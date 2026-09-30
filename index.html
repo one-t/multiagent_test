@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTRALIS TAROT — The Candlelit Altar</title>
+  <meta name="description" content="A single-page esoteric tarot divination sanctuary featuring all 78 cards in original SVG artwork, 1-card, 3-card, and Celtic Cross spreads, 3D card flips, candlelit ambiance, and a modular reader plug-in system.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Living Ambient Candlelight & Embers Canvas -->
+  <canvas id="candleCanvas"></canvas>
+  <div class="vignette-overlay"></div>
+
+  <div class="app-container">
+    <!-- Header & Sacred Altar Controls -->
+    <header class="altar-header">
+      <div class="header-top">
+        <div class="brand-section">
+          <div class="altar-sigil">✦</div>
+          <div class="brand-titles">
+            <h1>ASTRALIS TAROT</h1>
+            <p class="subtitle">The Candlelit Altar of the Sacred 78</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Audio Ambiance Toggle -->
+          <button id="ambianceToggleBtn" class="icon-btn" title="Toggle Candlelit Fire & Drone Ambiance">
+            🕯️
+          </button>
+          <!-- Mute FX Toggle -->
+          <button id="muteToggleBtn" class="icon-btn" title="Mute Audio Effects">
+            🔊
+          </button>
+          <!-- Deck Compendium Browser -->
+          <button id="compendiumBtn" class="btn btn-ghost" title="Explore all 78 Cards">
+            <span>📜</span> Compendium
+          </button>
+          <!-- Readers Panel Trigger -->
+          <button id="readersPanelBtn" class="btn btn-gold" title="Open the Reader Plug-in Sanctuary">
+            <span id="activeReaderAvatar">🔮</span> <span id="activeReaderName">Madame Vivienne</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Spread Selection & Inquiry Query Row -->
+      <div class="control-strip">
+        <div class="spread-selector-group">
+          <button class="spread-tab-btn active" data-spread="single">
+            1-Card Oracle
+          </button>
+          <button class="spread-tab-btn" data-spread="three_card">
+            3-Card Triptych
+          </button>
+          <button class="spread-tab-btn" data-spread="celtic_cross">
+            Celtic Cross (10 Cards)
+          </button>
+
+          <!-- 3-Card Subtheme Selector (Visible when 3-card spread active) -->
+          <div id="threeCardThemeBox" class="subtheme-container" style="display: none;">
+            <span>Theme:</span>
+            <select id="threeCardThemeSelect" class="subtheme-select">
+              <option value="past_present_future">Past / Present / Future</option>
+              <option value="situation_obstacle_advice">Situation / Obstacle / Advice</option>
+              <option value="mind_body_spirit">Mind / Body / Spirit</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="query-row">
+          <div class="query-input-wrap">
+            <span class="input-icon">✧</span>
+            <input type="text" id="queryInput" class="query-input" placeholder="Hold your query, intention, or meditation in mind..." autocomplete="off">
+          </div>
+
+          <label class="toggle-label" title="Enable traditional reversed cards with inverted orientations and meanings">
+            <input type="checkbox" id="reversalsToggle" class="toggle-checkbox" checked>
+            <span>Allow Reversals</span>
+          </label>
+
+          <button id="shuffleDealBtn" class="btn btn-gold">
+            <span>🔀</span> Shuffle &amp; Deal
+          </button>
+          <button id="revealAllBtn" class="btn btn-ghost">
+            <span>👁️</span> Reveal All
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Divination Altar Stage -->
+    <main class="altar-stage">
+      <div class="stage-status">
+        <h2 id="stageSpreadTitle" class="stage-title">Single Card — The Oracle's Light</h2>
+        <p id="stageSpreadDesc" class="stage-desc">Focus upon your inquiry. Click the card to flip and unveil its counsel.</p>
+      </div>
+
+      <!-- Dynamic Cards Layout Container -->
+      <section id="cardsLayoutContainer" class="cards-layout-container layout-single">
+        <!-- Rendered dynamically by js/app.js -->
+      </section>
+
+      <!-- Reading Scroll Output -->
+      <section id="readingSection" class="reading-section" style="display: none;">
+        <!-- Rendered dynamically by active reader -->
+      </section>
+    </main>
+  </div>
+
+  <!-- Readers Plug-in Slide-out Drawer -->
+  <div id="readersDrawerBackdrop" class="drawer-backdrop">
+    <aside class="drawer-panel">
+      <div class="drawer-header">
+        <h3>The Readers' Conclave</h3>
+        <button id="closeReadersDrawer" class="icon-btn">✕</button>
+      </div>
+
+      <div class="drawer-tabs">
+        <div class="drawer-tab active" data-tab="active-readers">Available Readers</div>
+        <div class="drawer-tab" data-tab="plugin-dev">Plug-in Developer</div>
+      </div>
+
+      <!-- Tab 1: Available Readers -->
+      <div id="tabActiveReaders" class="drawer-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">
+          Select a reader to interpret your spread. Each brings a distinct philosophical lens, tone, and interpretive wisdom.
+        </p>
+        <div id="readersList" style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Reader cards injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Plug-in Developer / Custom Reader -->
+      <div id="tabPluginDev" class="drawer-body" style="display: none;">
+        <div class="plugin-dev-box">
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            The reading system is powered by an open <strong>plug-in interface</strong>. Each reader is a JS module exposing an <code>interpret(spreadData)</code> function. You can register your own custom reader in real time below:
+          </p>
+
+          <textarea id="customPluginCode" class="code-editor-area" spellcheck="false"></textarea>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button id="resetPluginTemplateBtn" class="btn btn-ghost" style="font-size: 0.75rem;">Reset Template</button>
+            <button id="registerCustomReaderBtn" class="btn btn-gold" style="font-size: 0.75rem;">Register Plugin</button>
+          </div>
+          <div id="pluginStatusMsg" style="font-size: 0.8rem; min-height: 18px;"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Card Inspection Modal -->
+  <div id="cardModalBackdrop" class="modal-backdrop">
+    <div class="modal-content">
+      <button id="closeCardModal" class="modal-close-btn">&times;</button>
+      
+      <div class="modal-card-display">
+        <div id="modalCardStage" class="modal-card-stage">
+          <!-- Full SVG injected here -->
+        </div>
+        <button id="modalToggleOrientationBtn" class="btn btn-ghost" style="font-size: 0.75rem;">
+          Invert Orientation
+        </button>
+      </div>
+
+      <div class="modal-details">
+        <div class="modal-header">
+          <h2 id="modalCardName">The Magician</h2>
+          <p id="modalEsotericTitle" class="modal-esoteric-title">The Magus of Power</p>
+        </div>
+
+        <div class="modal-badges">
+          <span id="modalArcanaBadge" class="badge-tag">Major Arcana</span>
+          <span id="modalElementBadge" class="badge-tag">Air / Mercury</span>
+          <span id="modalOrientationBadge" class="badge-tag">Upright</span>
+        </div>
+
+        <div class="modal-body-section">
+          <h4>Keywords</h4>
+          <p id="modalKeywords" style="color: var(--gold-primary); font-weight: 500;"></p>
+        </div>
+
+        <div class="modal-body-section">
+          <h4>Upright Meaning</h4>
+          <p id="modalMeaningUpright"></p>
+        </div>
+
+        <div class="modal-body-section">
+          <h4>Reversed Meaning</h4>
+          <p id="modalMeaningReversed"></p>
+        </div>
+
+        <div class="modal-body-section">
+          <h4>Symbolic Keys</h4>
+          <p id="modalSymbols" style="font-style: italic; color: var(--text-muted);"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deck Compendium Modal (Browse all 78 Cards) -->
+  <div id="compendiumModalBackdrop" class="modal-backdrop">
+    <div class="modal-content compendium-modal">
+      <button id="closeCompendiumModal" class="modal-close-btn">&times;</button>
+      <div style="width: 100%;">
+        <h2 style="font-family: var(--font-display); color: var(--gold-primary); letter-spacing: 2px; margin-bottom: 6px;">
+          The Tarot Compendium
+        </h2>
+        <p style="font-family: var(--font-serif); font-style: italic; color: var(--text-muted); margin-bottom: 16px;">
+          Explore all 78 cards, their original vector iconography, esoteric correspondence, and sacred meanings.
+        </p>
+
+        <input type="text" id="compendiumSearchInput" class="compendium-search" placeholder="Search by name, element, or keyword...">
+
+        <div class="compendium-filters" style="margin-top: 10px;">
+          <button class="spread-tab-btn active" data-filter="all">All (78)</button>
+          <button class="spread-tab-btn" data-filter="major">Major Arcana (22)</button>
+          <button class="spread-tab-btn" data-filter="wands">Wands (14)</button>
+          <button class="spread-tab-btn" data-filter="cups">Cups (14)</button>
+          <button class="spread-tab-btn" data-filter="swords">Swords (14)</button>
+          <button class="spread-tab-btn" data-filter="pentacles">Pentacles (14)</button>
+        </div>
+
+        <div id="compendiumGrid" class="compendium-grid">
+          <!-- 78 Card thumbnails generated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Controller -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
