@@ -5,7 +5,9 @@
  */
 
 import { TAROT_DECK, getCardById } from './cards.js';
-import { renderCardFaceSvg, renderCardBackSvg } from './svg-art.js';
+import { shuffleDeck } from './shuffle.js';
+import { renderCardFaceSvg as renderSvgFace, renderCardBackSvg as renderSvgBack, setDeckTheme, getDeckTheme } from './svg-art.js';
+import { renderHouseholdFace, renderHouseholdBack } from './household-deck.js';
 import { SPREADS, getSpread } from './spreads.js';
 import { registry } from './reader-interface.js';
 import { sound } from './sound.js';
@@ -16,6 +18,8 @@ import { MysticSeer } from './readers/mystic-seer.js';
 import { ShadowOracle } from './readers/shadow-oracle.js';
 import { PragmaticAlchemist } from './readers/pragmatic-alchemist.js';
 import { CosmicAstrologer } from './readers/cosmic-astrologer.js';
+import { RuthCalloway } from './readers/ruth-calloway.js';
+import { CassianVetch } from './readers/cassian-vetch.js';
 
 // -------------------------------------------------------------
 // APP STATE
@@ -27,7 +31,8 @@ const state = {
   userQuery: '',
   drawnCards: [], // Array of { card, isReversed, position, isFlipped }
   activeModalCard: null,
-  isModalReversed: false
+  isModalReversed: false,
+  deckTheme: 'household' // 'surrealist' | 'feline' | 'household'
 };
 
 // Register default readers
@@ -35,6 +40,8 @@ registry.register(MysticSeer);
 registry.register(ShadowOracle);
 registry.register(PragmaticAlchemist);
 registry.register(CosmicAstrologer);
+registry.register(RuthCalloway);
+registry.register(CassianVetch);
 
 // -------------------------------------------------------------
 // DOM ELEMENTS
@@ -45,7 +52,8 @@ const elements = {
   ambianceToggleBtn: document.getElementById('ambianceToggleBtn'),
   muteToggleBtn: document.getElementById('muteToggleBtn'),
 
-  // Header
+  // Header & Deck Selection
+  deckThemeSelect: document.getElementById('deckThemeSelect'),
   compendiumBtn: document.getElementById('compendiumBtn'),
   readersPanelBtn: document.getElementById('readersPanelBtn'),
   activeReaderAvatar: document.getElementById('activeReaderAvatar'),
@@ -104,11 +112,12 @@ const elements = {
 // -------------------------------------------------------------
 // INITIALIZATION
 // -------------------------------------------------------------
-window.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   // Start ambient candlelight
   new CandlelightSystem('candleCanvas');
 
   // Set up listeners
+  setupDeckControls();
   setupSpreadControls();
   setupAudioControls();
   setupReadersConclave();
@@ -117,7 +126,69 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Initial Deal
   dealSpread();
-});
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
+
+// -------------------------------------------------------------
+// DECK THEME CONTROLS
+// -------------------------------------------------------------
+function renderActiveFace(card) {
+  if (state.deckTheme === 'household') return renderHouseholdFace(card);
+  return renderSvgFace(card);
+}
+
+function renderActiveBack(width = 300, height = 480) {
+  if (state.deckTheme === 'household') return renderHouseholdBack(width, height);
+  return renderSvgBack(width, height);
+}
+
+function setupDeckControls() {
+  if (!elements.deckThemeSelect) return;
+
+  elements.deckThemeSelect.value = state.deckTheme;
+
+  elements.deckThemeSelect.addEventListener('change', (e) => {
+    const newTheme = e.target.value;
+    state.deckTheme = newTheme;
+    if (newTheme === 'feline' || newTheme === 'surrealist' || newTheme === 'feline_mystica') setDeckTheme(newTheme);
+
+    sound.playSwoosh();
+
+    // Re-render currently drawn cards on altar
+    if (state.drawnCards && state.drawnCards.length > 0) {
+      renderCardsOnAltar();
+    }
+
+    // Re-render reading scroll thumbnails if active
+    if (elements.readingSection && elements.readingSection.style.display === 'block') {
+      const thumbs = elements.readingSection.querySelectorAll('.entry-thumb');
+      thumbs.forEach(thumb => {
+        const cardId = thumb.dataset.cardId;
+        const cardObj = getCardById(cardId);
+        if (cardObj) {
+          thumb.innerHTML = renderActiveFace(cardObj);
+        }
+      });
+    }
+
+    // Re-render inspection modal if open
+    if (state.activeModalCard && elements.cardModalBackdrop.classList.contains('open')) {
+      elements.modalCardStage.innerHTML = renderActiveFace(state.activeModalCard);
+    }
+
+    // Re-render compendium grid if open
+    if (elements.compendiumModalBackdrop.classList.contains('open')) {
+      const activeFilterBtn = document.querySelector('.compendium-filters button.active');
+      const activeFilter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
+      renderCompendiumCards(activeFilter, elements.compendiumSearchInput.value);
+    }
+  });
+}
 
 // -------------------------------------------------------------
 // SPREAD SETUP & SHUFFLING
@@ -195,19 +266,14 @@ function dealSpread() {
   const positions = getPositionsForCurrentSpread();
 
   // Shuffle deck
-  const deck = [...TAROT_DECK];
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
+  const deck = shuffleDeck(TAROT_DECK, { allowReversals: state.allowReversals });
 
   // Draw cards
   state.drawnCards = positions.map((pos, idx) => {
-    const card = deck[idx];
-    const isReversed = state.allowReversals ? Math.random() < 0.38 : false;
+    const drawn = deck[idx];
     return {
-      card,
-      isReversed,
+      card: drawn.card,
+      isReversed: drawn.isReversed,
       position: pos,
       isFlipped: false
     };
@@ -247,7 +313,7 @@ function renderCardsOnAltar() {
   container.className = `cards-layout-container layout-${state.currentSpreadId}`;
   container.innerHTML = '';
 
-  const backSvg = renderCardBackSvg(300, 480);
+  const backSvg = renderActiveBack(300, 480);
 
   if (state.currentSpreadId === 'single' || state.currentSpreadId === 'three_card') {
     state.drawnCards.forEach((item, idx) => {
@@ -328,7 +394,7 @@ function createCardCell(item, idx, backSvg) {
 
   // Card 3D wrapper
   const wrapper = document.createElement('div');
-  wrapper.className = `card-wrapper ${item.isReversed ? 'reversed' : ''}`;
+  wrapper.className = `card-wrapper ${item.isReversed ? 'reversed' : ''} ${item.isFlipped ? 'flipped' : ''}`;
   wrapper.dataset.index = idx;
 
   const inner = document.createElement('div');
@@ -337,7 +403,7 @@ function createCardCell(item, idx, backSvg) {
   // Front face (card art)
   const frontFace = document.createElement('div');
   frontFace.className = 'card-face card-face-front';
-  frontFace.innerHTML = renderCardFaceSvg(item.card);
+  frontFace.innerHTML = renderActiveFace(item.card);
 
   // Shimmer
   const shimmer = document.createElement('div');
@@ -455,7 +521,7 @@ function renderReadingScroll(reading, reader) {
 
   const cardItemsHtml = reading.cardReadings.map(entry => {
     const cardObj = getCardById(entry.cardId);
-    const thumbSvg = renderCardFaceSvg(cardObj);
+    const thumbSvg = renderActiveFace(cardObj);
 
     return `
       <div class="card-reading-entry">
@@ -542,21 +608,7 @@ function renderReadingScroll(reading, reader) {
 }
 
 function copyReadingToClipboard(reading) {
-  const text = `# Tarot Reading by ${reading.readerName} (${reading.readerTitle})
-
-**Summary:** ${reading.summary}
-
-**Elemental Insight:** ${reading.elementalInsight}
-
-## Cards:
-${reading.cardReadings.map(c => `### ${c.positionName}: ${c.cardName} (${c.orientation})
-${c.reflection}
-`).join('\n')}
-
-**Actionable Counsel:** ${reading.actionableAdvice}
-
-*${reading.closingBenediction}*
-`;
+  const text = `# Tarot Reading by ${reading.readerName} (${reading.readerTitle})\n\n**Summary:** ${reading.summary}\n\n**Elemental Insight:** ${reading.elementalInsight}\n\n## Cards:\n${reading.cardReadings.map(c => `### ${c.positionName}: ${c.cardName} (${c.orientation})\n${c.reflection}\n`).join('\n')}\n\n**Actionable Counsel:** ${reading.actionableAdvice}\n\n*${reading.closingBenediction}*\n`;
 
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copyReadingBtn');
@@ -747,7 +799,7 @@ function openCardInspection(card, isReversed = false) {
   state.activeModalCard = card;
   state.isModalReversed = isReversed;
 
-  elements.modalCardStage.innerHTML = renderCardFaceSvg(card);
+  elements.modalCardStage.innerHTML = renderActiveFace(card);
   elements.modalCardName.textContent = card.name;
   elements.modalEsotericTitle.textContent = card.esotericTitle || '';
   elements.modalArcanaBadge.textContent = card.arcana === 'major' ? 'Major Arcana' : `${card.suitName || card.suit} • Minor Arcana`;
@@ -851,7 +903,7 @@ function renderCompendiumCards(filter = 'all', searchQuery = '') {
 
     item.innerHTML = `
       <div class="compendium-card-thumb">
-        ${renderCardFaceSvg(card)}
+        ${renderActiveFace(card)}
       </div>
       <div class="compendium-card-name">${card.name}</div>
     `;

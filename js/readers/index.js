@@ -3,9 +3,11 @@
  * Exports all available reader personas for the tarot panel.
  */
 import morwennaReader, { MORWENNA_PROFILE } from './morwenna.js';
+import cassianReader, { CASSIAN_PROFILE } from './cassian-vetch.js';
 
 export const READERS = [
-  morwennaReader
+  morwennaReader,
+  cassianReader,
 ];
 
 export function getReaderById(id) {
@@ -20,5 +22,8 @@ export default {
   READERS,
   getReaderById,
   getAllReaders,
-  morwenna: morwennaReader
+  morwenna: morwennaReader,
+  cassian: cassianReader,
+  MORWENNA_PROFILE,
+  CASSIAN_PROFILE,
 };

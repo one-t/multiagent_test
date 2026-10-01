@@ -1,5 +1,6 @@
-import { ruthCalloway } from "../readers/ruthCalloway";
+import { cassianVetch } from "../readers/cassianVetch";
 import { morwennaRavenscroft } from "../readers/morwennaRavenscroft";
+import { ruthCalloway } from "../readers/ruthCalloway";
 import { CARD_BY_KEY } from "../cards";
 import type { CardDraw } from "../types";
 
@@ -52,3 +53,12 @@ const celticCross: CardDraw[] = [
   draw("major-21", "upright", "outcome"),
 ];
 console.log(morwennaRavenscroft.interpretSpread(celticCross));
+
+console.log(`\n=== ${cassianVetch.name} ===`);
+console.log(cassianVetch.tagline);
+console.log();
+console.log("--- Single card pull ---");
+console.log(cassianVetch.interpretCard(draw("major-0", "upright", "single")));
+console.log();
+console.log("--- Celtic Cross, the Fool in the heart of the forme ---");
+console.log(cassianVetch.interpretSpread(celticCross));

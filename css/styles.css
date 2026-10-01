@@ -172,6 +172,51 @@ body {
   flex-wrap: wrap;
 }
 
+/* Deck Selector Control */
+.deck-selector-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 17, 32, 0.7);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 6px;
+  padding: 4px 10px;
+  transition: var(--transition-smooth);
+}
+
+.deck-selector-wrap:hover {
+  border-color: var(--gold-rich);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+}
+
+.deck-select-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+}
+
+.deck-theme-select {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  background: transparent;
+  color: var(--text-main);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding-right: 4px;
+}
+
+.deck-theme-select option {
+  background: #140f24;
+  color: #fef6dc;
+  font-size: 0.88rem;
+  padding: 8px 12px;
+}
+
 /* Buttons */
 .btn {
   font-family: var(--font-heading);

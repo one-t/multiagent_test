@@ -1,51 +1,46 @@
-// Minimal static file server for local development & preview
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+import fs from "node:fs";
+import http from "node:http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const PORT = process.env.PORT || 8080;
-const MIME_TYPES = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml; charset=utf-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.ico': 'image/x-icon'
+const root = path.dirname(fileURLToPath(import.meta.url));
+const port = Number(process.env.PORT) || 5173;
+
+const types = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
 };
 
-const server = http.createServer((req, res) => {
-  let reqPath = decodeURI(req.url.split('?')[0]);
-  if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
+const server = http.createServer((request, response) => {
+  const url = new URL(request.url ?? "/", `http://127.0.0.1:${port}`);
+  let pathname = decodeURIComponent(url.pathname);
+  if (pathname === "/") pathname = "/index.html";
 
-  const filePath = path.join(__dirname, reqPath);
-
-  // Security check: ensure path is within __dirname
-  if (!filePath.startsWith(__dirname)) {
-    res.writeHead(403);
-    res.end('Forbidden');
+  const requested = path.normalize(path.join(root, pathname));
+  if (requested !== root && !requested.startsWith(root + path.sep)) {
+    response.writeHead(403);
+    response.end("Forbidden");
     return;
   }
 
-  fs.stat(filePath, (err, stats) => {
-    if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
+  fs.readFile(requested, (error, data) => {
+    if (error) {
+      response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      response.end("Not found");
       return;
     }
-
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
-    res.writeHead(200, {
-      'Content-Type': contentType,
-      'Cache-Control': 'no-cache'
-    });
-    fs.createReadStream(filePath).pipe(res);
+    const type = types[path.extname(requested)] ?? "application/octet-stream";
+    response.writeHead(200, { "Content-Type": type, "Cache-Control": "no-store" });
+    response.end(data);
   });
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Astralis Tarot server running at http://127.0.0.1:${PORT}/`);
+server.listen(port, "127.0.0.1", () => {
+  console.log(`Night window listening on http://127.0.0.1:${port}`);
 });

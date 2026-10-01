@@ -1,3 +1,6 @@
 node_modules/
 .DS_Store
 *.log
+
+# Personal reference photos for the feline deck
+src/art/cat-deck/cat-inspo/
