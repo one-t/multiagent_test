@@ -25,6 +25,8 @@ import { openOverlay, closeOverlay, isOverlayOpen, setupOverlays, wireRadioGroup
 import { RuthCalloway } from './readers/ruth-calloway.js';
 import { CassianVetch } from './readers/cassian-vetch.js';
 import { LylePasternak } from './readers/lyle-pasternak.js';
+import { SableMoreau } from './readers/sable-moreau.js';
+import { CalNavarro } from './readers/cal-navarro.js';
 
 // -------------------------------------------------------------
 // APP STATE
@@ -75,6 +77,8 @@ const modal = {
 registry.register(RuthCalloway);
 registry.register(CassianVetch);
 registry.register(LylePasternak);
+registry.register(SableMoreau);
+registry.register(CalNavarro);
 const BUILT_IN_READER_IDS = new Set(registry.getAll().map(reader => reader.id));
 
 // -------------------------------------------------------------
