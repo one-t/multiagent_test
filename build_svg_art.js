@@ -1,6 +1,6 @@
 /**
- * Build Script: Unified Tarot SVG Art Engine
- * Assembles Surrealist Deck, Feline Familiars Alt Deck, and Feline Mystica Illustrated Deck into js/svg-art.js
+ * Build Script: Feline Mystica SVG Art Engine
+ * Assembles Feline Mystica Illustrated Deck (and line-art fallbacks) into js/svg-art.js
  */
 
 import fs from 'fs';
@@ -11,39 +11,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function buildSvgArt() {
-  console.log('Compiling Multi-Deck Tarot Art Engines (Surrealist, Feline Familiars & Feline Mystica)...');
+  console.log('Compiling Feline Mystica Tarot Art Engine...');
 
   const srcDir = path.join(__dirname, 'src', 'art');
   const catDir = path.join(srcDir, 'cat-deck');
 
-  // Surrealist Art Source Files
-  const emblemsSrc = fs.readFileSync(path.join(srcDir, 'emblems.js'), 'utf8');
-  const cardBackSrc = fs.readFileSync(path.join(srcDir, 'card-back.js'), 'utf8');
-  const cardFrameSrc = fs.readFileSync(path.join(srcDir, 'card-frame.js'), 'utf8');
-  const majorArcanaSrc = fs.readFileSync(path.join(srcDir, 'major-arcana.js'), 'utf8');
-  const minorArcanaSrc = fs.readFileSync(path.join(srcDir, 'minor-arcana.js'), 'utf8');
-
-  // Feline Familiars Source Files
+  // Feline Emblems and Fallback Art Source Files
   const catEmblemsSrc = fs.readFileSync(path.join(catDir, 'cat-emblems.js'), 'utf8');
-  const catBackSrc = fs.readFileSync(path.join(catDir, 'cat-back.js'), 'utf8');
-  const catFrameSrc = fs.readFileSync(path.join(catDir, 'cat-frame.js'), 'utf8');
   const catMajorSrc = fs.readFileSync(path.join(catDir, 'cat-major-arcana.js'), 'utf8');
   const catMinorSrc = fs.readFileSync(path.join(catDir, 'cat-minor-arcana.js'), 'utf8');
 
   // Strip exports & internal imports for single-bundle packaging
-  const cleanEmblems = emblemsSrc.replace(/export\s+/g, '');
-  const cleanCardBack = cardBackSrc.replace(/export\s+function\s+renderCardBackSvg/, 'function _renderCardBackSvg');
-  const cleanCardFrame = cardFrameSrc.replace(/export\s+/g, '');
-  const cleanMajor = majorArcanaSrc.replace(/export\s+/g, '');
-  const cleanMinor = minorArcanaSrc
-    .replace(/import\s+[^;]+;/g, '')
-    .replace(/export\s+/g, '');
-
   const cleanCatEmblems = catEmblemsSrc.replace(/export\s+/g, '');
-  const cleanCatBack = catBackSrc.replace(/export\s+function\s+renderCatCardBackSvg/, 'function _renderCatCardBackSvg');
-  const cleanCatFrame = catFrameSrc
-    .replace(/import\s+[^;]+;/g, '')
-    .replace(/export\s+/g, '');
   const cleanCatMajor = catMajorSrc
     .replace(/import\s+[^;]+;/g, '')
     .replace(/export\s+/g, '');
@@ -51,116 +30,23 @@ async function buildSvgArt() {
     .replace(/import\s+[^;]+;/g, '')
     .replace(/export\s+/g, '');
 
-  const bundledScript = `/**
- * Multi-Deck Tarot Art Engine (Generated)
- * Includes:
- * 1. Classic Surrealist Altar Tarot (78 cards + Reversible Celestial Back)
- * 2. Feline Familiars Alt Deck (78 cards + Reversible Feline Back)
- * 3. Feline Mystica Alt Deck (Masterpiece Illustrated Deck referencing real cat photos)
+  const parts = [];
+
+  parts.push(`/**
+ * Feline Mystica Tarot Art Engine (Generated)
+ * Masterpiece Illustrated Deck referencing real cat photos, with line-art fallbacks
  */
 
-// ============================================================
-// PART 1: SURREALIST TAROT ENGINE
-// ============================================================
-
-// --- SUIT EMBLEMS ---
-${cleanEmblems}
-
-// --- CARD FRAME & THEMES ---
-${cleanCardFrame}
-
-// --- 22 MAJOR ARCANA MASTERPIECES ---
-${cleanMajor}
-
-// --- MINOR ARCANA ENGINE (ACES, PIPS, COURTS) ---
-${cleanMinor}
-
-// --- CARD BACK GENERATOR ---
-${cleanCardBack}
-
-function _renderSurrealistCardFaceSvg(card) {
-  if (!card) return '';
-
-  let customDefs = '';
-  let artworkSvg = '';
-
-  if (card.arcana === 'major') {
-    const art = MAJOR_ARCANA_ART[card.id];
-    if (art) {
-      customDefs = art.defs || '';
-      artworkSvg = art.svg || '';
-    } else {
-      artworkSvg = '<circle cx="150" cy="230" r="40" fill="#ffd700" />';
-    }
-  } else if (card.rank === 'ace') {
-    const art = renderAceCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  } else if (['page', 'knight', 'queen', 'king'].includes(card.rank)) {
-    const art = renderCourtCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  } else {
-    const art = renderPipCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  }
-
-  return createCardFrame(card, artworkSvg, customDefs);
-}
-
-// ============================================================
-// PART 2: FELINE FAMILIARS ALT DECK ENGINE
-// ============================================================
-
 // --- FELINE EMBLEMS & ARTIFACTS ---
-${cleanCatEmblems}
+`);
+  parts.push(cleanCatEmblems);
+  parts.push(`\n// --- FELINE 22 MAJOR ARCANA FALLBACK ART ---\n`);
+  parts.push(cleanCatMajor);
+  parts.push(`\n// --- FELINE MINOR ARCANA ENGINE (COURTS, ACES, PIPS) ---\n`);
+  parts.push(cleanCatMinor);
 
-// --- FELINE CARD FRAME ---
-${cleanCatFrame}
-
-// --- FELINE 22 MAJOR ARCANA ---
-${cleanCatMajor}
-
-// --- FELINE MINOR ARCANA ENGINE ---
-${cleanCatMinor}
-
-// --- FELINE CARD BACK GENERATOR ---
-${cleanCatBack}
-
-function _renderCatCardFaceSvg(card) {
-  if (!card) return '';
-
-  let customDefs = '';
-  let artworkSvg = '';
-
-  if (card.arcana === 'major') {
-    const art = CAT_MAJOR_ARCANA_ART[card.id];
-    if (art) {
-      customDefs = art.defs || '';
-      artworkSvg = art.svg || '';
-    } else {
-      artworkSvg = '<circle cx="150" cy="230" r="40" fill="#ffd700" />';
-    }
-  } else if (card.rank === 'ace') {
-    const art = renderCatAceCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  } else if (['page', 'knight', 'queen', 'king'].includes(card.rank)) {
-    const art = renderCatCourtCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  } else {
-    const art = renderCatPipCardArt(card);
-    customDefs = art.defs || '';
-    artworkSvg = art.svg || '';
-  }
-
-  return createCatCardFrame(card, artworkSvg, customDefs);
-}
-
-// ============================================================
-// PART 3: FELINE MYSTICA (MASTERPIECE ILLUSTRATED DECK)
+  parts.push(`\n// ============================================================
+// FELINE MYSTICA (MASTERPIECE ILLUSTRATED DECK)
 // ============================================================
 
 const FELINE_MYSTICA_IMAGES = {
@@ -309,16 +195,10 @@ function _renderFelineMysticaCardFaceSvg(card) {
 // DECK THEME STATE & PUBLIC API
 // ============================================================
 
-let currentDeckTheme = 'surrealist'; // 'surrealist' | 'feline' | 'feline_mystica'
+let currentDeckTheme = 'feline_mystica';
 
 export function setDeckTheme(theme) {
-  if (theme === 'feline_mystica' || theme === 'mystica' || theme === 'illustrated') {
-    currentDeckTheme = 'feline_mystica';
-  } else if (theme === 'feline' || theme === 'cats') {
-    currentDeckTheme = 'feline';
-  } else {
-    currentDeckTheme = 'surrealist';
-  }
+  currentDeckTheme = 'feline_mystica';
 }
 
 export function getDeckTheme() {
@@ -326,35 +206,20 @@ export function getDeckTheme() {
 }
 
 export function renderCardBackSvg(width = 300, height = 480, theme = currentDeckTheme) {
-  if (theme === 'feline_mystica' || theme === 'mystica' || theme === 'illustrated') {
-    return _renderFelineMysticaCardBackSvg(width, height);
-  }
-  if (theme === 'feline' || theme === 'cats') {
-    return _renderCatCardBackSvg(width, height);
-  }
-  return _renderCardBackSvg(width, height);
+  return _renderFelineMysticaCardBackSvg(width, height);
 }
 
 export function renderCardFaceSvg(card, theme = currentDeckTheme) {
   if (!card) return '';
-  if (theme === 'feline_mystica' || theme === 'mystica' || theme === 'illustrated') {
-    return _renderFelineMysticaCardFaceSvg(card);
-  }
-  if (theme === 'feline' || theme === 'cats') {
-    return _renderCatCardFaceSvg(card);
-  }
-  return _renderSurrealistCardFaceSvg(card);
+  return _renderFelineMysticaCardFaceSvg(card);
 }
 
 // Explicit themed helpers
-export const renderSurrealistCardFaceSvg = _renderSurrealistCardFaceSvg;
-export const renderSurrealistCardBackSvg = _renderCardBackSvg;
-export const renderCatCardFaceSvg = _renderCatCardFaceSvg;
-export const renderCatCardBackSvg = _renderCatCardBackSvg;
 export const renderFelineMysticaCardFaceSvg = _renderFelineMysticaCardFaceSvg;
 export const renderFelineMysticaCardBackSvg = _renderFelineMysticaCardBackSvg;
-`;
+`);
 
+  const bundledScript = parts.join('');
   const outPath = path.join(__dirname, 'js', 'svg-art.js');
   fs.writeFileSync(outPath, bundledScript, 'utf8');
   console.log('Successfully generated ' + outPath + ' (' + (bundledScript.length / 1024).toFixed(1) + ' KB)');

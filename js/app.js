@@ -31,7 +31,7 @@ import { LylePasternak } from './readers/lyle-pasternak.js';
 // -------------------------------------------------------------
 const SETTINGS_KEY = 'astralis.settings.v1';
 const DRAFT_KEY = 'astralis.draft.v1';
-const DECK_THEMES = ['household', 'surrealist', 'feline', 'feline_mystica'];
+const DECK_THEMES = ['household', 'feline_mystica'];
 const SPREAD_IDS = ['single', 'three_card', 'celtic_cross'];
 const QUESTION_LIMIT = 280;
 
@@ -47,7 +47,7 @@ const state = {
   restored: null, // { at, readerId, readerMissing } while a reopened reading is on the table
   undo: null, // The unfinished reading the last deal replaced, while it can still be brought back
   dealId: 0, // Goes up with every deal, so a delayed turn never lands on a newer spread
-  deckTheme: 'household' // 'surrealist' | 'feline' | 'feline_mystica' | 'household'
+  deckTheme: 'household' // 'household' | 'feline_mystica'
 };
 
 /**
@@ -2333,8 +2333,6 @@ function renderHistoryList() {
 // -------------------------------------------------------------
 const DECK_INFO = {
   household: { name: 'Household Arcana', blurb: 'The house cats, photographed and painted. All 78 cards.' },
-  surrealist: { name: 'Surrealist Altar', blurb: 'Gold line drawings on a dark ground. All 78 cards.' },
-  feline: { name: 'Familiars', blurb: 'A line-drawn cat on every card. All 78 cards.' },
   feline_mystica: { name: 'Feline Mystica', blurb: '' } // written from what has actually been painted
 };
 const DECK_SAMPLE_CARD = 'maj_08'; // Strength has a face in every deck
@@ -2353,7 +2351,7 @@ function deckInfo(theme) {
   if (painted >= total) return { ...info, blurb: `Painted cats on every card. All ${total} cards.`, partial: '' };
   return {
     ...info,
-    blurb: `Painted cats on ${painted} of the ${total} cards so far. The other ${total - painted} use the Familiars line drawings, so a spread can mix the two.`,
+    blurb: `Painted cats on ${painted} of the ${total} cards so far. The other ${total - painted} use line drawings, so a spread can mix the two.`,
     partial: `${painted} of ${total} painted`
   };
 }

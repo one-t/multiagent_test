@@ -23,7 +23,7 @@ runs the test suite with Node's built-in test runner (`tests/`).
 ## What is in it
 
 - **Three spreads.** One card, three cards with a choice of positions (past/present/future, situation/obstacle/advice, mind/body/spirit), and the Celtic Cross. Position names, descriptions, and roles live in `js/spreads.js`.
-- **Four decks.** Household Arcana (the house cats, photographed and painted, all 78 cards), Surrealist Altar (gold line drawings, all 78), Familiars (a line-drawn cat on every card), and Feline Mystica (painted cats on the major arcana, aces and most courts; the other 39 cards use the line drawings).
+- **Two decks.** Household Arcana (the house cats, photographed and painted, all 78 cards) and Feline Mystica (painted cats on the major arcana, aces and most courts; the other 39 cards use line drawings).
 - **Three readers.** Ruth Calloway, a retired trucker; Cassian Vetch, a letterpress night clerk; Lyle Pasternak, a sacked ethics lecturer in a parking lot. Each has its own line for every card, upright and reversed, and its own framing for every position.
 - **Custom readers.** The Readers drawer has a code editor with a worked example. Paste a reader object and it is added for the session.
 - **Reversals** can be included or not; the setting applies from the next deal.
@@ -39,7 +39,7 @@ css/styles.css          All styling
 js/app.js               Application controller: state, dealing, reading panel, dialogs
 js/spreads.js           Spread and position copy (names, descriptions, roles)
 js/cards.js             GENERATED card data; edit build_cards_data.js instead
-js/svg-art.js           GENERATED card art for the Surrealist, Familiars and Feline Mystica decks; edit src/art and run build_svg_art.js
+js/svg-art.js           GENERATED card art for the Feline Mystica deck; edit src/art and run build_svg_art.js
 js/household-deck.js    Household Arcana renderer
 js/reader-interface.js  Reader registry and the suit/major tally helper
 js/readers/             Built-in readers; *-lines.js files hold the per-card text
