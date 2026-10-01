@@ -27,6 +27,9 @@ import { CassianVetch } from './readers/cassian-vetch.js';
 import { LylePasternak } from './readers/lyle-pasternak.js';
 import { SableMoreau } from './readers/sable-moreau.js';
 import { CalNavarro } from './readers/cal-navarro.js';
+import { Barnaby } from './readers/barnaby.js';
+import { Pippin } from './readers/pippin.js';
+import { morwennaReader } from './readers/morwenna.js';
 
 // -------------------------------------------------------------
 // APP STATE
@@ -79,6 +82,9 @@ registry.register(CassianVetch);
 registry.register(LylePasternak);
 registry.register(SableMoreau);
 registry.register(CalNavarro);
+registry.register(morwennaReader);
+registry.register(Barnaby);
+registry.register(Pippin);
 const BUILT_IN_READER_IDS = new Set(registry.getAll().map(reader => reader.id));
 
 // -------------------------------------------------------------

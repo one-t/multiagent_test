@@ -10,8 +10,10 @@
 export const MORWENNA_PROFILE = {
   id: "morwenna_ravenscroft",
   name: "Madame Morwenna Ravenscroft",
-  title: "The Widow of the Seventh Bell & Keeper of the Cobbled Vaults",
+  title: "The Widow of the Seventh Bell",
   shortName: "Madame Morwenna",
+  bio: "Once the toast of Edinburgh's spiritualist salons, she now reads beneath the Old Town with tallow candles and a one-eyed rook named Malachi. She does not sugarcoat a harsh card.",
+  philosophy: "The cards simply report the weather of your soul; whether you carry an umbrella is your affair.",
   alias: "The Widow of the Seventh Bell",
   location: "Mary King's Close Subterranean Vaults, Edinburgh",
   familiar: "Malachi (a one-eyed rook with an uncanny nose for human pretense)",
@@ -1090,8 +1092,82 @@ export function renderReaderCardHTML() {
 /**
  * Default reader persona export for the readers panel
  */
+/** The app's positions, by role, and the lens Morwenna reads each one through. */
+const ROLE_LENSES = {
+  core: "single",
+  past: "past",
+  present: "heart",
+  future: "future",
+  center_base: "heart",
+  center_cross: "crossing",
+  below: "foundation",
+  left: "past",
+  above: "crown",
+  right: "future",
+  staff_1: "self",
+  staff_2: "environment",
+  staff_3: "hopes_fears",
+  staff_4: "outcome",
+  situation: "situation",
+  obstacle: "obstacle",
+  advice: "advice",
+  mind: "mind",
+  body: "body",
+  spirit: "spirit"
+};
+
+/**
+ * The reading in the shape the app draws: one reflection per card, a summary,
+ * one sentence on the balance of suits, advice and a closing line.
+ */
+function interpret(spreadData) {
+  const { cards, question } = spreadData;
+
+  const cardReadings = cards.map(({ card, isReversed, position }) => {
+    const lines = CARD_INTERPRETATIONS[card.id];
+    if (!lines) throw new Error(`Morwenna has no page in the ledger for ${card.id}.`);
+    const lens = POSITION_LENSES[ROLE_LENSES[position?.role]] || normalizePosition(position?.name);
+    const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
+    return {
+      positionIndex: position.index,
+      positionName: position.name,
+      cardId: card.id,
+      cardName: card.name,
+      cardElement: card.element,
+      isReversed,
+      orientation: isReversed ? "Reversed" : "Upright",
+      focalKeyword: (keywords && keywords[0]) || "",
+      reflection: `${isReversed ? lines.reversed : lines.upright} ${lens.contextualize(lines, isReversed)}`
+    };
+  });
+
+  const synthesis = synthesizeSpread(
+    cards.map(({ card, isReversed, position }) => ({ card, isReversed, position: position?.name })),
+    spreadData.spread?.id
+  );
+  const asked = question && question.trim()
+    ? `You ask “${question.trim()}” Draw close to the brazier.`
+    : "No question spoken. The pasteboards will choose their own subject.";
+  const last = cards[cards.length - 1];
+  const lastLines = last ? CARD_INTERPRETATIONS[last.card.id] : null;
+
+  return {
+    readerId: MORWENNA_PROFILE.id,
+    readerName: MORWENNA_PROFILE.name,
+    readerTitle: MORWENNA_PROFILE.title,
+    summary: `${asked} ${synthesis.reversalCommentary}`,
+    elementalInsight: synthesis.elementalCommentary,
+    cardReadings,
+    actionableAdvice: lastLines
+      ? `From ${last.card.name}, the last card on the cloth: ${lastLines.aphorism}`
+      : "",
+    closingBenediction: synthesis.partingChime
+  };
+}
+
 export const morwennaReader = {
   ...MORWENNA_PROFILE,
+  interpret,
   interpretCard,
   synthesizeSpread,
   getGreeting,
