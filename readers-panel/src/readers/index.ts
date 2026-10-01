@@ -5,6 +5,8 @@ import { lylePasternak } from "./lylePasternak";
 import { morwennaRavenscroft } from "./morwennaRavenscroft";
 import { ruthCalloway } from "./ruthCalloway";
 import { sableMoreau } from "./sableMoreau";
+import { barnaby } from "./barnaby";
+import { pippin } from "./pippin";
 
 /** Registry of every reader available in the panel, keyed by persona id. */
 export const READERS: Record<string, ReaderPersona> = {
@@ -14,6 +16,8 @@ export const READERS: Record<string, ReaderPersona> = {
   [lylePasternak.id]: lylePasternak,
   [sableMoreau.id]: sableMoreau,
   [calNavarro.id]: calNavarro,
+  [barnaby.id]: barnaby,
+  [pippin.id]: pippin,
 };
 
 export function listReaders(): ReaderPersona[] {
@@ -34,3 +38,5 @@ export { cassianVetch } from "./cassianVetch";
 export { lylePasternak } from "./lylePasternak";
 export { sableMoreau } from "./sableMoreau";
 export { calNavarro } from "./calNavarro";
+export { barnaby } from "./barnaby";
+export { pippin } from "./pippin";

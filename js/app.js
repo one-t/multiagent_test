@@ -1873,7 +1873,14 @@ function renderCompendiumCards() {
 // READER AVATARS: a portrait where one exists, a monogram otherwise
 // -------------------------------------------------------------
 const READER_PORTRAITS = {
-  cassian_vetch: assetUrl('readers/cassian_vetch.jpg')
+  cassian_vetch: assetUrl('readers/cassian_vetch.jpg'),
+  ruth_calloway: assetUrl('readers/ruth_calloway.jpg'),
+  lyle_pasternak: assetUrl('readers/lyle_pasternak.jpg'),
+  cal_navarro: assetUrl('readers/cal_navarro.jpg'),
+  sable_moreau: assetUrl('readers/sable_moreau.jpg'),
+  morwenna_ravenscroft: assetUrl('readers/morwenna_ravenscroft.jpg'),
+  barnaby: assetUrl('readers/barnaby.jpg'),
+  pippin: assetUrl('readers/pippin.jpg')
 };
 
 function readerInitials(name) {
