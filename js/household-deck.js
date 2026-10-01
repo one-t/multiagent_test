@@ -102,7 +102,8 @@ const MAT = {
   major: "#160f0c"
 };
 
-const BACK_PORTRAIT = "/src/art/cat-deck/cat-inspo/IMG_20160112_220622.jpg";
+// Committed copy; the cat-inspo source photos stay out of git.
+const BACK_PORTRAIT = "/assets/household/back-portrait.jpg";
 
 let clipSeq = 0;
 

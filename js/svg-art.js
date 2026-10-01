@@ -4833,23 +4833,80 @@ function _renderFelineMysticaCardBackSvg(width = 300, height = 480) {
 
 function _renderFelineMysticaCardFaceSvg(card) {
   if (!card) return '';
-  const imgName = FELINE_MYSTICA_IMAGES[card.id];
-  if (!imgName) {
-    return _renderCatCardFaceSvg(card);
-  }
   const cid = card.id;
   const nameUpper = card.name.toUpperCase();
+  const numText = card.number || '';
+  const esotericTitle = card.esotericTitle || '';
+  const imgName = FELINE_MYSTICA_IMAGES[cid];
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 480" class="tarot-card-svg tarot-feline-theme tarot-mystica-theme" data-id="${cid}">
+  let artContent = '';
+  let customDefs = '';
+
+  if (imgName) {
+    artContent = `<image href="/assets/feline-mystica/${imgName}" x="12" y="42" width="276" height="382" preserveAspectRatio="xMidYMid slice" />`;
+  } else if (card.arcana === 'major') {
+    const art = CAT_MAJOR_ARCANA_ART[cid];
+    if (art) {
+      customDefs = art.defs || '';
+      artContent = `<rect x="12" y="42" width="276" height="382" fill="#0d091a" />
+        <radialGradient id="mysticaGlow_${cid}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2a164d" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#080512" stop-opacity="0.95" />
+        </radialGradient>
+        <rect x="12" y="42" width="276" height="382" fill="url(#mysticaGlow_${cid})" />
+        ${art.svg || ''}`;
+    }
+  } else if (card.rank === 'ace') {
+    const art = renderCatAceCardArt(card);
+    customDefs = art.defs || '';
+    artContent = `<rect x="12" y="42" width="276" height="382" fill="#0d091a" />${art.svg || ''}`;
+  } else if (['page', 'knight', 'queen', 'king'].includes(card.rank)) {
+    const art = renderCatCourtCardArt(card);
+    customDefs = art.defs || '';
+    artContent = `<rect x="12" y="42" width="276" height="382" fill="#0d091a" />${art.svg || ''}`;
+  } else {
+    const art = renderCatPipCardArt(card);
+    customDefs = art.defs || '';
+    artContent = `<rect x="12" y="42" width="276" height="382" fill="#0d091a" />${art.svg || ''}`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 480" width="300" height="480" class="tarot-card-svg tarot-front tarot-feline-theme tarot-mystica-theme" data-id="${cid}">
   <defs>
+    <linearGradient id="mysticaStockGrad_${cid}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181126" />
+      <stop offset="50%" stop-color="#0e0a17" />
+      <stop offset="100%" stop-color="#050308" />
+    </linearGradient>
+    <linearGradient id="mysticaGoldGrad_${cid}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8db" />
+      <stop offset="30%" stop-color="#ffd56b" />
+      <stop offset="70%" stop-color="#d4af37" />
+      <stop offset="100%" stop-color="#8a6d1c" />
+    </linearGradient>
     <clipPath id="artClip_${cid}">
-      <rect x="0" y="0" width="300" height="480" rx="16" ry="16" />
+      <rect x="12" y="42" width="276" height="382" rx="10" />
     </clipPath>
+    ${customDefs}
   </defs>
+  <rect width="300" height="480" rx="16" fill="url(#mysticaStockGrad_${cid})" stroke="#020104" stroke-width="2" />
+  <rect x="6" y="6" width="288" height="468" rx="12" fill="none" stroke="url(#mysticaGoldGrad_${cid})" stroke-width="1.3" opacity="0.95" />
+  <rect x="10" y="10" width="280" height="460" rx="9" fill="none" stroke="#ffd56b" stroke-dasharray="3, 4" stroke-width="0.7" opacity="0.45" />
+  ${CAT_EMBLEMS.paw(19, 19, 4.5, '#ffd56b', 0.8)}
+  ${CAT_EMBLEMS.paw(281, 19, 4.5, '#ffd56b', 0.8)}
+  ${CAT_EMBLEMS.paw(19, 461, 4.5, '#ffd56b', 0.8)}
+  ${CAT_EMBLEMS.paw(281, 461, 4.5, '#ffd56b', 0.8)}
+  <g id="mysticaHeader_${cid}">
+    <rect x="90" y="12" width="120" height="22" rx="4" fill="#0d0914" fill-opacity="0.9" stroke="url(#mysticaGoldGrad_${cid})" stroke-width="0.9" />
+    <text x="150" y="27" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="11" font-weight="700" fill="#ffd700" text-anchor="middle" letter-spacing="2.5">${numText || '✦'}</text>
+  </g>
   <g clip-path="url(#artClip_${cid})">
-    <image href="/assets/feline-mystica/${imgName}" x="0" y="0" width="300" height="480" preserveAspectRatio="xMidYMid slice" />
-    <rect x="25" y="442" width="250" height="24" rx="6" fill="#0d0914" fill-opacity="0.88" stroke="#d4af37" stroke-width="1.2" />
-    <text x="150" y="458" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="11" font-weight="700" fill="#fdf6d8" text-anchor="middle" letter-spacing="2">${nameUpper}</text>
+    ${artContent}
+  </g>
+  <rect x="12" y="42" width="276" height="382" rx="10" fill="none" stroke="url(#mysticaGoldGrad_${cid})" stroke-width="1.1" opacity="0.85" />
+  <g id="mysticaFooter_${cid}">
+    <rect x="16" y="428" width="268" height="40" rx="6" fill="#0b0813" fill-opacity="0.94" stroke="url(#mysticaGoldGrad_${cid})" stroke-width="1.2" />
+    <text x="150" y="446" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="11" font-weight="700" fill="#fdf6d8" text-anchor="middle" letter-spacing="2">${nameUpper}</text>
+    <text x="150" y="459" font-family="'Cinzel', serif" font-size="7.5" font-weight="400" fill="#d4af37" text-anchor="middle" letter-spacing="1.2">${esotericTitle ? esotericTitle.toUpperCase() : ''}</text>
   </g>
 </svg>`;
 }

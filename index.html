@@ -21,20 +21,24 @@
             </div>
           </div>
           <div class="header-actions">
-            <div class="deck-selector-wrap">
-              <label for="deckThemeSelect" class="deck-select-label">Deck</label>
-              <select id="deckThemeSelect" class="deck-theme-select" title="Choose Deck Theme">
+            <button type="button" id="deckPickerBtn" class="deck-selector-wrap deck-picker-btn" aria-haspopup="dialog">
+              <span class="deck-select-label">Deck</span>
+              <span id="deckPickerName" class="deck-picker-name">Household Arcana</span>
+            </button>
+            <div hidden>
+              <select id="deckThemeSelect" class="deck-theme-select" aria-label="Deck" tabindex="-1">
                 <option value="household" selected>Household Arcana</option>
-                <option value="surrealist">🏛️ Surrealist Altar</option>
-                <option value="feline">🐱 Feline Familiars</option>
-                <option value="feline_mystica">✨ Feline Mystica</option>
+                <option value="surrealist">Surrealist Altar</option>
+                <option value="feline">Feline Familiars</option>
+                <option value="feline_mystica">Feline Mystica</option>
               </select>
             </div>
-            <button type="button" id="ambianceToggleBtn" class="icon-btn" title="Candlelight">☀</button>
-            <button type="button" id="muteToggleBtn" class="icon-btn" title="Sound">♫</button>
+            <button type="button" id="ambianceToggleBtn" class="icon-btn" title="Candle ambiance" aria-label="Candle ambiance" aria-pressed="false">☀</button>
+            <button type="button" id="muteToggleBtn" class="icon-btn" title="Sound on" aria-label="Sound" aria-pressed="true">♫</button>
+            <button type="button" id="historyBtn" class="btn btn-ghost">History</button>
             <button type="button" id="compendiumBtn" class="btn btn-ghost">Compendium</button>
             <button type="button" id="readersPanelBtn" class="btn btn-gold">Readers</button>
-            <div class="reader-badge-header" id="activeReaderChip">
+            <div class="reader-badge-header header-reader-chip" id="activeReaderChip">
               <div class="reader-avatar-circle" id="activeReaderAvatar">✦</div>
               <span id="activeReaderName">Reader</span>
             </div>
@@ -58,7 +62,7 @@
           <div class="query-row">
             <div class="query-input-wrap">
               <span class="input-icon" aria-hidden="true">✻</span>
-              <input id="queryInput" class="query-input" type="text" maxlength="280" placeholder="Ask plainly. The clerk can tell when you decorate it." />
+              <input id="queryInput" class="query-input" type="text" maxlength="280" aria-label="Your question" placeholder="Ask plainly. The clerk can tell when you decorate it." />
             </div>
             <label class="toggle-label">
               <input id="reversalsToggle" class="toggle-checkbox" type="checkbox" checked />
@@ -77,13 +81,18 @@
             <button type="button" id="revealAllBtn" class="btn btn-ghost">Reveal &amp; read</button>
           </div>
         </div>
-        <div id="cardsLayoutContainer" class="cards-layout-container"></div>
-        <section id="readingSection" class="reading-section" style="display: none"></section>
+        <div class="reading-layout">
+          <div class="spread-column">
+            <div id="cardsLayoutContainer" class="cards-layout-container"></div>
+          </div>
+          <section id="readingSection" class="reading-section" aria-label="Reading"></section>
+        </div>
+        <p id="liveStatus" class="sr-only" aria-live="polite"></p>
       </main>
     </div>
 
     <div id="readersDrawerBackdrop" class="drawer-backdrop">
-      <aside class="drawer-panel" aria-label="Readers">
+      <aside class="drawer-panel" role="dialog" aria-modal="true" aria-label="Readers">
         <div class="drawer-header">
           <h3>Readers</h3>
           <button type="button" id="closeReadersDrawer" class="modal-close-btn" aria-label="Close readers">×</button>
@@ -109,11 +118,15 @@
     </div>
 
     <div id="cardModalBackdrop" class="modal-backdrop">
-      <div class="modal-content">
+      <div class="modal-content card-modal" role="dialog" aria-modal="true" aria-labelledby="modalCardName">
         <button type="button" id="closeCardModal" class="modal-close-btn" aria-label="Close card">×</button>
         <div class="modal-card-display">
           <div id="modalCardStage" class="modal-card-stage"></div>
-          <button type="button" id="modalToggleOrientationBtn" class="btn btn-ghost">Turn the plate</button>
+          <div class="modal-card-actions">
+            <button type="button" id="modalPrevBtn" class="icon-btn" aria-label="Previous card in the spread">‹</button>
+            <button type="button" id="modalToggleOrientationBtn" class="btn btn-ghost">Turn the plate</button>
+            <button type="button" id="modalNextBtn" class="icon-btn" aria-label="Next card in the spread">›</button>
+          </div>
         </div>
         <div class="modal-details">
           <div class="modal-header">
@@ -121,9 +134,13 @@
             <p id="modalEsotericTitle" class="modal-esoteric-title"></p>
           </div>
           <div class="modal-badges">
-            <span id="modalArcanaBadge"></span>
-            <span id="modalElementBadge"></span>
-            <span id="modalOrientationBadge"></span>
+            <span id="modalArcanaBadge" class="badge-tag"></span>
+            <span id="modalElementBadge" class="badge-tag"></span>
+            <span id="modalOrientationBadge" class="badge-tag"></span>
+          </div>
+          <div class="modal-body-section modal-in-reading" id="modalInReading" hidden>
+            <h4 id="modalPositionName"></h4>
+            <p id="modalReflection"></p>
           </div>
           <div class="modal-body-section">
             <h4>Keywords</h4>
@@ -138,7 +155,7 @@
             <p id="modalMeaningReversed"></p>
           </div>
           <div class="modal-body-section">
-            <h4>Symbols</h4>
+            <h4>Traditional imagery</h4>
             <p id="modalSymbols"></p>
           </div>
         </div>
@@ -146,10 +163,10 @@
     </div>
 
     <div id="compendiumModalBackdrop" class="modal-backdrop">
-      <div class="modal-content compendium-modal">
+      <div class="modal-content compendium-modal" role="dialog" aria-modal="true" aria-label="Card compendium">
         <button type="button" id="closeCompendiumModal" class="modal-close-btn" aria-label="Close compendium">×</button>
         <h2>The case</h2>
-        <input id="compendiumSearchInput" class="compendium-search" type="search" placeholder="Search the seventy-eight" />
+        <input id="compendiumSearchInput" class="compendium-search" type="search" placeholder="Search the seventy-eight" aria-label="Search cards" />
         <div class="compendium-filters">
           <button type="button" class="active" data-filter="all">All</button>
           <button type="button" data-filter="major">Major</button>
@@ -159,6 +176,25 @@
           <button type="button" data-filter="pentacles">Pentacles</button>
         </div>
         <div id="compendiumGrid" class="compendium-grid"></div>
+      </div>
+    </div>
+
+    <div id="deckModalBackdrop" class="modal-backdrop">
+      <div class="modal-content deck-modal" role="dialog" aria-modal="true" aria-labelledby="deckModalTitle">
+        <button type="button" id="closeDeckModal" class="modal-close-btn" aria-label="Close deck picker">×</button>
+        <h2 id="deckModalTitle">Choose a deck</h2>
+        <div id="deckGrid" class="deck-grid"></div>
+      </div>
+    </div>
+
+    <div id="historyModalBackdrop" class="modal-backdrop">
+      <div class="modal-content history-modal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <button type="button" id="closeHistoryModal" class="modal-close-btn" aria-label="Close history">×</button>
+        <div class="history-head">
+          <h2 id="historyModalTitle">Past readings</h2>
+          <button type="button" id="clearHistoryBtn" class="btn btn-ghost">Clear all</button>
+        </div>
+        <ol id="historyList" class="history-list"></ol>
       </div>
     </div>
 

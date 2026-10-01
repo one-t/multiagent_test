@@ -1,5 +1,6 @@
 import type { ReaderPersona } from "../types";
 import { cassianVetch } from "./cassianVetch";
+import { lylePasternak } from "./lylePasternak";
 import { morwennaRavenscroft } from "./morwennaRavenscroft";
 import { ruthCalloway } from "./ruthCalloway";
 
@@ -8,6 +9,7 @@ export const READERS: Record<string, ReaderPersona> = {
   [ruthCalloway.id]: ruthCalloway,
   [morwennaRavenscroft.id]: morwennaRavenscroft,
   [cassianVetch.id]: cassianVetch,
+  [lylePasternak.id]: lylePasternak,
 };
 
 export function listReaders(): ReaderPersona[] {
@@ -25,3 +27,4 @@ export function getReader(id: string): ReaderPersona {
 export { ruthCalloway } from "./ruthCalloway";
 export { morwennaRavenscroft } from "./morwennaRavenscroft";
 export { cassianVetch } from "./cassianVetch";
+export { lylePasternak } from "./lylePasternak";

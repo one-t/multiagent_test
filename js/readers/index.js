@@ -4,10 +4,12 @@
  */
 import morwennaReader, { MORWENNA_PROFILE } from './morwenna.js';
 import cassianReader, { CASSIAN_PROFILE } from './cassian-vetch.js';
+import lyleReader, { LYLE_PROFILE } from './lyle-pasternak.js';
 
 export const READERS = [
   morwennaReader,
   cassianReader,
+  lyleReader,
 ];
 
 export function getReaderById(id) {
@@ -24,6 +26,8 @@ export default {
   getAllReaders,
   morwenna: morwennaReader,
   cassian: cassianReader,
+  lyle: lyleReader,
   MORWENNA_PROFILE,
   CASSIAN_PROFILE,
+  LYLE_PROFILE,
 };

@@ -13,7 +13,8 @@ import { renderHouseholdFace, renderHouseholdBack } from '../js/household-deck.j
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const inspoDir = path.join(root, 'src', 'art', 'cat-deck', 'cat-inspo');
-const inspoNames = new Set(fs.readdirSync(inspoDir));
+// The source photographs are kept out of git, so a fresh clone has no cat-inspo directory.
+const inspoNames = new Set(fs.existsSync(inspoDir) ? fs.readdirSync(inspoDir) : []);
 
 const PIP_COUNTS = {
   ace: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10,
@@ -67,10 +68,12 @@ test('numbered cups and the cups courts each keep their own plate', () => {
   }
 });
 
-test('household back medallion is the persian portrait from the directory', () => {
+test('household back medallion is the committed copy of the persian portrait', () => {
   const svg = renderHouseholdBack();
   assert.match(svg, /tarot-household-back/);
   const imgs = imagePaths(svg);
   assert.equal(imgs.length, 1);
-  assert.equal(path.basename(decodeURI(imgs[0])), 'IMG_20160112_220622.jpg');
+  const rel = decodeURI(imgs[0]).replace(/^\//, '');
+  assert.equal(rel, 'assets/household/back-portrait.jpg');
+  assert.ok(fs.existsSync(path.join(root, rel)), `missing ${rel}`);
 });
