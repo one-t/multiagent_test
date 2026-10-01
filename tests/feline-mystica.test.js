@@ -2,7 +2,7 @@
  * Test Suite: Feline Mystica Masterpiece Illustrated Tarot Art Engine
  * Validates:
  * 1. Reversible Feline Mystica Card Back (with tarot-back-feline and defs compatibility)
- * 2. All 25 AI-generated raster masterpiece cards (Complete 22 Major Arcana + Aces) load properly
+ * 2. All 52 AI-generated raster masterpiece cards load properly
  * 3. All 78 cards in the deck render valid SVGs in feline_mystica theme without errors
  */
 
@@ -59,12 +59,25 @@ const EXPECTED_MYSTICA_FILES = [
   'king_of_cups.jpg',
   'queen_of_cups.jpg',
   'knight_of_cups.jpg',
+  'page_of_cups.jpg',
   'king_of_swords.jpg',
   'queen_of_swords.jpg',
   'knight_of_swords.jpg',
+  'page_of_swords.jpg',
   'king_of_pentacles.jpg',
   'queen_of_pentacles.jpg',
   'knight_of_pentacles.jpg',
+  'page_of_pentacles.jpg',
+  'two_of_wands.jpg',
+  'three_of_wands.jpg',
+  'four_of_wands.jpg',
+  'five_of_wands.jpg',
+  'six_of_wands.jpg',
+  'seven_of_wands.jpg',
+  'eight_of_wands.jpg',
+  'nine_of_wands.jpg',
+  'ten_of_wands.jpg',
+  'two_of_cups.jpg',
   'card_back.jpg'
 ];
 
@@ -106,6 +119,5 @@ test('All 78 cards render successfully in feline_mystica theme', () => {
     }
   }
 
-  // All 22 Major Arcana + 3 Aces = 25 raster cards
-  assert.strictEqual(rasterCount, 39, 'All 22 Major Arcana, 4 Aces, and 13 Court cards must render AI raster artwork');
+  assert.strictEqual(rasterCount, 52, 'All 52 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, Two of Cups) must render AI raster artwork');
 });
