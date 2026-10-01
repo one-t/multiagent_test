@@ -10,6 +10,7 @@ import { renderCardFaceSvg as renderSvgFace, renderCardBackSvg as renderSvgBack,
 import { renderHouseholdFace, renderHouseholdBack } from './household-deck.js';
 import { getSpread } from './spreads.js';
 import { makeRecord, encodeRecord, decodeRecord, resolveCards, upsertRecord, removeRecord, loadHistory, saveHistory } from './history.js';
+import { renderReadingImage, downloadBlob } from './share-image.js';
 import { registry, ReaderRegistry } from './reader-interface.js';
 import { sound } from './sound.js';
 import { CandlelightSystem } from './candlelight.js';
@@ -242,6 +243,13 @@ function renderActiveFace(card, theme = state.deckTheme) {
   return renderSvgFace(card, theme);
 }
 
+/** Cards on the altar load 640px plates; the full-size ones are kept for the inspection modal. */
+function useMidPlates(svg) {
+  return svg
+    .replaceAll('/assets/household/', '/assets/household/mid/')
+    .replaceAll('/assets/feline-mystica/', '/assets/feline-mystica/mid/');
+}
+
 /** Painted decks keep downsized copies of their plates for small renders. */
 function useThumbs(svg) {
   return svg
@@ -467,7 +475,7 @@ function renderCardsOnAltar({ animate = false } = {}) {
   container.innerHTML = '';
   elements.readingSection.parentElement.dataset.spread = state.currentSpreadId;
 
-  const backSvg = renderActiveBack(300, 480);
+  const backSvg = useMidPlates(renderActiveBack(300, 480));
 
   if (state.currentSpreadId === 'single' || state.currentSpreadId === 'three_card') {
     state.drawnCards.forEach((item, idx) => {
@@ -581,7 +589,7 @@ function createCardCell(item, idx, backSvg) {
 
   // Front face (card art)
   const frontFace = el('div', 'card-face card-face-front');
-  frontFace.innerHTML = renderActiveFace(item.card);
+  frontFace.innerHTML = useMidPlates(renderActiveFace(item.card));
   frontFace.appendChild(el('div', 'card-shimmer'));
 
   // Back face (mystic filigree)
@@ -766,7 +774,13 @@ function renderReadingPanel() {
   switchBtn.type = 'button';
   switchBtn.id = 'switchReaderFromReadingBtn';
   switchBtn.addEventListener('click', openReadersDrawer);
-  actions.append(copyBtn, linkBtn, switchBtn);
+  const imageBtn = el('button', 'btn btn-ghost', 'Save image');
+  imageBtn.type = 'button';
+  imageBtn.id = 'saveImageBtn';
+  imageBtn.title = 'Save the spread as a picture';
+  imageBtn.disabled = !allFlipped;
+  imageBtn.addEventListener('click', () => saveReadingImage());
+  actions.append(copyBtn, linkBtn, imageBtn, switchBtn);
   header.appendChild(actions);
   section.appendChild(header);
 
@@ -863,6 +877,8 @@ function revealSynthesis() {
   if (copyBtn) copyBtn.disabled = false;
   const linkBtn = document.getElementById('copyLinkBtn');
   if (linkBtn) linkBtn.disabled = false;
+  const imageBtn = document.getElementById('saveImageBtn');
+  if (imageBtn) imageBtn.disabled = false;
   announce('All cards are turned. The full reading is ready.');
 }
 
@@ -1476,6 +1492,53 @@ function copyReadingLink() {
   }).catch(err => {
     console.error("Clipboard error:", err);
   });
+}
+
+/** What the picture of this reading needs: the cards as drawn, their seats, and the heading. */
+function readingImageData() {
+  const reader = registry.getActive();
+  return {
+    spreadId: state.currentSpreadId,
+    spreadLabel: currentSpreadTitle(),
+    question: readingQuestion(),
+    readerName: reader ? reader.name : '',
+    dateLabel: new Date(state.completedAt || Date.now()).toLocaleDateString(undefined, { dateStyle: 'long' }),
+    cards: state.drawnCards.map(item => ({
+      svg: useMidPlates(renderActiveFace(item.card)),
+      isReversed: item.isReversed,
+      seat: item.position.name,
+      cardName: item.card.name
+    }))
+  };
+}
+
+async function saveReadingImage() {
+  if (!isReadingComplete()) return;
+  const btn = document.getElementById('saveImageBtn');
+  const restore = (label) => {
+    const current = document.getElementById('saveImageBtn');
+    if (!current) return;
+    current.textContent = label;
+    current.disabled = false;
+    if (label !== 'Save image') setTimeout(() => { current.textContent = 'Save image'; }, 2500);
+  };
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Drawing…';
+  }
+  try {
+    const blob = await renderReadingImage(readingImageData());
+    const when = new Date(state.completedAt || Date.now());
+    const day = [when.getFullYear(), String(when.getMonth() + 1).padStart(2, '0'), String(when.getDate()).padStart(2, '0')].join('-');
+    downloadBlob(blob, `astralis-reading-${day}.jpg`);
+    restore('Saved');
+    announce('Picture of the reading saved.');
+  } catch (err) {
+    console.error('Could not draw the reading:', err);
+    restore('Could not save');
+    announce('The picture could not be saved.');
+  }
 }
 
 /** Lay a saved reading back out: same seats, same cards, face up. */
