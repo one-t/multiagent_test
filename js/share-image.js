@@ -1,6 +1,6 @@
 /**
  * Save a finished reading as one picture: the question, the spread laid out
- * as it was on the altar, and a legend of which card sat in which seat.
+ * as it was dealt, and a legend of which card sat in which position.
  *
  * `spreadLayout` and `wrapText` are plain maths so they can be tested without
  * a browser. `renderReadingImage` needs a DOM (canvas, Image, fetch).
@@ -118,7 +118,8 @@ async function toDataUrl(url) {
 
 /** An SVG drawn as an image cannot fetch its own pictures, so they are folded in as data. */
 async function inlineImages(svg) {
-  const urls = [...new Set([...svg.matchAll(/href="(\/[^"]+\.(?:jpe?g|png|webp))"/gi)].map(match => match[1]))];
+  // Any picture reference that is not already inline data, whether root-relative or a full URL
+  const urls = [...new Set([...svg.matchAll(/href="((?!data:)[^"]+\.(?:jpe?g|png|webp))"/gi)].map(match => match[1]))];
   let out = svg;
   for (const url of urls) {
     const data = await toDataUrl(url);
@@ -154,7 +155,7 @@ const MUTED = '#c2b59b';
  * @param {string} reading.question
  * @param {string} reading.readerName
  * @param {string} reading.dateLabel
- * @param {Array<{svg: string, isReversed: boolean, seat: string, cardName: string}>} reading.cards
+ * @param {Array<{svg: string, isReversed: boolean, position: string, cardName: string}>} reading.cards
  * @returns {Promise<Blob>} JPEG
  */
 export async function renderReadingImage(reading) {
@@ -274,19 +275,19 @@ export async function renderReadingImage(reading) {
 
     ctx.font = `600 22px ${FONT_HEADING}`;
     ctx.fillStyle = GOLD;
-    const seat = card.seat.toUpperCase();
-    const seatWidth = drawSpaced(ctx, seat, textX, y, 1.5, 'left');
+    const position = card.position.toUpperCase();
+    const positionWidth = drawSpaced(ctx, position, textX, y, 1.5, 'left');
 
     ctx.fillStyle = TEXT;
     const name = `${card.cardName}${card.isReversed ? ', reversed' : ''}`;
-    const room = Math.max(x + legendColumnWidth - (textX + seatWidth + 22), 120);
+    const room = Math.max(x + legendColumnWidth - (textX + positionWidth + 22), 120);
     // Shrink a long name a little before resorting to cutting it
     for (const size of [30, 27, 24]) {
       ctx.font = `400 ${size}px ${FONT_SERIF}`;
       if (ctx.measureText(name).width <= room) break;
     }
     const [fitted] = wrapText(name, room, text => ctx.measureText(text).width, 1);
-    ctx.fillText(fitted || name, textX + seatWidth + 22, y + 2);
+    ctx.fillText(fitted || name, textX + positionWidth + 22, y + 2);
   });
 
   // Footer
@@ -341,6 +342,37 @@ function drawSpaced(ctx, text, x, y, spacing, align = 'center') {
   });
   ctx.textAlign = saved;
   return total;
+}
+
+/**
+ * A file name that sorts by date and does not collide with another reading
+ * saved the same day: astralis-reading-2026-10-01-1405.jpg
+ * @param {number|Date} when
+ */
+export function readingFileName(when) {
+  const date = new Date(when);
+  const pad = value => String(value).padStart(2, '0');
+  const day = [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join('-');
+  return `astralis-reading-${day}-${pad(date.getHours())}${pad(date.getMinutes())}.jpg`;
+}
+
+/**
+ * Offer the picture to the device's share sheet, where there is one that
+ * takes files (phones, mostly). Returns 'shared', 'cancelled', or
+ * 'unsupported' when the caller should fall back to a download.
+ */
+export async function shareBlob(blob, filename, title) {
+  if (typeof File !== 'function' || !navigator.canShare || !navigator.share) return 'unsupported';
+  const file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
+  if (!navigator.canShare({ files: [file] })) return 'unsupported';
+  try {
+    await navigator.share({ files: [file], title });
+    return 'shared';
+  } catch (err) {
+    // The person closed the share sheet: that is a choice, not a failure
+    if (err && err.name === 'AbortError') return 'cancelled';
+    return 'unsupported';
+  }
 }
 
 /** Hand a blob to the browser as a download. */

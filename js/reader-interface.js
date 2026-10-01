@@ -88,24 +88,87 @@ export class ReaderRegistry {
   }
 
   /**
-   * Helper utility for readers: calculates elemental distribution
-   * @param {Array} cards
+   * Helper for readers and the app: how the spread divides between the four
+   * suits and the Major Arcana.
+   *
+   * Majors are counted on their own, never as a suit, so a tally of "Wands 1"
+   * always means a Wands card is on the table. `counts` keeps the element
+   * names readers already use: Fire = Wands, Water = Cups, Air = Swords,
+   * Earth = Pentacles, Spirit = Major Arcana.
+   *
+   * `dominant` is the group with strictly the most cards, or null when two
+   * groups tie or the spread has fewer than three cards.
+   *
+   * @param {Array<{card: {arcana?: string, suit?: string|null}}>} drawnCards
    */
   static analyzeElements(drawnCards) {
-    const counts = { Fire: 0, Water: 0, Air: 0, Earth: 0, Spirit: 0 };
-    let total = drawnCards.length;
+    const suits = { wands: 0, cups: 0, swords: 0, pentacles: 0 };
+    let majors = 0;
+    const total = drawnCards.length;
 
     drawnCards.forEach(({ card }) => {
-      const el = card.element || "";
-      if (el.includes("Fire") || card.suit === "wands") counts.Fire++;
-      else if (el.includes("Water") || card.suit === "cups") counts.Water++;
-      else if (el.includes("Air") || card.suit === "swords") counts.Air++;
-      else if (el.includes("Earth") || card.suit === "pentacles") counts.Earth++;
-      else counts.Spirit++;
+      if (card.arcana !== "major" && Object.hasOwn(suits, card.suit)) suits[card.suit]++;
+      else majors++;
     });
 
-    const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
-    return { counts, total, dominant };
+    const counts = {
+      Fire: suits.wands,
+      Water: suits.cups,
+      Air: suits.swords,
+      Earth: suits.pentacles,
+      Spirit: majors
+    };
+
+    let dominant = null;
+    if (total >= 3) {
+      const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      if (ranked[0][1] > ranked[1][1]) dominant = ranked[0][0];
+    }
+    return { counts, suits, majors, total, dominant };
+  }
+
+  /**
+   * A reading built from the cards' own meanings, in the shape every reader
+   * returns. The app falls back to this when a reader throws or returns
+   * something unusable, so a turned card never sits beside an empty row.
+   *
+   * @param {{cards: Array<{card: object, isReversed: boolean, position: object}>}} spreadData
+   * @param {{name?: string, title?: string, id?: string}} [reader]
+   */
+  static plainReading(spreadData, reader = {}) {
+    const cards = (spreadData && spreadData.cards) || [];
+    return {
+      readerId: reader.id || "",
+      readerName: reader.name || "",
+      readerTitle: reader.title || "",
+      summary: "",
+      elementalInsight: "",
+      cardReadings: cards.map(({ card, isReversed, position }) => ({
+        positionIndex: position ? position.index : 0,
+        positionName: position ? position.name : "",
+        positionSubtitle: position ? position.subtitle : "",
+        cardId: card.id,
+        cardName: card.name,
+        cardElement: card.element,
+        isReversed,
+        orientation: isReversed ? "Reversed" : "Upright",
+        focalKeyword: ((isReversed ? card.keywordsReversed : card.keywordsUpright) || [])[0] || "",
+        reflection: (isReversed ? card.meaningReversed : card.meaningUpright) || ""
+      })),
+      actionableAdvice: "",
+      closingBenediction: ""
+    };
+  }
+
+  /** True when a reader's output has the parts the app draws. */
+  static isUsableReading(reading, cardCount) {
+    return Boolean(
+      reading &&
+      typeof reading === "object" &&
+      Array.isArray(reading.cardReadings) &&
+      reading.cardReadings.length === cardCount &&
+      reading.cardReadings.every(entry => entry && typeof entry.reflection === "string")
+    );
   }
 }
 

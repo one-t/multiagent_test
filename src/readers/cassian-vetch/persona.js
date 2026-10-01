@@ -5,7 +5,7 @@ export const persona = {
   epithet: "He stamps the sentence you were avoiding.",
   shop: "Vetch & Daughter, the after-hours window",
   rate: "Condolence-card rate. Waived if the fare was your last one.",
-  portrait: "/assets/cassian-vetch.jpg",
+  portrait: "/assets/readers/cassian_vetch.jpg",
   monogram: "CV",
   greeting:
     "Window's open. I'm Cassian. The shop is closed, which is why this will be honest. Slide the question under the grille, or leave the slip blank and I will read the sheet you are already holding. I sell registration. If the picture is ugly we say it is ugly, and then we decide whether to reset the press.",

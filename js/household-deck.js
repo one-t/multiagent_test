@@ -1,43 +1,9 @@
 /**
- * Household Arcana — photographic and painted faces of the cats in
- * src/art/cat-deck/cat-inspo. Titles, numerals, and pip counts are drawn
- * here so they stay exact. Painted plates, when present, override the
- * source photograph for that card.
+ * Household Arcana — painted plates of the house cats, one per card, in
+ * assets/household. Titles, numerals, and pip counts are drawn here so they
+ * stay exact. The photographs the plates were painted from are not part of
+ * the repository and are never loaded by the app.
  */
-
-const SITTERS = {
-  wands: "/src/art/cat-deck/cat-inspo/PXL_20260706_044505153.jpg",
-  cups: "/src/art/cat-deck/cat-inspo/IMG_9826.jpg",
-  // The other black cat, the one who does not wear the bow.
-  cupsPlain: "/src/art/cat-deck/cat-inspo/PXL_20260724_185805662.jpg",
-  swords: "/src/art/cat-deck/cat-inspo/IMG_3119.JPG",
-  pentacles: "/src/art/cat-deck/cat-inspo/IMG_4933.jpg"
-};
-
-const MAJOR_PHOTO = {
-  maj_00: SITTERS.wands,
-  maj_01: SITTERS.wands,
-  maj_02: SITTERS.swords,
-  maj_03: SITTERS.pentacles,
-  maj_04: "/src/art/cat-deck/cat-inspo/IMG_0990.jpg",
-  maj_05: "/src/art/cat-deck/cat-inspo/IMG_20160112_220622.jpg",
-  maj_06: "/src/art/cat-deck/cat-inspo/IMG_9787.jpg",
-  maj_07: SITTERS.wands,
-  maj_08: "/src/art/cat-deck/cat-inspo/IMG_3541.jpg",
-  maj_09: SITTERS.swords,
-  maj_10: "/src/art/cat-deck/cat-inspo/IMG_0378.jpg",
-  maj_11: "/src/art/cat-deck/cat-inspo/IMG_20160112_220622.jpg",
-  maj_12: "/src/art/cat-deck/cat-inspo/PXL_20260716_041845955.jpg",
-  maj_13: SITTERS.pentacles,
-  maj_14: SITTERS.pentacles,
-  maj_15: SITTERS.cups,
-  maj_16: "/src/art/cat-deck/cat-inspo/IMG_9918.jpg",
-  maj_17: "/src/art/cat-deck/cat-inspo/PXL_20260724_185805662.jpg",
-  maj_18: "/src/art/cat-deck/cat-inspo/IMG_5988.jpg",
-  maj_19: SITTERS.wands,
-  maj_20: "/src/art/cat-deck/cat-inspo/IMG_0990.jpg",
-  maj_21: "/src/art/cat-deck/cat-inspo/PXL_20260817_233210250.jpg"
-};
 
 const PLATES = {
   maj_00: "/assets/household/maj_00.jpg",
@@ -102,7 +68,7 @@ const MAT = {
   major: "#160f0c"
 };
 
-// Committed copy; the cat-inspo source photos stay out of git.
+// Committed copy of the portrait on the card back.
 const BACK_PORTRAIT = "/assets/household/back-portrait.jpg";
 
 let clipSeq = 0;
@@ -123,12 +89,10 @@ function parseCardId(id) {
   return { arcana: "minor", suit, rank, rankInfo: RANKS[rank] };
 }
 
-function sourceFor(id, kind) {
-  if (PLATES[id]) return PLATES[id];
-  if (kind.arcana === "major") return MAJOR_PHOTO[id] || SITTERS.wands;
-  // Numbered cups belong to the black cat without the bow. Courts keep the bow.
-  if (kind.suit === "cups" && kind.rankInfo && kind.rankInfo.pips > 0) return SITTERS.cupsPlain;
-  return SITTERS[kind.suit] || SITTERS.wands;
+function sourceFor(id) {
+  // Every card has a plate. An unknown id falls back to a picture that is in
+  // the repository, so a card is never a broken image.
+  return PLATES[id] || BACK_PORTRAIT;
 }
 
 function titleSize(name) {
@@ -271,7 +235,7 @@ function courtFace(card, kind, src) {
 
 export function renderHouseholdFace(card) {
   const kind = parseCardId(card.id);
-  const src = sourceFor(card.id, kind);
+  const src = sourceFor(card.id);
   if (kind.arcana === "major") return majorFace(card, src);
   if (kind.rankInfo && kind.rankInfo.pips === 0) return courtFace(card, kind, src);
   return pipFace(card, kind, src);
@@ -310,5 +274,4 @@ export function renderHouseholdBack(width = 300, height = 480) {
 </svg>`;
 }
 
-export const HOUSEHOLD_SITTERS = SITTERS;
 export const HOUSEHOLD_PLATES = PLATES;

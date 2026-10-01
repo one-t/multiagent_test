@@ -1,7 +1,7 @@
 /**
  * Candlelight and Atmospheric Canvas System
  * Creates living candle flame illumination, dynamic flickering light halos,
- * and floating golden dust/embers across the dark altar.
+ * and floating dust across the dark background.
  */
 
 export class CandlelightSystem {

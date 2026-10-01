@@ -1,6 +1,6 @@
 /**
  * Web Audio API Sound Synthesizer for Tarot App
- * Synthesizes card swooshes, card flips, ethereal bells, and ambient candle crackle
+ * Synthesizes the deal swoosh, the card flip, a chime, and a background candle crackle
  * entirely via the Web Audio API with zero external asset dependencies.
  */
 
@@ -32,7 +32,7 @@ class SoundSystem {
   }
 
   /**
-   * Sound of card sliding or dealing onto velvet table
+   * Sound of a card being dealt.
    */
   playSwoosh() {
     if (this.isMuted) return;
@@ -120,7 +120,7 @@ class SoundSystem {
   }
 
   /**
-   * Mystical singing chime for reading completion / card reveal
+   * Chime played when the last card of a reading is turned
    */
   playChime(freq = 528) {
     if (this.isMuted) return;
@@ -155,33 +155,42 @@ class SoundSystem {
   }
 
   /**
-   * Candle ambiance: gentle fire crackle & low mystical drone
+   * Background sound: a quiet fire crackle over a low drone
    */
   toggleAmbiance() {
     if (this.isAmbiancePlaying) {
       this.stopAmbiance();
       return false;
-    } else {
-      this.startAmbiance();
-      return true;
     }
+    return this.startAmbiance();
   }
 
+  /** Turn the background sound on or off. Returns whether it is playing afterwards. */
+  setAmbiance(on) {
+    if (!on) {
+      this.stopAmbiance();
+      return false;
+    }
+    return this.isAmbiancePlaying || this.startAmbiance();
+  }
+
+  /** @returns {boolean} Whether the background sound actually started. */
   startAmbiance() {
-    if (this.isMuted) return;
+    if (this.isMuted) return false;
+    if (this.isAmbiancePlaying) return true;
     this.init();
-    if (!this.ctx) return;
+    if (!this.ctx) return false;
 
     try {
-      // 1. Ambient low mystical drone (om / bowl resonance)
+      // 1. Low drone: two sine waves a fifth apart
       const droneOsc1 = this.ctx.createOscillator();
       const droneOsc2 = this.ctx.createOscillator();
       const droneGain = this.ctx.createGain();
 
       droneOsc1.type = 'sine';
-      droneOsc1.frequency.setValueAtTime(108, this.ctx.currentTime); // Sacred 108Hz
+      droneOsc1.frequency.setValueAtTime(108, this.ctx.currentTime);
       droneOsc2.type = 'sine';
-      droneOsc2.frequency.setValueAtTime(162, this.ctx.currentTime); // Perfect fifth 162Hz
+      droneOsc2.frequency.setValueAtTime(162, this.ctx.currentTime); // a fifth above
 
       droneGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
       droneGain.gain.linearRampToValueAtTime(0.035, this.ctx.currentTime + 2.0);
@@ -222,25 +231,29 @@ class SoundSystem {
 
       this.ambianceNodes = { droneOsc1, droneOsc2, droneGain, noise, fireGain };
       this.isAmbiancePlaying = true;
+      return true;
     } catch (e) {
       console.warn("Could not start ambiance:", e);
+      return false;
     }
   }
 
   stopAmbiance() {
-    if (!this.ambianceNodes || !this.ctx) return;
+    // The state changes at once, so a restart during the fade-out starts fresh nodes
+    const nodes = this.ambianceNodes;
+    this.ambianceNodes = null;
+    this.isAmbiancePlaying = false;
+    if (!nodes || !this.ctx) return;
     try {
       const t = this.ctx.currentTime;
-      this.ambianceNodes.droneGain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
-      this.ambianceNodes.fireGain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
+      nodes.droneGain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
+      nodes.fireGain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
 
       setTimeout(() => {
         try {
-          this.ambianceNodes.droneOsc1.stop();
-          this.ambianceNodes.droneOsc2.stop();
-          this.ambianceNodes.noise.stop();
-          this.ambianceNodes = null;
-          this.isAmbiancePlaying = false;
+          nodes.droneOsc1.stop();
+          nodes.droneOsc2.stop();
+          nodes.noise.stop();
         } catch (err) {}
       }, 900);
     } catch (e) {

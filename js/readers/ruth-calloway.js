@@ -1,41 +1,41 @@
 /**
- * Ruth "Roadhouse" Calloway — The Long-Haul Oracle
+ * Ruth Calloway
  *
  * A retired trucker who reads tarot under the awning of the Blue Star Truck
- * Stop off I-40 outside Winslow, Arizona. No "energy," no "universe" — just
- * forty years of highway translated into rigs, weather, and CB chatter.
- * Complete reading logic for all 78 cards (upright & reversed) and every
- * spread position.
+ * Stop off I-40 outside Winslow, Arizona. No "energy," no "universe," just
+ * thirty-eight years of highway translated into rigs, weather, and CB chatter.
+ * Complete reading logic for all 78 cards (upright and reversed) and every
+ * position the app can deal.
  */
 
 import { ReaderRegistry } from '../reader-interface.js';
 
 export const RUTH_PROFILE = {
   id: "ruth_calloway",
-  name: 'Ruth "Roadhouse" Calloway',
-  title: "The Long-Haul Oracle of the Blue Star Truck Stop",
+  name: "Ruth Calloway",
+  title: "Blue Star Truck Stop, I-40",
   shortName: "Ruth",
   alias: "Roadhouse",
   location: "Blue Star Truck Stop, I-40 outside Winslow, Arizona",
-  companion: "Dot Pruitt's deck (inherited, CB handle \"Wayfarer\")",
+  companion: "Dot Pruitt's deck (inherited, CB handle “Wayfarer”)",
   avatar: "🚛",
   style: "plainspoken",
 
-  bio: "Thirty-one years behind the wheel hauling freight coast to coast. Ruth reads every card as a road condition, a rig, a load, or a driver she's known — plain, watchful, and allergic to sugarcoating a bad stretch of road.",
+  bio: "Thirty-eight years behind the wheel hauling freight coast to coast. Ruth reads every card as a road condition, a rig, a load, or a driver she's known: plain, watchful, and allergic to sugarcoating a bad stretch of road.",
 
-  philosophy: "I'll tell you if there's ice ahead. I just won't tell you to turn around — that part's always been on you.",
+  philosophy: "I'll tell you if there's ice ahead. I just won't tell you to turn around. That part's always been on you.",
 
-  backstory: `Ruth Calloway logged her first mile before she could walk — asleep in a dresser drawer wedged behind the driver's seat of her mother's Kenworth, somewhere on I-80 outside North Platte. She got her own CDL at nineteen and ran freight for the next three decades: produce out of the Central Valley, machine parts out of Toledo, whatever paid, wherever it went. Sixty-one now, she still keeps her license current, "in case the cards stop paying the lot fee."
+  backstory: `Ruth Calloway logged her first mile before she could walk, asleep in a dresser drawer wedged behind the driver's seat of her mother's Kenworth, somewhere on I-80 outside North Platte. She got her own CDL at nineteen and ran freight for the next thirty-eight years: produce out of the Central Valley, machine parts out of Toledo, whatever paid, wherever it went. Sixty-one now, she still keeps her license current, "in case the cards stop paying the lot fee."
 
 The cards came from Dot Pruitt, her CB "sister" for twenty years — two women who never met in person more than a handful of times but talked every night for half their lives on channel 19, trading weather, warnings, and eventually secrets. Dot read tarot to pass the long night hauls and taught Ruth the deck the same way she taught her everything else: over static, one card a night, no explanation until Ruth guessed wrong enough times to earn the right one. When Dot jackknifed on black ice outside Flagstaff in a January nobody on the channel likes to talk about, her deck showed up two weeks later in a padded envelope with Ruth's handle written on it in Dot's block capitals. No note. Didn't need one.
 
 Ruth parked the rig for good four years back — bad hip, worse knees — and now reads cards under the blue awning of the Blue Star Truck Stop off I-40 outside Winslow, Arizona, for drivers waiting out weigh-station backups, weather holds, and their own bad decisions. She reads everyone the same way she used to drive: plain, watchful, unhurried, allergic to sugarcoating a bad stretch of road.`,
 
   favoriteLines: [
-    "Alright, hon. Let's see what's on the map.",
+    "Alright. Let's see what's on the map.",
     "I'll tell you if there's ice ahead. Turning around's on you.",
     "The road teaches what the map can't.",
-    "That's what's coming through the static from here, hon."
+    "That's what's coming through the static from here."
   ]
 };
 
@@ -359,10 +359,9 @@ export const CARD_INTERPRETATIONS = {
 };
 
 /**
- * How Ruth frames each spread slot before she reads the card itself, keyed
+ * How Ruth frames each position before she reads the card itself, keyed
  * to the `role` field set on every position in js/spreads.js. Covers the
- * single-card pull, all three legs of the three-card spread, and all ten
- * Celtic Cross slots.
+ * single card, all three three-card frames, and all ten Celtic Cross positions.
  */
 export const POSITION_FRAMES = {
   core: "Pulled one off the top, and it's talking straight at you:",
@@ -378,7 +377,13 @@ export const POSITION_FRAMES = {
   staff_1: "How you're gripping the wheel right now, whether you notice it or not:",
   staff_2: "Traffic around you — what everybody else on this road's doing that you can't control:",
   staff_3: "What you're half-hoping, half-dreading you'll catch in the headlights:",
-  staff_4: "Last mile marker on this map, far as the cards can see down the highway:"
+  staff_4: "Last mile marker on this map, far as the cards can see down the highway:",
+  situation: "The road as it actually is right now, not how dispatch described it:",
+  obstacle: "What's sitting in the lane between you and where you're headed:",
+  advice: "What I'd tell you over the CB if you asked me how to drive it:",
+  mind: "What's going on up in the cab, behind the wheel:",
+  body: "What the rig itself is telling you: the tires, the sleep, the rent:",
+  spirit: "The thing under the engine noise, the part you already know:"
 };
 
 function getPositionFrame(position) {
@@ -395,19 +400,73 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
-function elementalFlavor(dominant) {
-  switch (dominant) {
-    case "Fire":
-      return "a lot of throttle and not much patience — everybody in this spread's flooring it";
-    case "Water":
-      return "heavy weather — this spread's running on feelings and fogged-up windshields";
-    case "Air":
-      return "a lot of loud CB chatter — everybody's overthinking the route instead of driving it";
-    case "Earth":
-      return "all cargo and paychecks — a plain, practical stretch of road";
-    default:
-      return "big mile-marker stuff — not the usual Tuesday haul";
+/** The user's words, quoted as they came. Nothing is added after the closing quote. */
+function quote(question) {
+  return `“${question.trim()}”`;
+}
+
+const OPENERS = {
+  question: {
+    1: (q) => `You asked ${quote(q)} One card for that. Alright, let's see what's on the map.`,
+    3: (q) => `You asked ${quote(q)} Three cards. Let's see what's coming through on that.`,
+    10: (q) => `You asked ${quote(q)} Ten cards is the long haul. Pour a coffee.`
+  },
+  blank: {
+    1: "No question on the table. One card, then. Let's see what it says.",
+    3: "No question on the table, so let's just see what's coming through the static tonight.",
+    10: "No question and the full ten. Fine by me. The road'll tell us what we're asking."
   }
+};
+
+// One sentence on the balance of suits. The app shows the counts; Ruth only says what they feel like on the road.
+const ELEMENTAL_NOTES = {
+  Fire: "Mostly Wands: a lot of throttle and not much patience. Everybody in this spread is flooring it.",
+  Water: "Mostly Cups: heavy weather. This spread is running on feelings and fogged-up windshields.",
+  Air: "Mostly Swords: a lot of CB chatter. Everybody's overthinking the route instead of driving it.",
+  Earth: "Mostly Pentacles: cargo and paychecks. A plain, practical stretch of road.",
+  Spirit: "Mostly Major Arcana. Big mile-marker stuff, not the usual Tuesday haul.",
+  mixed: "No one suit's in charge of this spread. Mixed traffic, which is most days."
+};
+
+const ADVICE = {
+  none: {
+    light: "Every card came in upright. Road's about as clear as it gets. Quit second-guessing the gauges and drive.",
+    heavy: "All upright and heavy on the Major Arcana. Clear road, big load. Don't speed just because nothing's in the way."
+  },
+  some: {
+    light: "Mixed bag. Some clear lanes, some rough patches. Normal stretch of highway. Handle what's in front of you and don't go borrowing trouble from the next exit.",
+    heavy: "A couple of cards reversed under a lot of Majors. Fix the small thing that's rattling before the big stretch. It's cheaper now."
+  },
+  most: {
+    light: "More than half these cards came in reversed. That's not bad luck. That's you white-knuckling something you already know needs fixing. Pull over and look at it.",
+    heavy: "Majors, mostly reversed. I'd park the rig this week. Fix one small thing, sleep, then decide the big one."
+  }
+};
+
+const CLOSERS = {
+  wands: (name) => `That's what's coming through the static from here. Last card's ${name}, so you'll want to gun it. Check your mirrors first.`,
+  cups: (name) => `That's what's coming through from here. It ends on ${name}, which means you'll feel this before you do anything about it. That's fine. Then do something.`,
+  swords: (name) => `That's the read from here. It ends on ${name}, so you'll argue with it most of the way home. The card doesn't mind. Rest of the drive's on you.`,
+  pentacles: (name) => `That's the read. It ends on ${name}, which is the road telling you the fix is practical and probably costs money. Pay it. Rest of the drive's on you.`,
+  major: (name) => `That's what's coming through the static from here. It ends on ${name}, and there's no small version of that. Rest of the drive's on you.`
+};
+
+function closingFor(cards) {
+  const last = cards[cards.length - 1];
+  const name = last ? last.card.name : "the last card";
+  return CLOSERS[lastCardKey(cards)](name);
+}
+
+function sizeKey(total) {
+  if (total >= 10) return 10;
+  if (total >= 3) return 3;
+  return 1;
+}
+
+function lastCardKey(cards) {
+  const last = cards[cards.length - 1];
+  if (!last) return "major";
+  return last.card.arcana === "major" ? "major" : last.card.suit || "major";
 }
 
 export const RuthCalloway = {
@@ -415,12 +474,14 @@ export const RuthCalloway = {
 
   interpret(spreadData) {
     const { cards, question } = spreadData;
-    const { counts, dominant } = ReaderRegistry.analyzeElements(cards);
+    const { dominant } = ReaderRegistry.analyzeElements(cards);
     const total = cards.length;
     const reversedCount = cards.filter(c => c.isReversed).length;
+    const majorCount = cards.filter(c => c.card.arcana === "major").length;
+    const majorHeavy = majorCount >= 3 || majorCount / total > 0.4;
+    const size = sizeKey(total);
 
     const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const orientation = isReversed ? "Reversed" : "Upright";
       const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
       const frame = getPositionFrame(position);
       const line = getCardLines(card, isReversed);
@@ -428,40 +489,28 @@ export const RuthCalloway = {
       return {
         positionIndex: position.index,
         positionName: position.name,
-        positionSubtitle: position.subtitle,
         cardId: card.id,
         cardName: card.name,
         cardElement: card.element,
         isReversed,
-        orientation,
+        orientation: isReversed ? "Reversed" : "Upright",
         focalKeyword: (keywords && keywords[0]) || "",
         reflection: `${frame} ${card.name}${isReversed ? " (reversed)" : ""}. ${line}`
       };
     });
 
-    const queryContext = question && question.trim()
-      ? `You asked: "${question.trim()}." Alright, hon, let's see what's coming through on that.`
-      : "No question on the table, so let's just see what's coming through the static tonight.";
+    const opener = question && question.trim() ? OPENERS.question[size](question) : OPENERS.blank[size];
 
-    const majorCount = cards.filter(c => c.card.arcana === "major").length;
-    const weightNote = (majorCount >= 3 || majorCount / total > 0.4)
-      ? "Lot of Major Arcana in this spread — that's not truck-stop chatter, hon, that's the kind of haul that reroutes you for good."
-      : "Mostly Minor Arcana here — day-to-day driving, not the big rerouting. Still matters. Most of any road is day-to-day driving.";
+    const weightNote = majorHeavy
+      ? "Lot of Major Arcana in this spread. That's not truck-stop chatter, that's the kind of haul that reroutes you for good."
+      : "Mostly Minor Arcana here: day-to-day driving, not the big rerouting. Still matters. Most of any road is day-to-day driving.";
 
-    const summary = `${queryContext} ${weightNote}`;
+    const summary = `${opener} ${weightNote}`;
+    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
 
-    const elementalInsight = `Fire ${counts.Fire} · Water ${counts.Water} · Air ${counts.Air} · Earth ${counts.Earth}${counts.Spirit ? ` · Wildcard ${counts.Spirit}` : ""} — ${elementalFlavor(dominant)}.`;
-
-    let actionableAdvice;
-    if (reversedCount === 0) {
-      actionableAdvice = "Every card in this spread came in riding upright. Road's about as clear as it gets — quit second-guessing the gauges and drive.";
-    } else if (reversedCount / total > 0.5) {
-      actionableAdvice = "More than half these cards came in reversed. That's not bad luck, hon, that's you white-knuckling something you already know needs fixing. Pull over and actually look at it.";
-    } else {
-      actionableAdvice = "Mixed bag — some clear lanes, some rough patches. Normal stretch of highway. Handle what's in front of you and don't go borrowing trouble from the next exit.";
-    }
-
-    const closingBenediction = "That's what's coming through the static from here, hon. Rest of the drive's on you.";
+    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
+    const actionableAdvice = ADVICE[bucket][majorHeavy ? "heavy" : "light"];
+    const closingBenediction = closingFor(cards);
 
     return {
       readerId: this.id,

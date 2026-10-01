@@ -1,271 +1,198 @@
-// Generator script for js/cards.js containing complete data for all 78 tarot cards
-const fs = require('fs');
-const path = require('path');
+/**
+ * Source of js/cards.js. Edit the data here, then run:
+ *
+ *   node build_cards_data.js
+ *
+ * js/cards.js is generated and is overwritten by this script. Do not edit it by hand.
+ *
+ * Every card has: name, arcana, suit, element, ruler (majors only), an esoteric
+ * title, one or two plain sentences for upright and reversed, and lower-case
+ * keywords. Meanings describe what the card means, not what a particular deck
+ * paints on it, because the decks in this app paint very different pictures.
+ */
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const majorArcanaData = [
   {
-    num: 0,
-    roman: "0",
-    name: "The Fool",
-    element: "Air",
+    num: 0, roman: "0", name: "The Fool", element: "Air", ruler: "Uranus",
     esotericTitle: "The Spirit of Aether",
-    symbols: ["Cosmic Precipice", "Golden Feather", "Solar Spiral", "White Butterfly"],
-    upright: "A call to step into the unknown with pure trust and an open heart. The Fool signals beginnings that defy conventional logic, inviting you to take a daring leap of faith into infinite possibility.",
-    reversed: "A warning against careless impulsiveness or, conversely, paralyzing fear that prevents you from taking a necessary step. Check your footing before you leap, but do not let caution become a cage.",
-    kwUp: ["New Beginnings", "Innocence", "Leap of Faith", "Spontaneity", "Pure Potential"],
-    kwRev: ["Recklessness", "Fear of the Unknown", "Naivety", "Hesitation", "Carelessness"]
+    upright: "A beginning that asks for trust rather than a plan. Step into the unknown with an open mind, and travel light.",
+    reversed: "Either you are leaping without looking, or you are too afraid to take a step you need to take. Check your footing, then go.",
+    kwUp: ["new beginnings", "innocence", "a leap of faith", "spontaneity", "potential"],
+    kwRev: ["recklessness", "fear of the unknown", "naivety", "hesitation", "carelessness"]
   },
   {
-    num: 1,
-    roman: "I",
-    name: "The Magician",
-    element: "Air / Mercury",
+    num: 1, roman: "I", name: "The Magician", element: "Air", ruler: "Mercury",
     esotericTitle: "The Magus of Power",
-    symbols: ["Lemniscate (Infinity)", "Ouroboros", "Four Hallows (Wand, Cup, Sword, Coin)", "Upright Athame"],
-    upright: "The convergence of will and creation. As above, so below: you have all four elements and tools required to manifest your intent into material reality. Channel focused concentration.",
-    reversed: "Misdirection, trickery, untapped potential, or the manipulation of creative force. Look closely at whether illusions are clouding the true intent or if your gifts are being squandered.",
-    kwUp: ["Manifestation", "Willpower", "Resourcefulness", "Creation", "Focused Action"],
-    kwRev: ["Manipulation", "Untapped Power", "Deception", "Scattered Focus", "Illusion"]
+    upright: "You have the tools and the will to make something real. Focus your attention and act.",
+    reversed: "Skill without direction, or talent spent on appearances and tricks. Check whether you are deceiving others or yourself.",
+    kwUp: ["manifestation", "willpower", "resourcefulness", "skill", "focused action"],
+    kwRev: ["manipulation", "untapped potential", "deception", "scattered focus", "illusion"]
   },
   {
-    num: 2,
-    roman: "II",
-    name: "The High Priestess",
-    element: "Water / Moon",
+    num: 2, roman: "II", name: "The High Priestess", element: "Water", ruler: "Moon",
     esotericTitle: "Priestess of the Silver Star",
-    symbols: ["Twin Pillars of Duality (Boaz & Jachin)", "Veil of Pomegranates", "Horned Lunar Crown", "Sacred Scroll"],
-    upright: "Guardian of the subconscious sanctuary. She bids you to sit in quiet contemplation, trusting your innate intuition and the silent mysteries whispered beyond the veil of physical perception.",
-    reversed: "Suppressed intuition, hidden agendas, superficiality, or secrets eating away at clarity. You are ignoring your inner knowing in favor of external noise.",
-    kwUp: ["Intuition", "Sacred Mystery", "Subconscious", "Divine Feminine", "Inner Knowing"],
-    kwRev: ["Ignored Instinct", "Secrets", "Superficiality", "Emotional Detachment", "Hidden Motives"]
+    upright: "Trust what you already know but have not said aloud. Sit with the question instead of asking the room.",
+    reversed: "You are ignoring your intuition, keeping secrets, or settling for surface answers. Listen to what you have been drowning out.",
+    kwUp: ["intuition", "mystery", "the subconscious", "inner knowing", "stillness"],
+    kwRev: ["ignored instinct", "secrets", "superficiality", "detachment", "hidden motives"]
   },
   {
-    num: 3,
-    roman: "III",
-    name: "The Empress",
-    element: "Earth / Venus",
+    num: 3, roman: "III", name: "The Empress", element: "Earth", ruler: "Venus",
     esotericTitle: "Daughter of the Mighty Ones",
-    symbols: ["Crown of Twelve Stars", "Shield of Venus", "Golden Wheat Sheaf", "Flowing River of Life"],
-    upright: "Abundant harvest, sensual vitality, and motherly creation. The Empress breathes life into projects, creative endeavors, and relationships through nurturing warmth and lush fertility.",
-    reversed: "Creative drought, over-dependence, smothering possessiveness, or neglect of your physical and emotional well-being. Tend to your own garden before attempting to harvest.",
-    kwUp: ["Abundance", "Fertility", "Creativity", "Nurturing", "Sensual Grace"],
-    kwRev: ["Creative Block", "Depletion", "Smothering", "Neglect", "Over-indulgence"]
+    upright: "Growth, nurture, and abundance. Feed what you are growing, whether a project, a relationship, or yourself, and let it ripen.",
+    reversed: "Creative block, dependence, smothering, or neglect of your own needs. Tend your own garden first.",
+    kwUp: ["abundance", "fertility", "creativity", "nurturing", "pleasure"],
+    kwRev: ["creative block", "depletion", "smothering", "neglect", "overindulgence"]
   },
   {
-    num: 4,
-    roman: "IV",
-    name: "The Emperor",
-    element: "Fire / Aries",
+    num: 4, roman: "IV", name: "The Emperor", element: "Fire", ruler: "Aries",
     esotericTitle: "Sun of the Morning, Chief Among the Mighty",
-    symbols: ["Carved Ram Stone Throne", "Orb of Dominion", "Ankh Scepter", "Granite Peaks"],
-    upright: "Sovereignty, disciplined architecture, and benevolent authority. The Emperor provides the structural scaffold, boundaries, and strategic fortitude necessary for lasting order.",
-    reversed: "Tyranny, rigidity, abuse of power, or conversely, a lack of self-discipline and structural chaos. Examine whether firmness has hardened into brittle stubbornness.",
-    kwUp: ["Authority", "Structure", "Stability", "Discipline", "Strategic Leadership"],
-    kwRev: ["Tyranny", "Rigidity", "Chaos", "Micromanagement", "Loss of Control"]
+    upright: "Structure, authority, and discipline. Set the rules and boundaries that let the work stand up.",
+    reversed: "Control has become rigid or tyrannical, or there is no structure at all. Ask whether firmness has become stubbornness.",
+    kwUp: ["authority", "structure", "stability", "discipline", "leadership"],
+    kwRev: ["tyranny", "rigidity", "chaos", "micromanagement", "loss of control"]
   },
   {
-    num: 5,
-    roman: "V",
-    name: "The Hierophant",
-    element: "Earth / Taurus",
+    num: 5, roman: "V", name: "The Hierophant", element: "Earth", ruler: "Taurus",
     esotericTitle: "Magus of the Eternal Gods",
-    symbols: ["Triple Papal Tiara", "Cross of Three Bars", "Crossed Golden Keys", "Twin Acolytes"],
-    upright: "Spiritual lineage, sacred tradition, mentorship, and collective wisdom. Seeking guidance through established pathways of knowledge, structured study, and shared moral truth.",
-    reversed: "Blind dogma, hollow orthodoxy, rebellious awakening, or breaking away from oppressive institutional belief systems to discover your autonomous truth.",
-    kwUp: ["Tradition", "Spiritual Mentorship", "Wisdom", "Institutions", "Sacred Truth"],
-    kwRev: ["Dogmatism", "Rebellion", "Unconventional Paths", "Hypocrisy", "Blind Conformity"]
+    upright: "Tradition, teaching, and shared belief. Learn the way this has been done before you decide to do it differently.",
+    reversed: "Dogma, hypocrisy, or rebellion against rules that no longer fit. Question the form, but do not reject it out of spite.",
+    kwUp: ["tradition", "mentorship", "wisdom", "institutions", "shared belief"],
+    kwRev: ["dogma", "rebellion", "unconventional paths", "hypocrisy", "conformity"]
   },
   {
-    num: 6,
-    roman: "VI",
-    name: "The Lovers",
-    element: "Air / Gemini",
+    num: 6, roman: "VI", name: "The Lovers", element: "Air", ruler: "Gemini",
     esotericTitle: "The Children of the Voice Divine",
-    symbols: ["Winged Seraph of Grace", "Tree of Life and Tree of Knowledge", "Entwined Serpent", "Alchemical Union"],
-    upright: "Profound soul alignment, sacred union, and core value decisions. Beyond romantic passion, this card mirrors the harmonious reconciliation of your own opposing internal dualities.",
-    reversed: "Disharmony, misaligned values, moral compromise, or self-sabotaging conflict. A divided heart cannot walk two divergent paths at once.",
-    kwUp: ["Sacred Union", "Harmony", "Values Alignment", "Deep Connection", "Choice"],
-    kwRev: ["Disharmony", "Misalignment", "Moral Conflict", "Indecision", "Severed Bonds"]
+    upright: "A union, or a choice about what you value. Choose what you can live with, not only what you feel.",
+    reversed: "Misaligned values, a divided heart, or a choice you keep refusing to make. You cannot walk two roads at once.",
+    kwUp: ["union", "harmony", "shared values", "connection", "choice"],
+    kwRev: ["disharmony", "misalignment", "conflict", "indecision", "broken bonds"]
   },
   {
-    num: 7,
-    roman: "VII",
-    name: "The Chariot",
-    element: "Water / Cancer",
+    num: 7, roman: "VII", name: "The Chariot", element: "Water", ruler: "Cancer",
     esotericTitle: "Child of the Powers of the Waters",
-    symbols: ["Star-Spangled Canopy", "Twin Sphinxes (Light & Shadow)", "Wand of Will", "Armor of Sunlight"],
-    upright: "Mastery of opposing currents through unwavering focus and willpower. Victory won through determination, self-discipline, and steering opposing impulses toward a singular triumph.",
-    reversed: "Loss of direction, runaway aggression, feeling dragged off course by warring passions, or arrogance leading to a sudden crash. Reign in the steeds before continuing.",
-    kwUp: ["Determination", "Willpower", "Victory", "Discipline", "Triumph Over Adversity"],
-    kwRev: ["Loss of Control", "Aggression", "Obstacles", "Aimlessness", "Ego Crash"]
+    upright: "Victory through will and focus. Hold the opposing pulls together and steer.",
+    reversed: "Loss of direction, aggression, or force without a goal. Fix what is steering before you push harder.",
+    kwUp: ["determination", "willpower", "victory", "control", "focus"],
+    kwRev: ["loss of control", "aggression", "obstacles", "aimlessness", "a hard stop"]
   },
   {
-    num: 8,
-    roman: "VIII",
-    name: "Strength",
-    element: "Fire / Leo",
+    num: 8, roman: "VIII", name: "Strength", element: "Fire", ruler: "Leo",
     esotericTitle: "Daughter of the Flaming Sword",
-    symbols: ["Gentle Hand Taming Lion", "Infinity Lemniscate", "Woven Rose Garland", "Serene Radiance"],
-    upright: "Courage without cruelty; fortitude rooted in compassion and emotional endurance. Taming raw primordial instinct through gentle patience, quiet inner grace, and moral resilience.",
-    reversed: "Self-doubt, explosive temper, raw vulnerability masquerading as cowardice, or being consumed by primal fear. Remember that genuine force does not shout.",
-    kwUp: ["Inner Strength", "Compassion", "Patience", "Courage", "Gentle Mastery"],
-    kwRev: ["Self-Doubt", "Raw Aggression", "Impatience", "Weakness of Will", "Burnout"]
+    upright: "Courage that does not need to shout. Meet what is fierce in you or around you with patience and a steady hand.",
+    reversed: "Self-doubt, temper, or fear you are trying to force down. Real strength is quiet; find it again.",
+    kwUp: ["inner strength", "compassion", "patience", "courage", "calm"],
+    kwRev: ["self-doubt", "aggression", "impatience", "weakness", "burnout"]
   },
   {
-    num: 9,
-    roman: "IX",
-    name: "The Hermit",
-    element: "Earth / Virgo",
+    num: 9, roman: "IX", name: "The Hermit", element: "Earth", ruler: "Virgo",
     esotericTitle: "Magus of the Voice of Light",
-    symbols: ["Six-Pointed Star Lantern", "Pilgrim Staff of Pine", "Frozen Mountain Crag", "Cowl of Solitude"],
-    upright: "Soul-searching in sacred solitude. Stepping away from societal clamor to illuminate your own path with the lantern of hard-won introspection and contemplative truth.",
-    reversed: "Harmful isolation, bitter loneliness, antisocial withdrawal, or fear of looking inward. Alternatively, obstinate refusal to accept wisdom from genuine guides.",
-    kwUp: ["Introspection", "Solitude", "Inner Guidance", "Spiritual Quest", "Discernment"],
-    kwRev: ["Isolation", "Loneliness", "Rejection of Wisdom", "Paranoia", "Lost in the Dark"]
+    upright: "Solitude and reflection. Step away from the noise to find your own answer.",
+    reversed: "Isolation, loneliness, or refusing the quiet because it would tell you something. Come back far enough to be reached, or go far enough to hear yourself.",
+    kwUp: ["introspection", "solitude", "guidance", "searching", "discernment"],
+    kwRev: ["isolation", "loneliness", "withdrawal", "paranoia", "feeling lost"]
   },
   {
-    num: 10,
-    roman: "X",
-    name: "Wheel of Fortune",
-    element: "Fire / Jupiter",
+    num: 10, roman: "X", name: "Wheel of Fortune", element: "Fire", ruler: "Jupiter",
     esotericTitle: "Lord of the Forces of Life",
-    symbols: ["Cosmic Turning Wheel", "Four Living Creatures", "Sphinx of Balance", "Ascending/Descending Serpents"],
-    upright: "The cyclical rotation of destiny, karmic shifts, and sudden pivots of fortune. A reminder that no condition is static: welcome the rising crest of transformation with adaptable grace.",
-    reversed: "A stroke of misfortune, resistance to inevitability, feeling trapped in repeating generational or karmic cycles. Yield to the turn rather than clinging to the spokes.",
-    kwUp: ["Cycles of Destiny", "Karmic Shift", "Good Fortune", "Inevitable Change", "Serendipity"],
-    kwRev: ["Misfortune", "Resistance to Change", "Karmic Stagnation", "Bad Timing", "Disruption"]
+    upright: "A turn of fortune, a change of season. Something stuck is moving; ride it rather than resisting it.",
+    reversed: "Bad luck, resistance to change, or a cycle you keep repeating. You cannot wind the wheel back; work with where it is.",
+    kwUp: ["cycles", "change", "good fortune", "turning points", "luck"],
+    kwRev: ["misfortune", "resistance to change", "stagnation", "bad timing", "disruption"]
   },
   {
-    num: 11,
-    roman: "XI",
-    name: "Justice",
-    element: "Air / Libra",
+    num: 11, roman: "XI", name: "Justice", element: "Air", ruler: "Libra",
     esotericTitle: "Daughter of the Lords of Truth",
-    symbols: ["Double-Edged Upright Sword", "Golden Scales of Equity", "Veil of Rectitude", "Stone Dais"],
-    upright: "Equitable balance, karmic cause and effect, objective clarity, and absolute integrity. What has been sown will now be weighed and reaped under impartial universal law.",
-    reversed: "Dishonesty, unfair treatment, bias, avoiding accountability, or harsh self-condemnation. The truth will eventually reveal itself regardless of evasive maneuvers.",
-    kwUp: ["Truth", "Fairness", "Cause & Effect", "Integrity", "Accountability"],
-    kwRev: ["Injustice", "Bias", "Dishonesty", "Evading Truth", "Legal/Moral Conflict"]
+    upright: "Cause and effect, fairness, and accountability. What was done will be weighed; be honest about your part.",
+    reversed: "Unfairness, bias, dishonesty, or avoiding responsibility. Check whose thumb is on the scale.",
+    kwUp: ["truth", "fairness", "cause and effect", "integrity", "accountability"],
+    kwRev: ["injustice", "bias", "dishonesty", "evasion", "conflict"]
   },
   {
-    num: 12,
-    roman: "XII",
-    name: "The Hanged Man",
-    element: "Water / Neptune",
+    num: 12, roman: "XII", name: "The Hanged Man", element: "Water", ruler: "Neptune",
     esotericTitle: "Spirit of the Mighty Waters",
-    symbols: ["Living Tau Cross", "Luminous Golden Halo", "Crossed Ankle Suspension", "Calm Expression"],
-    upright: "Willing surrender, radical shift in perspective, and sacred pause. By releasing the desperate impulse to force an outcome, enlightenment emerges from stillness and sacrifice.",
-    reversed: "Stubborn resistance, martyrdom for useless causes, prolonged indecision, or stagnation masquerading as patience. Letting go is different from languishing.",
-    kwUp: ["Surrender", "New Perspective", "Sacred Pause", "Spiritual Awakening", "Releasing Control"],
-    kwRev: ["Martyrdom", "Stagnation", "Futile Resistance", "Indecision", "Delays"]
+    upright: "A pause, a surrender, a new angle. Stop forcing the outcome and let the view change.",
+    reversed: "Stalling, martyrdom, or resistance disguised as patience. Letting go is not the same as doing nothing.",
+    kwUp: ["surrender", "new perspective", "pause", "letting go", "suspension"],
+    kwRev: ["martyrdom", "stagnation", "resistance", "indecision", "delay"]
   },
   {
-    num: 13,
-    roman: "XIII",
-    name: "Death",
-    element: "Water / Scorpio",
+    num: 13, roman: "XIII", name: "Death", element: "Water", ruler: "Scorpio",
     esotericTitle: "Child of the Great Transformers",
-    symbols: ["Mystic Five-Petaled Rose", "Obsidian Scythe", "Eclipsed Solar Dawn", "Fallen Crown"],
-    upright: "Profound transformation, inevitable endings, and the fertile composting of the obsolete. Clear the decayed underbrush so that genuine renewal can sprout from the fertile ground.",
-    reversed: "Fear of change, desperately clinging to dying relationships or habits, dragging out unavoidable endings, stagnation rooted in grief.",
-    kwUp: ["Transformation", "Endings & Beginnings", "Shedding Old Skin", "Inevitable Transition", "Liberation"],
-    kwRev: ["Clinging to Past", "Fear of Transformation", "Stagnant Rot", "Prolonged Endings", "Resistance"]
+    upright: "An ending that makes room. Let what is finished be finished so something else can begin.",
+    reversed: "Fear of change, clinging to what is already over, or an ending dragged out past its time. Let it end.",
+    kwUp: ["transformation", "endings", "release", "transition", "renewal"],
+    kwRev: ["clinging to the past", "fear of change", "stagnation", "prolonged endings", "resistance"]
   },
   {
-    num: 14,
-    roman: "XIV",
-    name: "Temperance",
-    element: "Fire / Sagittarius",
+    num: 14, roman: "XIV", name: "Temperance", element: "Fire", ruler: "Sagittarius",
     esotericTitle: "Daughter of the Reconcilers",
-    symbols: ["Twin Golden Urns", "Continuous Light Stream", "Dual Footing (Earth & Water)", "Solar Iris on Brow"],
-    upright: "Alchemical synthesis, supreme balance, patience, and moderation. Blending opposing elements into a unified, harmonious elixir. Finding healing tranquility in middle ground.",
-    reversed: "Imbalance, excess, clashing extremes, impatience, or trying to force incompatible elements into a toxic cocktail. Restore equilibrium before continuing.",
-    kwUp: ["Alchemy", "Moderation", "Divine Harmony", "Patience", "Integration"],
-    kwRev: ["Imbalance", "Excess", "Discord", "Impatience", "Extremism"]
+    upright: "Balance, patience, and moderation. Blend the opposites rather than choosing one.",
+    reversed: "Excess, imbalance, or forcing together things that do not mix. Restore the middle before you continue.",
+    kwUp: ["balance", "moderation", "patience", "harmony", "integration"],
+    kwRev: ["imbalance", "excess", "discord", "impatience", "extremes"]
   },
   {
-    num: 15,
-    roman: "XV",
-    name: "The Devil",
-    element: "Earth / Capricorn",
+    num: 15, roman: "XV", name: "The Devil", element: "Earth", ruler: "Capricorn",
     esotericTitle: "Lord of the Gates of Matter",
-    symbols: ["Inverted Pentagram", "Stone Pedestal with Iron Ring", "Loosely Chained Captives", "Torch of Ignorance"],
-    upright: "Shadow bonds, materialism, obsessive attachments, and self-imposed illusions of helplessness. Notice that the chains around the neck are loose enough to be lifted off at will.",
-    reversed: "Breaking free of toxicity, releasing limiting addictions, reclaiming autonomy from oppressive dogmas, opening eyes to self-imposed captivity.",
-    kwUp: ["Shadow Self", "Materialism", "Addiction/Attachment", "Illusion of Trap", "Primal Desires"],
-    kwRev: ["Liberation", "Overcoming Addiction", "Awakening", "Reclaiming Power", "Breaking Chains"]
+    upright: "Attachment, compulsion, and the feeling of being trapped. The chains are looser than they look.",
+    reversed: "Breaking free of a habit, a bond, or a belief that held you. Seeing the chain is the first step; lifting it is the second.",
+    kwUp: ["attachment", "materialism", "compulsion", "feeling trapped", "temptation"],
+    kwRev: ["liberation", "breaking free", "awakening", "reclaiming power", "release"]
   },
   {
-    num: 16,
-    roman: "XVI",
-    name: "The Tower",
-    element: "Fire / Mars",
+    num: 16, roman: "XVI", name: "The Tower", element: "Fire", ruler: "Mars",
     esotericTitle: "Lord of the Hosts of the Mighty",
-    symbols: ["Lightning Bolt of Revelation", "Crumbling Crown of Citadel", "Flames from Windows", "Falling Figures"],
-    upright: "Cataclysmic breakthrough, shattering of illusions, sudden revelation, and the collapse of brittle structures built on false premises. Humbling yet completely liberating.",
-    reversed: "Disaster narrowly averted, denial in the face of inevitable collapse, fear of suffering necessary disruption, clinging to a cracking foundation.",
-    kwUp: ["Sudden Upheaval", "Shattered Illusions", "Breakthrough", "Liberation", "Radical Truth"],
-    kwRev: ["Disaster Averted", "Denial", "Fear of Collapse", "Prolonging the Inevitable", "Internal Ruin"]
+    upright: "Sudden upheaval that brings down what was built on a false footing. It is painful, and it clears the ground.",
+    reversed: "Disaster averted, or disaster denied: the structure is cracking and you are not looking. Face the fault before it faces you.",
+    kwUp: ["upheaval", "revelation", "collapse", "breakthrough", "hard truth"],
+    kwRev: ["disaster averted", "denial", "fear of change", "delaying the inevitable", "a slow collapse"]
   },
   {
-    num: 17,
-    roman: "XVII",
-    name: "The Star",
-    element: "Air / Aquarius",
+    num: 17, roman: "XVII", name: "The Star", element: "Air", ruler: "Aquarius",
     esotericTitle: "Daughter of the Firmament",
-    symbols: ["Eight-Pointed Guiding Star", "Seven Lesser Constellations", "Twin Urns Pouring Waters", "Sacred Ibis"],
-    upright: "Renewed hope, celestial inspiration, serene faith, and profound spiritual healing. After the storm of the Tower, the night sky opens to reveal your eternal north star.",
-    reversed: "Hopelessness, despair, lack of faith in your own gifts, cynicism, feeling disconnected from spiritual nourishment. Look up; the stars have not vanished.",
-    kwUp: ["Hope", "Inspiration", "Serenity", "Divine Guidance", "Spiritual Renewal"],
-    kwRev: ["Despair", "Disillusionment", "Cynicism", "Lack of Faith", "Discouragement"]
+    upright: "Hope, healing, and renewed faith after a hard stretch. Look up; the way is clearer than it was.",
+    reversed: "Despair, cynicism, or lost faith in your own gifts. The stars have not gone; you have stopped looking for them.",
+    kwUp: ["hope", "inspiration", "serenity", "healing", "faith"],
+    kwRev: ["despair", "disillusionment", "cynicism", "lost faith", "discouragement"]
   },
   {
-    num: 18,
-    roman: "XVIII",
-    name: "The Moon",
-    element: "Water / Pisces",
+    num: 18, roman: "XVIII", name: "The Moon", element: "Water", ruler: "Pisces",
     esotericTitle: "Ruler of Flux and Reflux",
-    symbols: ["Crying Lunar Face", "Twin Watchtowers", "Howling Wolf & Dog", "Emerging Primeval Crab"],
-    upright: "The realm of illusions, deep dreams, irrational fears, and primeval subconscious tides. Not all is as it seems in the moonlight; let intuition guide you past phantom terrors.",
-    reversed: "Clearing of psychic fog, unveiling deception, release from paranoid fears, awakening from an unsettling nightmare into grounded reality.",
-    kwUp: ["Illusion", "Subconscious Depths", "Intuition", "Dreams & Phantoms", "Uncertainty"],
-    kwRev: ["Lifting Fog", "Truth Revealed", "Overcoming Fear", "Clarity", "Release of Anxiety"]
+    upright: "Illusion, fear, and the pull of the subconscious. Not everything is what it seems; move slowly and trust your instincts.",
+    reversed: "The fog is lifting and the fears are shrinking. What frightened you is smaller in daylight.",
+    kwUp: ["illusion", "intuition", "fear", "dreams", "uncertainty"],
+    kwRev: ["clarity", "truth revealed", "fear released", "understanding", "calm"]
   },
   {
-    num: 19,
-    roman: "XIX",
-    name: "The Sun",
-    element: "Fire / Sun",
+    num: 19, roman: "XIX", name: "The Sun", element: "Fire", ruler: "Sun",
     esotericTitle: "Lord of the Fire of the World",
-    symbols: ["Radiant Smiling Sun", "Four Blooming Sunflowers", "Joyful Innocent Rider", "Crimson Banner"],
-    upright: "Radiant joy, vitality, crystalline clarity, warmth, and unclouded success. Every shadow dissipates under the solar brilliance of pure authenticity and celebratory vigor.",
-    reversed: "Temporary clouds obscuring the light, muted enthusiasm, unrealistic optimism, or sunburn from overexposure. The sun is still shining behind the mist.",
-    kwUp: ["Joy", "Vitality", "Success", "Warmth & Clarity", "Celebration"],
-    kwRev: ["Temporary Cloudiness", "Muted Joy", "Unrealistic Expectations", "Burnout", "Delayed Success"]
+    upright: "Joy, vitality, and success in plain sight. Enjoy a good day for what it is.",
+    reversed: "A clouded or muted joy, unrealistic optimism, or burnout from too much of a good thing. The sun is still there behind the mist.",
+    kwUp: ["joy", "vitality", "success", "clarity", "warmth"],
+    kwRev: ["clouded joy", "muted enthusiasm", "unrealistic expectations", "burnout", "delay"]
   },
   {
-    num: 20,
-    roman: "XX",
-    name: "Judgement",
-    element: "Fire / Pluto",
+    num: 20, roman: "XX", name: "Judgement", element: "Fire", ruler: "Pluto",
     esotericTitle: "The Spirit of the Primal Fire",
-    symbols: ["Archangel Gabriel's Trumpet", "Cross-Emblazoned Herald Banner", "Rising Awakened Souls", "Glacial Peaks"],
-    upright: "Resurrection, answering the higher calling, reckoning, and ultimate spiritual rebirth. Forgiving past missteps and stepping forward fully into your authentic cosmic vocation.",
-    reversed: "Harsh self-reproach, ignoring the unmistakable summons to evolve, fear of being judged, holding onto outdated guilt that paralyzes rebirth.",
-    kwUp: ["Rebirth", "Higher Calling", "Awakening", "Forgiveness", "Karmic Absolution"],
-    kwRev: ["Self-Doubt", "Harsh Judgement", "Ignoring the Call", "Guilt & Shame", "Hesitation"]
+    upright: "A reckoning and a calling. Take stock of what you have done and answer the summons to change.",
+    reversed: "Harsh self-judgment, ignoring the call, or guilt that keeps you from moving. Forgive what needs forgiving and get up.",
+    kwUp: ["reckoning", "awakening", "a calling", "forgiveness", "renewal"],
+    kwRev: ["self-doubt", "harsh judgment", "ignoring the call", "guilt", "hesitation"]
   },
   {
-    num: 21,
-    roman: "XXI",
-    name: "The World",
-    element: "Earth / Saturn",
+    num: 21, roman: "XXI", name: "The World", element: "Earth", ruler: "Saturn",
     esotericTitle: "The Great One of the Night of Time",
-    symbols: ["Laurel Wreath of Eternity", "Cosmic Dancer with Twin Wands", "Four Tetramorphs", "Golden Ribbons"],
-    upright: "Wholeness, completion, triumphant cycle fulfillment, and cosmic integration. You have traveled the full circle of the arcana; step into celebration and universal harmony.",
-    reversed: "Incomplete closure, shortcuts taken that leave unfinished business, feeling delayed at the final threshold, inability to celebrate accomplishments.",
-    kwUp: ["Completion", "Wholeness", "Integration", "Triumph", "Cosmic Harmony"],
-    kwRev: ["Lack of Closure", "Unfinished Business", "Delays at Finish", "Emptiness", "Shortcuts Taken"]
+    upright: "Completion and wholeness. A cycle has finished; celebrate it before the next one begins.",
+    reversed: "Unfinished business, shortcuts, or a delay at the final step. Finish the last mile.",
+    kwUp: ["completion", "wholeness", "achievement", "integration", "fulfillment"],
+    kwRev: ["incompleteness", "unfinished business", "delay", "emptiness", "shortcuts"]
   }
 ];
 
@@ -306,497 +233,454 @@ const suits = [
 
 const minorRankData = [
   {
-    rank: "ace",
-    num: 1,
-    label: "Ace",
-    roman: "A",
+    rank: "ace", num: 1, label: "Ace", roman: "A",
     wands: {
       title: "Root of the Powers of Fire",
-      up: "A sudden spark of inspiration, creative urge, or ambitious new venture bursting with primal fire.",
-      rev: "Flickering delays, lack of direction, creative block, or misdirected kinetic passion.",
-      kwUp: ["Inspiration", "Creative Spark", "Potential", "Bold Initiative"],
-      kwRev: ["Hesitation", "Burnout", "Lack of Energy", "Creative Blocks"]
+      up: "A new idea, project, or desire has real energy behind it. Start while the spark is hot rather than waiting to feel ready.",
+      rev: "You want to begin but cannot find the push, or the push keeps getting spent on the wrong thing. Wait for the real spark, then act on it quickly.",
+      kwUp: ["inspiration", "a creative spark", "potential", "initiative"],
+      kwRev: ["hesitation", "burnout", "low energy", "creative block"]
     },
     cups: {
       title: "Root of the Powers of Water",
-      up: "An overflowing fountain of pure emotion, intuitive opening, unconditional love, and spiritual communion.",
-      rev: "Emotional suppression, feeling drained, creative drought, or blocked romantic receptivity.",
-      kwUp: ["Love", "Compassion", "Emotional Awakening", "Spiritual Flow"],
-      kwRev: ["Emotional Drain", "Blocked Feelings", "Vulnerability Fear", "Heartache"]
+      up: "Feeling opens up: new love, compassion, a creative or spiritual beginning. Let yourself receive it rather than analyzing it.",
+      rev: "Feelings are blocked, drained, or being held back out of fear. Notice what you are refusing to feel, and why.",
+      kwUp: ["love", "compassion", "emotional opening", "new feeling"],
+      kwRev: ["emotional drain", "blocked feelings", "fear of vulnerability", "heartache"]
     },
     swords: {
       title: "Root of the Powers of Air",
-      up: "A breakthrough of sharp mental clarity, piercing truth, triumph of intellect over confusion.",
-      rev: "Clouded perception, cruelty disguised as honesty, misinformation, or analysis paralysis.",
-      kwUp: ["Mental Clarity", "Piercing Truth", "Breakthrough", "Justice"],
-      kwRev: ["Confusion", "Hostility", "Miscommunication", "Brutal Judgment"]
+      up: "A breakthrough in clarity: the truth is suddenly plain. Act on what you now see.",
+      rev: "Thinking is clouded, or the truth is being used as a weapon. Wait for clarity before you cut.",
+      kwUp: ["clarity", "truth", "breakthrough", "a decision"],
+      kwRev: ["confusion", "hostility", "miscommunication", "harsh judgment"]
     },
     pentacles: {
       title: "Root of the Powers of Earth",
-      up: "A tangible seed of material opportunity, financial prosperity, career prospect, or bodily vitality.",
-      rev: "Missed financial opportunity, poor foundation, greed, or delay in material results.",
-      kwUp: ["Opportunity", "Prosperity", "New Foundation", "Tangible Wealth"],
-      kwRev: ["Lost Opportunity", "Financial Instability", "Poor Planning", "Scarcity Mindset"]
+      up: "A tangible opportunity: money, work, health, or a new foundation. Plant it where it can grow.",
+      rev: "A missed opportunity, poor planning, or a chance that looks better than it is. Read the fine print before you commit.",
+      kwUp: ["opportunity", "prosperity", "a new foundation", "security"],
+      kwRev: ["a lost opportunity", "financial instability", "poor planning", "scarcity"]
     }
   },
   {
-    rank: "2",
-    num: 2,
-    label: "Two",
-    roman: "II",
+    rank: "2", num: 2, label: "Two", roman: "II",
     wands: {
       title: "Lord of Dominion",
-      up: "Future planning, holding the world in your hands, gazing toward horizons beyond present borders.",
-      rev: "Fear of stepping into the unknown, small-mindedness, travel delays, or lack of long-term vision.",
-      kwUp: ["Planning", "Future Horizons", "Ambition", "Discovery"],
-      kwRev: ["Fear of Unknown", "Playing It Safe", "Bad Timing", "Disorientation"]
+      up: "You have done well enough to want more, and you are weighing where to go next. Plan the longer route and commit to one direction.",
+      rev: "You are afraid to leave what you know, so the plan stays a plan. Either go, or admit you have chosen to stay.",
+      kwUp: ["planning", "ambition", "a decision", "the long view"],
+      kwRev: ["fear of the unknown", "playing it safe", "bad timing", "indecision"]
     },
     cups: {
       title: "Lord of Love",
-      up: "Mutual attraction, soul connection, balanced partnership, and heartfelt mutual respect.",
-      rev: "Imbalance in giving, communication breakdown, codependency, or fractured rapport.",
-      kwUp: ["Partnership", "Mutual Respect", "Harmony", "Soul Connection"],
-      kwRev: ["Misalignment", "Broken Trust", "Codependency", "Disconnection"]
+      up: "A real connection, met halfway: partnership, attraction, or mutual respect. Give and receive in equal measure.",
+      rev: "The balance in a relationship is off, and one side is giving or withholding too much. Name the imbalance before it becomes distance.",
+      kwUp: ["partnership", "mutual respect", "harmony", "connection"],
+      kwRev: ["imbalance", "broken trust", "codependency", "disconnection"]
     },
     swords: {
       title: "Lord of Peace Restored",
-      up: "A delicate stalemate, blindfolded weighing of difficult choices, needing internal stillness to decide.",
-      rev: "Information overload, agonizing avoidance of decision, truth forcing its way through denial.",
-      kwUp: ["Stalemate", "Difficult Choice", "Truce", "Quiet Deliberation"],
-      kwRev: ["Avoidance", "Overload", "False Truce", "Indecision Exposed"]
+      up: "A stalemate between two choices, and you are avoiding looking at either. Decide, even without certainty.",
+      rev: "The information is overwhelming, or a truth is forcing its way through a denial. The decision is about to make itself if you do not.",
+      kwUp: ["stalemate", "a hard choice", "truce", "deliberation"],
+      kwRev: ["avoidance", "overload", "a false truce", "indecision exposed"]
     },
     pentacles: {
       title: "Lord of Harmonious Change",
-      up: "Masterful juggling of dual priorities, financial fluidity, adaptability amidst shifting tides.",
-      rev: "Dropping plates, overwhelming financial juggling, overextension, and impending chaotic collapse.",
-      kwUp: ["Adaptability", "Balance", "Resourcefulness", "Flexibility"],
-      kwRev: ["Overwhelmed", "Disorganization", "Financial Stress", "Dropped Balls"]
+      up: "You are juggling priorities and keeping it all in the air. Stay flexible, but notice what is being neglected.",
+      rev: "The juggling has become dropping; you are overextended and something is about to give. Set one thing down.",
+      kwUp: ["adaptability", "balance", "resourcefulness", "flexibility"],
+      kwRev: ["overextension", "disorganization", "financial stress", "dropped commitments"]
     }
   },
   {
-    rank: "3",
-    num: 3,
-    label: "Three",
-    roman: "III",
+    rank: "3", num: 3, label: "Three", roman: "III",
     wands: {
       title: "Lord of Established Strength",
-      up: "Ships coming into harbor; expansion, overseas enterprise, seeing first fruits of earlier foresight.",
-      rev: "Return on investment delayed, thwarted travel, feeling stranded, setbacks to visionary plans.",
-      kwUp: ["Expansion", "Foresight", "Overseas Enterprise", "Progress"],
-      kwRev: ["Delays", "Frustration", "Bottlenecks", "Unrealized Vision"]
+      up: "What you set in motion is starting to come back to you. Expect progress, news from a distance, and room to expand.",
+      rev: "Results are slower than you expected and the plan looks shakier than it did. Check what is actually in motion before you assume it has failed.",
+      kwUp: ["expansion", "foresight", "progress", "first results"],
+      kwRev: ["delays", "frustration", "obstacles", "an unrealized plan"]
     },
     cups: {
       title: "Lord of Abundance",
-      up: "Joyful celebration with soul community, toasts of gratitude, sisterhood/brotherhood, shared festive delight.",
-      rev: "Gossip, excluded feelings, hedonistic over-indulgence, party burnout, or superficial camaraderie.",
-      kwUp: ["Celebration", "Community", "Friendship", "Gathering Joy"],
-      kwRev: ["Overindulgence", "Gossip", "Isolation", "Superficial Friends"]
+      up: "Friends, celebration, and shared joy. Gather the people you love and mark the moment.",
+      rev: "A circle of friends feels strained, exclusive, or exhausted by too much of a good thing. Step back from gossip and overindulgence.",
+      kwUp: ["celebration", "community", "friendship", "shared joy"],
+      kwRev: ["overindulgence", "gossip", "exclusion", "shallow friendship"]
     },
     swords: {
       title: "Lord of Sorrow",
-      up: "Piercing heartbreak, sorrowful revelations, necessary surgical grief that clears festering pain.",
-      rev: "Releasing deep grief, healing from betrayal, moving beyond historical wounds, forgiveness.",
-      kwUp: ["Heartbreak", "Grief", "Sorrowful Truth", "Emotional Release"],
-      kwRev: ["Healing Heart", "Forgiveness", "Moving Beyond Grief", "Reconciliation"]
+      up: "Heartbreak, painful truth, or grief that cuts clean. Feel it fully; it heals cleaner for being felt.",
+      rev: "You are releasing old pain, forgiving, or finally healing a wound you have carried. Let it close.",
+      kwUp: ["heartbreak", "grief", "painful truth", "release"],
+      kwRev: ["healing", "forgiveness", "moving on", "reconciliation"]
     },
     pentacles: {
       title: "Lord of Material Works",
-      up: "Master craftsmanship, collaborative teamwork, meticulous dedication, elevated artistic reputation.",
-      rev: "Poor workmanship, friction among colleagues, lack of discipline, apathy in tradecraft.",
-      kwUp: ["Craftsmanship", "Collaboration", "Mastery", "Appreciation"],
-      kwRev: ["Friction", "Shoddy Work", "Disregard for Quality", "Lack of Skill"]
+      up: "Skilled work and good collaboration. Your craft is valued; keep learning and keep building with others.",
+      rev: "Poor workmanship, friction on the team, or no shared plan. Agree on the approach before you continue.",
+      kwUp: ["craftsmanship", "collaboration", "skill", "recognition"],
+      kwRev: ["friction", "shoddy work", "carelessness", "lack of skill"]
     }
   },
   {
-    rank: "4",
-    num: 4,
-    label: "Four",
-    roman: "IV",
+    rank: "4", num: 4, label: "Four", roman: "IV",
     wands: {
       title: "Lord of Perfected Work",
-      up: "Homecoming, joyous wedding or milestone festival, sanctified hearth, harmonious foundations.",
-      rev: "Transient instability, canceled family reunions, feeling unwelcome, tension beneath celebrations.",
-      kwUp: ["Homecoming", "Celebration", "Community Sanctity", "Harmony"],
-      kwRev: ["Transient Instability", "Family Tension", "Delayed Return", "Insecurity"]
+      up: "Something is worth celebrating: a homecoming, a milestone, a place that finally feels settled. Enjoy it with the people who helped.",
+      rev: "Home, or the group you count on, feels unsettled, or a celebration has tension under it. Repair the foundation before you plan the party.",
+      kwUp: ["homecoming", "celebration", "community", "stability"],
+      kwRev: ["instability", "family tension", "a delayed return", "insecurity"]
     },
     cups: {
       title: "Lord of Blended Pleasure",
-      up: "Apathy, contemplation, arms crossed under the tree ignoring the golden cup offered by unseen hands.",
-      rev: "Snapping out of melancholy, renewed enthusiasm, noticing missed opportunities, gratitude return.",
-      kwUp: ["Apathy", "Contemplation", "Introspection", "Discontent"],
-      kwRev: ["Renewed Interest", "Seizing Opportunity", "Awakening from Slump", "Gratitude"]
+      up: "You are bored or discontented, and an offer is sitting in front of you unnoticed. Look up from what is wrong and see what is being offered.",
+      rev: "You are coming out of a slump and ready to engage again. Take the opportunity you overlooked before.",
+      kwUp: ["apathy", "contemplation", "discontent", "a missed offer"],
+      kwRev: ["renewed interest", "seizing an opportunity", "waking up", "gratitude"]
     },
     swords: {
       title: "Lord of Rest from Strife",
-      up: "Sacred sanctuary, voluntary retreat, peaceful mental recuperation, laying down weapons to heal.",
-      rev: "Burnout forced by refusal to rest, awakening from recuperation, returning to battlefield too early.",
-      kwUp: ["Rest", "Sanctuary", "Recuperation", "Peaceful Contemplation"],
-      kwRev: ["Burnout", "Restlessness", "Forced Exile", "Premature Return"]
+      up: "Rest, retreat, and recovery. Step back from the fight to recuperate.",
+      rev: "Rest has gone on too long, or you are refusing the rest you need. Either get back up or let yourself stop.",
+      kwUp: ["rest", "retreat", "recovery", "quiet"],
+      kwRev: ["burnout", "restlessness", "forced withdrawal", "returning too soon"]
     },
     pentacles: {
       title: "Lord of Earthly Power",
-      up: "Preservation of wealth, tight security, cautious fiscal boundaries, safeguarding hard-won capital.",
-      rev: "Miserliness, greedy hoarding, fear-based scarcity hoarding, financial paranoia restricting life flow.",
-      kwUp: ["Security", "Preservation", "Financial Boundaries", "Frugality"],
-      kwRev: ["Greed", "Miserliness", "Scarcity Trap", "Material Obsession"]
+      up: "Holding on tight to money, control, or security. Stability is good; gripping it so hard you cannot move is not.",
+      rev: "You are loosening your grip, spending more freely, or letting go of control. Make sure it is release and not recklessness.",
+      kwUp: ["security", "control", "saving", "holding on"],
+      kwRev: ["greed", "miserliness", "letting go", "material obsession"]
     }
   },
   {
-    rank: "5",
-    num: 5,
-    label: "Five",
-    roman: "V",
+    rank: "5", num: 5, label: "Five", roman: "V",
     wands: {
       title: "Lord of Strife",
-      up: "Spirited competition, sparring match of egos, divergent opinions, friction stimulating growth.",
-      rev: "Escalating hostility, fatigue from constant bickering, finding common ground or avoiding petty fights.",
-      kwUp: ["Competition", "Sparring", "Creative Friction", "Ego Clash"],
-      kwRev: ["Petty Bickering", "Exhaustion", "Conflict Avoidance", "Reaching Accord"]
+      up: "Competing wants, voices, or egos are pulling in different directions. Treat the friction as a workout rather than a war, and look for the useful idea in the noise.",
+      rev: "The squabbling has either worn everyone out or is about to turn genuinely hostile. Step back from a fight that no longer has a point.",
+      kwUp: ["competition", "disagreement", "friction", "clashing egos"],
+      kwRev: ["petty bickering", "exhaustion", "avoiding conflict", "finding agreement"]
     },
     cups: {
       title: "Lord of Loss in Pleasure",
-      up: "Mourning three spilled cups in a dark cloak, blinded to the two full cups standing upright behind you.",
-      rev: "Turning around to see what remains, emotional recovery, forgiveness, letting go of unchangeable past.",
-      kwUp: ["Grief & Regret", "Mourning Loss", "Spilled Dreams", "Focus on Loss"],
-      kwRev: ["Acceptance", "Emotional Recovery", "Seeing Hope", "Gratitude for What Remains"]
+      up: "Grief and regret over what has been lost. Mourn it, and then notice what is still standing behind you.",
+      rev: "You are starting to accept the loss and see what remains. Recovery and forgiveness are within reach.",
+      kwUp: ["grief", "regret", "loss", "disappointment"],
+      kwRev: ["acceptance", "recovery", "hope", "gratitude for what remains"]
     },
     swords: {
       title: "Lord of Defeat",
-      up: "Pyrrhic victory; hollow win attained through cutthroat tactics, leaving allies defeated and bitter.",
-      rev: "Laying down bitter vendettas, walking away from toxic arguments, reconciling past humiliation.",
-      kwUp: ["Pyrrhic Victory", "Cutthroat Ego", "Hollow Triumph", "Hostility"],
-      kwRev: ["Forgiveness", "Walking Away", "Healing Resentment", "Remorse"]
+      up: "A win that costs more than it is worth: conflict, hostility, and a hollow victory. Ask whether being right was worth what it cost.",
+      rev: "You are ready to walk away from a pointless fight, or to make amends after one. Take the exit.",
+      kwUp: ["a hollow victory", "conflict", "hostility", "winning at a cost"],
+      kwRev: ["forgiveness", "walking away", "healing resentment", "remorse"]
     },
     pentacles: {
       title: "Lord of Material Trouble",
-      up: "Trudging in snow past illuminated stained-glass sanctuary; temporary hardship, feeling left out in cold.",
-      rev: "Recovery from financial crisis, finding shelter, asking for support, warmth returning after hardship.",
-      kwUp: ["Hardship", "Isolation", "Financial Strain", "Feeling Left Out"],
-      kwRev: ["Shelter Found", "Financial Recovery", "Rebuilding Security", "Accepting Help"]
+      up: "Hardship, worry, and feeling left out in the cold. Help is closer than it looks if you will ask for it.",
+      rev: "Recovery is beginning: shelter, support, and a return to steadier ground. Accept the help.",
+      kwUp: ["hardship", "isolation", "financial strain", "feeling left out"],
+      kwRev: ["shelter", "financial recovery", "rebuilding", "accepting help"]
     }
   },
   {
-    rank: "6",
-    num: 6,
-    label: "Six",
-    roman: "VI",
+    rank: "6", num: 6, label: "Six", roman: "VI",
     wands: {
       title: "Lord of Victory",
-      up: "Triumphant procession, laurel wreath of public acclaim, recognition, pride in validated achievement.",
-      rev: "Ego arrogance, hollow applause, fall from favor, private disappointment behind public smile.",
-      kwUp: ["Victory", "Public Acclaim", "Honor", "Pride & Recognition"],
-      kwRev: ["Ego Inflated", "Fall from Grace", "Hollow Praise", "Loss of Status"]
+      up: "You have earned a win and other people can see it. Accept the recognition without apologizing for it.",
+      rev: "Recognition is late, missing, or hollow, and pride may be covering a private disappointment. Measure the win by what you did, not by the applause.",
+      kwUp: ["victory", "recognition", "confidence", "pride"],
+      kwRev: ["inflated ego", "a fall from favor", "hollow praise", "lost standing"]
     },
     cups: {
       title: "Lord of Pleasure",
-      up: "Nostalgic sweetness, childhood memories, innocent generosity, meeting old soul kin from years past.",
-      rev: "Clinging to rose-tinted childhood, living in the past, refusing to mature into adult autonomy.",
-      kwUp: ["Nostalgia", "Sweet Memories", "Childlike Joy", "Innocent Giving"],
-      kwRev: ["Stuck in the Past", "Immaturity", "Rose-Tinted Delusion", "Moving On"]
+      up: "Nostalgia, old friends, and the comfort of childhood memories. Let the past be sweet without moving back into it.",
+      rev: "You are living in the past or refusing to grow up. Visit the memory and then come back to the present.",
+      kwUp: ["nostalgia", "memories", "innocence", "kindness"],
+      kwRev: ["stuck in the past", "immaturity", "rose-tinted memory", "moving on"]
     },
     swords: {
       title: "Lord of Earned Success",
-      up: "Ferried across choppy waters toward tranquil shores; smooth passage, leaving turbulence behind.",
-      rev: "Baggage dragging down the boat, running back into storm, inability to leave old dysfunction behind.",
-      kwUp: ["Transition", "Tranquil Shores", "Mental Relief", "Leaving Strife Behind"],
-      kwRev: ["Emotional Baggage", "Relapsing into Turmoil", "Delayed Journey", "Resistance to Moving"]
+      up: "A transition from rough water to calmer. Progress is quiet, but it is real; keep going.",
+      rev: "You are stuck in transition, carrying baggage you cannot leave behind, or heading back into the storm. Commit to the far shore.",
+      kwUp: ["transition", "calmer water", "relief", "moving on"],
+      kwRev: ["baggage", "relapse", "a delayed move", "resistance to change"]
     },
     pentacles: {
       title: "Lord of Material Success",
-      up: "Generous patronage, fair distribution of resources, balanced scales of giving and gracious receiving.",
-      rev: "Strings attached to charity, condescending philanthropy, abuse of debtor-creditor leverage.",
-      kwUp: ["Generosity", "Charity", "Fair Balance", "Patronage"],
-      kwRev: ["Strings Attached", "Power Dynamic Abuse", "Inequity", "Debtor Guilt"]
+      up: "Generosity flowing fairly, whether you are giving or receiving. Share without keeping score.",
+      rev: "Charity with strings attached, or a power imbalance in who gives and who owes. Check what the generosity is really buying.",
+      kwUp: ["generosity", "charity", "fairness", "support"],
+      kwRev: ["strings attached", "power imbalance", "inequity", "debt"]
     }
   },
   {
-    rank: "7",
-    num: 7,
-    label: "Seven",
-    roman: "VII",
+    rank: "7", num: 7, label: "Seven", roman: "VII",
     wands: {
       title: "Lord of Valour",
-      up: "Standing your ground on high ground against overwhelming odds; fierce moral resolve and courage.",
-      rev: "Exhausted defensiveness, paranoia, giving up vantage point, succumbing to collective peer pressure.",
-      kwUp: ["Moral Fortitude", "Defending Position", "High Ground", "Courage Under Fire"],
-      kwRev: ["Overwhelmed", "Exhaustion", "Giving In", "Paranoid Guard"]
+      up: "You hold a position others are challenging, and you are right to defend it. Stand your ground, but pick the battles that matter.",
+      rev: "Defending everything has exhausted you, and some of what you are guarding is not worth the fight. Lower the guard where you can and rest.",
+      kwUp: ["standing your ground", "conviction", "defense", "courage under pressure"],
+      kwRev: ["feeling overwhelmed", "exhaustion", "giving in", "defensiveness"]
     },
     cups: {
       title: "Lord of Illusionary Success",
-      up: "Floating castles in the clouds, glittering daydreams, temptation of alluring possibilities requiring discernment.",
-      rev: "Shattered illusions, cutting through fantasy, making concrete choices, grounding desires in reality.",
-      kwUp: ["Daydreams", "Multiple Choices", "Fantasy & Allure", "Wishful Thinking"],
-      kwRev: ["Clarity of Choice", "Shattered Illusions", "Grounded Reality", "Decisive Action"]
+      up: "Too many options, and some of them are only fantasies. Look hard at what each one really offers before you choose.",
+      rev: "The daydreams are clearing and one real choice is coming into focus. Commit to it.",
+      kwUp: ["daydreams", "too many options", "fantasy", "wishful thinking"],
+      kwRev: ["clarity", "a clear choice", "realism", "decisive action"]
     },
     swords: {
       title: "Lord of Unstable Effort",
-      up: "Stealth, clever strategy, sneaking away with the swords, solo tactics, keeping cards close to chest.",
-      rev: "Caught in deception, confession, conscience asserting itself, coming clean, ineffective covert plots.",
-      kwUp: ["Stealth", "Strategy", "Tactical Cunning", "Discretion"],
-      kwRev: ["Caught Out", "Deception Exposed", "Conscience Awakening", "Confession"]
+      up: "Strategy, stealth, or getting away with something. Cleverness has its place, but check whether you are deceiving others or yourself.",
+      rev: "Deception is being exposed, or your conscience is catching up with you. Come clean before you are caught out.",
+      kwUp: ["strategy", "stealth", "cunning", "discretion"],
+      kwRev: ["getting caught", "exposed deception", "conscience", "confession"]
     },
     pentacles: {
       title: "Lord of Success Unfulfilled",
-      up: "Leaning on hoe contemplating harvest vines; patience, long-term assessment, waiting for seeds to ripen.",
-      rev: "Impatience, abandoned investments, disillusionment with rate of return, wasted effort.",
-      kwUp: ["Patience", "Harvest Assessment", "Long-term Investment", "Perseverance"],
-      kwRev: ["Impatience", "Wasted Labor", "Premature Abandonment", "Disappointment"]
+      up: "You have worked hard and are waiting for the harvest. Assess what is growing and be patient with what is not ready.",
+      rev: "Impatience or disappointment with a slow return. Decide whether to keep investing or redirect your effort.",
+      kwUp: ["patience", "assessment", "long-term effort", "perseverance"],
+      kwRev: ["impatience", "wasted effort", "giving up early", "disappointment"]
     }
   },
   {
-    rank: "8",
-    num: 8,
-    label: "Eight",
-    roman: "VIII",
+    rank: "8", num: 8, label: "Eight", roman: "VIII",
     wands: {
       title: "Lord of Swiftness",
-      up: "Eight flying arrows slicing through the sky; rapid progress, swift communications, sudden momentum.",
-      rev: "Chaotic delay, scrambled messages, haste resulting in mistakes, stalled flight, panic.",
-      kwUp: ["Rapid Momentum", "Swift Messages", "Sudden Progress", "Aligned Action"],
-      kwRev: ["Delays", "Chaotic Haste", "Miscommunicated News", "Frustrated Velocity"]
+      up: "Things are moving fast and in your favor. Expect quick news and quick progress, and keep your attention on the direction rather than the speed.",
+      rev: "Delays, crossed messages, and haste are scrambling what should have been quick. Slow down enough to read what is actually in front of you.",
+      kwUp: ["momentum", "quick news", "fast progress", "alignment"],
+      kwRev: ["delays", "haste", "crossed messages", "frustration"]
     },
     cups: {
       title: "Lord of Abandoned Success",
-      up: "Turning back on eight stacked chalices to climb the rocky path into mountains; walking away from what no longer feeds the soul.",
-      rev: "Fear of departure, clinging to hollow security, endlessly returning to unfulfilling situations.",
-      kwUp: ["Walking Away", "Deeper Meaning", "Spiritual Pilgrimage", "Soul Quest"],
-      kwRev: ["Fear of Leaving", "Aimless Wandering", "Clinging to Hollow Comfort", "Avoidance"]
+      up: "You are leaving something that no longer satisfies you, even though it still looks fine from outside. The walk away is the point.",
+      rev: "You are afraid to leave, or drifting without deciding, and you keep returning to what does not feed you. Either go or recommit.",
+      kwUp: ["walking away", "searching for meaning", "a departure", "letting go"],
+      kwRev: ["fear of leaving", "drifting", "clinging to comfort", "avoidance"]
     },
     swords: {
       title: "Lord of Shortened Force",
-      up: "Blindfolded and loosely bound by swords planted in mud; mental entrapment, victim mentality, self-imposed prison.",
-      rev: "Removing the blindfold, recognizing freedom was always accessible, stepping out of limiting beliefs.",
-      kwUp: ["Self-Imposed Trap", "Limiting Beliefs", "Mental Cage", "Victim Stance"],
-      kwRev: ["Liberation", "Removed Blindfold", "Newfound Freedom", "Overcoming Helplessness"]
+      up: "You feel trapped by thoughts and beliefs rather than real walls. The restriction is self-imposed, and the way out is in sight.",
+      rev: "You are starting to see that you were never really bound. Step out of the limiting belief.",
+      kwUp: ["feeling trapped", "limiting beliefs", "self-restriction", "helplessness"],
+      kwRev: ["liberation", "new perspective", "freedom", "taking control"]
     },
     pentacles: {
       title: "Lord of Prudence",
-      up: "Dedicated apprentice diligently hammering coin after coin; dedication to craft, repetitive mastery, pride in work.",
-      rev: "Perfectionism, tedious burnout, cutting corners, lack of passion for repetitive chores.",
-      kwUp: ["Apprenticeship", "Mastery of Craft", "Dedication", "Diligence"],
-      kwRev: ["Perfectionism", "Tedious Burnout", "Shoddy Craft", "Uninspired Drudgery"]
+      up: "Apprenticeship and craft: show up, do the work, and improve a little every day. Mastery comes through repetition.",
+      rev: "Perfectionism or tedium has drained the care out of the work. Reconnect with why you do it, or change what you do.",
+      kwUp: ["apprenticeship", "craft", "dedication", "diligence"],
+      kwRev: ["perfectionism", "tedium", "cutting corners", "uninspired work"]
     }
   },
   {
-    rank: "9",
-    num: 9,
-    label: "Nine",
-    roman: "IX",
+    rank: "9", num: 9, label: "Nine", roman: "IX",
     wands: {
       title: "Lord of Great Strength",
-      up: "Bandaged warrior leaning on protective staff; bruised but resilient, guarding final line of defense.",
-      rev: "Paranoid hypervigilance, defensive exhaustion, stubborn refusal to accept that danger has passed.",
-      kwUp: ["Resilience", "Grit", "Final Stand", "Defensive Fortitude"],
-      kwRev: ["Exhaustion", "Hypervigilance", "Paranoia", "Defensive Walls Too High"]
+      up: "You are tired and bruised but still standing, and the end is closer than it feels. Hold the line a little longer.",
+      rev: "You are braced for a blow that may never come, and the vigilance is costing more than the danger would. Let the guard down where it is safe to.",
+      kwUp: ["resilience", "persistence", "a last stand", "endurance"],
+      kwRev: ["exhaustion", "hypervigilance", "paranoia", "walls too high"]
     },
     cups: {
       title: "Lord of Material Happiness",
-      up: "The 'Wish Card'; hearty contentment, smug satisfaction, banquet of personal emotional and sensory fulfillment.",
-      rev: "Smug complacency, shallow materialism, over-indulgence leaving an internal spiritual void.",
-      kwUp: ["Wishes Fulfilled", "Satisfaction", "Emotional Contentment", "Pleasure"],
-      kwRev: ["Smugness", "Greed", "Superficial Comfort", "Underlying Emptiness"]
+      up: "Contentment and wishes fulfilled. Enjoy what you have built without hunting for the catch.",
+      rev: "The satisfaction is shallow or smug, and something underneath still feels empty. Ask whether you are full or just comfortable.",
+      kwUp: ["wishes fulfilled", "satisfaction", "contentment", "pleasure"],
+      kwRev: ["smugness", "greed", "shallow comfort", "emptiness"]
     },
     swords: {
       title: "Lord of Despair and Cruelty",
-      up: "Waking up in midnight darkness with hands clutching face; nocturnal anxiety, nightmare loops, catastrophic thoughts.",
-      rev: "Morning dawn breaking over nightmares, learning to quiet racing mind, seeking comfort and therapeutic clarity.",
-      kwUp: ["Nighttime Anguish", "Anxiety Spirals", "Catastrophizing", "Guilt & Dread"],
-      kwRev: ["Relief at Dawn", "Coping with Anxiety", "Finding Solace", "Releasing Catastrophic Fears"]
+      up: "Anxiety, sleepless nights, and catastrophic thinking. Most of the fears are larger in the dark than in daylight.",
+      rev: "The nightmare is easing and you are learning to quiet your mind. Seek support and let the fears shrink.",
+      kwUp: ["anxiety", "sleeplessness", "catastrophizing", "dread"],
+      kwRev: ["relief", "coping", "finding support", "letting fear go"]
     },
     pentacles: {
       title: "Lord of Material Gain",
-      up: "Graceful lady in lush vineyard with hooded falcon; dignified self-reliance, refined luxury, enjoying fruits of labor.",
-      rev: "Superficial display, gilded cage, isolation behind wealth, feeling dependent on someone else's resources.",
-      kwUp: ["Self-Reliance", "Refined Luxury", "Solitary Grace", "Fruitful Independence"],
-      kwRev: ["Gilded Cage", "Superficial Vanity", "Material Dependency", "Loneliness in Luxury"]
+      up: "Self-sufficiency and earned comfort. Enjoy the independence you built.",
+      rev: "The security looks better than it feels, or it depends on someone else more than you admit. Be honest about the numbers and about the loneliness.",
+      kwUp: ["self-reliance", "comfort", "independence", "earned reward"],
+      kwRev: ["a gilded cage", "vanity", "dependence", "loneliness in comfort"]
     }
   },
   {
-    rank: "10",
-    num: 10,
-    label: "Ten",
-    roman: "X",
+    rank: "10", num: 10, label: "Ten", roman: "X",
     wands: {
       title: "Lord of Oppression",
-      up: "Trudging up hill bearing ten heavy bundles; crushing responsibility, overburdened shoulders, near finish line.",
-      rev: "Collapsing under burden, delegating tasks, shedding unnecessary baggage, refusing martyrdom.",
-      kwUp: ["Heavy Burden", "Overcommitment", "Shouldering Responsibility", "Near the Top"],
-      kwRev: ["Delegation", "Collapse", "Dropping the Load", "Refusing Martyrdom"]
+      up: "You are carrying more than your share, and you are close to the finish. Set something down, or ask for help before you drop all of it.",
+      rev: "You are either buckling under the load or finally putting some of it down. Delegate what you can and stop treating exhaustion as a virtue.",
+      kwUp: ["burden", "overcommitment", "responsibility", "nearly there"],
+      kwRev: ["delegation", "collapse", "dropping the load", "refusing martyrdom"]
     },
     cups: {
       title: "Lord of Perfected Success",
-      up: "Rainbow of ten chalices overarching happy family and verdant home; lasting emotional bliss, idyllic communal love.",
-      rev: "Domestic friction, shattered family ideals, unrealistic fantasy of perfection, emotional alienation.",
-      kwUp: ["Lasting Bliss", "Family Harmony", "Communal Love", "Rainbow of Fulfillment"],
-      kwRev: ["Domestic Discord", "Shattered Ideal", "Alienation", "False Harmony"]
+      up: "Lasting happiness in family, home, and community. This is the harmony the other cards were working toward.",
+      rev: "Home life is strained, or the picture of perfection does not match what is going on inside it. Fix what is really happening rather than the image.",
+      kwUp: ["lasting happiness", "family harmony", "community", "fulfillment"],
+      kwRev: ["domestic discord", "a shattered ideal", "alienation", "false harmony"]
     },
     swords: {
       title: "Lord of Ruin",
-      up: "Figure lying face-down pierced by ten swords as dawn breaks on the distant horizon; rock bottom, complete ending, nowhere to go but up.",
-      rev: "Surviving the worst, beginning of recovery from trauma, rising from ashes, lingering victim wounds.",
-      kwUp: ["Rock Bottom", "Absolute Ending", "Inevitable Dawn", "Betrayal Over"],
-      kwRev: ["Rising from Ashes", "Recovery from Trauma", "Worst is Over", "Regaining Life"]
+      up: "Rock bottom: an ending that is painful but complete. There is nothing further to lose, and the dawn is already behind you.",
+      rev: "You are surviving the worst and beginning to recover. Stop reliving the wound and let yourself rise.",
+      kwUp: ["rock bottom", "a complete ending", "painful truth", "a new dawn"],
+      kwRev: ["recovery", "survival", "the worst is over", "rising again"]
     },
     pentacles: {
       title: "Lord of Wealth",
-      up: "Generational patriarch surrounded by family, dogs, and ancestral estate; lasting legacy, enduring security, heritage.",
-      rev: "Family inheritance disputes, crumbling ancestral estate, conservative stagnation, financial legacy burdens.",
-      kwUp: ["Generational Legacy", "Enduring Wealth", "Ancestral Heritage", "Family Prosperity"],
-      kwRev: ["Family Inheritance Feud", "Crumbling Heritage", "Legacy Burden", "Financial Mismanagement"]
+      up: "Lasting wealth, family, and legacy. Build something that outlives the moment, or let yourself belong to what already does.",
+      rev: "Family or financial trouble, an inheritance dispute, or a tradition that has become a burden. Have the practical conversation.",
+      kwUp: ["legacy", "lasting wealth", "family", "security"],
+      kwRev: ["family dispute", "a crumbling legacy", "financial burden", "mismanagement"]
     }
   },
   {
-    rank: "page",
-    num: 11,
-    label: "Page",
-    roman: "P",
+    rank: "page", num: 11, label: "Page", roman: "P",
     wands: {
       title: "Princess of the Shining Flame",
-      up: "Enthusiastic explorer holding blooming staff, bubbling with playful creative sparks and thirst for adventure.",
-      rev: "Procrastination, flighty attention span, boastful promises without follow-through, tantrums.",
-      kwUp: ["Creative Spark", "Enthusiasm", "Curiosity", "Playful Adventure"],
-      kwRev: ["Flightiness", "Procrastination", "Empty Promises", "Impatience"]
+      up: "A new enthusiasm wants your attention: a message, a hobby, a bold idea. Follow it with curiosity and see where it points.",
+      rev: "Enthusiasm is scattered or all talk, and nothing is being finished. Pick one spark and give it a week of real attention.",
+      kwUp: ["enthusiasm", "curiosity", "a new idea", "adventure"],
+      kwRev: ["flightiness", "procrastination", "empty promises", "impatience"]
     },
     cups: {
       title: "Princess of the Waters",
-      up: "Dreamy youth gazing tenderly at a whimsical fish peering out of the cup; poetic intuition and tender emotion.",
-      rev: "Emotional immaturity, drama, moodiness, escapism into childish fantasies, hypersensitivity.",
-      kwUp: ["Intuitive Messenger", "Poetic Dreamer", "Tender Heart", "Whimsical Surprise"],
-      kwRev: ["Emotional Fragility", "Mood Swings", "Escapist Fantasies", "Childish Drama"]
+      up: "An intuitive message, a creative impulse, or a tender surprise. Stay open and curious about what you feel.",
+      rev: "Emotional immaturity, moodiness, or escape into fantasy. Feelings are information, not verdicts.",
+      kwUp: ["intuition", "creativity", "tenderness", "a surprise"],
+      kwRev: ["fragility", "mood swings", "escapism", "drama"]
     },
     swords: {
       title: "Princess of the Rushing Winds",
-      up: "Agile youth standing on craggy knoll with sword raised, sharp wind blowing, vigilant and hungry for truth.",
-      rev: "Spiteful gossip, petty paranoia, abrasive communication, weaponizing secret information.",
-      kwUp: ["Curiosity for Truth", "Mental Agility", "Vigilance", "Inquisitive Mind"],
-      kwRev: ["Malicious Gossip", "Defensiveness", "Petty Bickering", "Abrasive Words"]
+      up: "Curiosity, sharp questions, and a hunger for truth. Stay alert, and think before you speak.",
+      rev: "Gossip, defensiveness, or words used carelessly. Let a thought settle before you broadcast it.",
+      kwUp: ["curiosity", "mental agility", "vigilance", "questions"],
+      kwRev: ["gossip", "defensiveness", "careless words", "pettiness"]
     },
     pentacles: {
       title: "Princess of the Echoing Hills",
-      up: "Earnest student cradling a glowing gold coin, immersed in nature, eager to learn practical skills.",
-      rev: "Lack of focus, financial irresponsibility, neglecting studies, laziness, failure to materialize dreams.",
-      kwUp: ["Practical Student", "Grounded Ambition", "Eagerness to Learn", "Fostering Seeds"],
-      kwRev: ["Lack of Progress", "Procrastination", "Financial Naivety", "Wasted Potential"]
+      up: "A practical beginning: studying, saving, learning a skill. Ambition here is quiet and steady.",
+      rev: "Procrastination, or plans without any practice behind them. Start the unglamorous lesson.",
+      kwUp: ["study", "practical ambition", "eagerness to learn", "a first step"],
+      kwRev: ["procrastination", "lack of progress", "financial naivety", "wasted potential"]
     }
   },
   {
-    rank: "knight",
-    num: 12,
-    label: "Knight",
-    roman: "Kn",
+    rank: "knight", num: 12, label: "Knight", roman: "Kn",
     wands: {
       title: "Lord of the Flame and Lightning",
-      up: "Fiery charger galloping through desert sands; fearless audacity, passionate haste, dynamic champion of causes.",
-      rev: "Reckless arrogance, volatile temper, hot-headed burnouts, impatience leaving wreckage behind.",
-      kwUp: ["Audacity", "Fiery Passion", "Chivalric Charge", "High Energy"],
-      kwRev: ["Reckless Haste", "Hot-Headed Aggression", "Impulsiveness", "Burnout"]
+      up: "Act boldly and move fast; this is a card of charge, passion, and daring. Just check the direction before you floor it.",
+      rev: "Recklessness, temper, or impatience is leaving wreckage behind. Slow down and ask what you are actually chasing.",
+      kwUp: ["boldness", "passion", "action", "energy"],
+      kwRev: ["recklessness", "temper", "impulsiveness", "burnout"]
     },
     cups: {
       title: "Lord of the Waves and Waters",
-      up: "Romantic knight riding silver horse across quiet creek, offering golden cup with heartfelt courtly devotion.",
-      rev: "Fickle romanticism, manipulative charm, unrealistic prince charming illusions, mood-driven unreliability.",
-      kwUp: ["Romantic Chivalry", "Heartfelt Quest", "Poetic Vision", "Diplomacy"],
-      kwRev: ["Fickle Heart", "Manipulative Charm", "Disappointment", "Passive Aggression"]
+      up: "A romantic offer, an idealistic quest, or a charming messenger. Follow the heart, but check that there is a plan behind the charm.",
+      rev: "Charm without follow-through, moodiness, or manipulation dressed up as romance. Judge by actions, not promises.",
+      kwUp: ["romance", "idealism", "charm", "an invitation"],
+      kwRev: ["fickleness", "manipulation", "disappointment", "moodiness"]
     },
     swords: {
       title: "Lord of the Wind and Breezes",
-      up: "Furious knight charging headlong through gale-force winds with drawn broadsword; lightning intellect and relentless drive.",
-      rev: "Sarcastic ruthlessness, bulldozing feelings, charging into battle without strategy, intellectual tyranny.",
-      kwUp: ["Direct Action", "Fast-Paced Intellect", "Fearless Drive", "Sharp Truth"],
-      kwRev: ["Ruthless Tactlessness", "Bulldozing", "Reckless Arguments", "Impulsive Strike"]
+      up: "Fast, direct, and certain. Charge toward the truth, but check your mirrors; speed is not accuracy.",
+      rev: "Ruthlessness, tactlessness, or arguments picked for their own sake. Certainty is not the same as being right.",
+      kwUp: ["directness", "quick thinking", "drive", "candor"],
+      kwRev: ["ruthlessness", "tactlessness", "reckless argument", "impulsiveness"]
     },
     pentacles: {
       title: "Lord of the Wide and Fertile Land",
-      up: "Patient knight on heavy draught horse in plowed field; unwavering reliability, methodical endurance, duty.",
-      rev: "Stubborn rigidity, obsessive workaholism, mundane tunnel-vision, resistance to necessary change.",
-      kwUp: ["Methodical Reliability", "Endurance", "Duty & Honor", "Patience"],
-      kwRev: ["Stubborn Inertia", "Workaholism", "Tunnel Vision", "Boring Rigidity"]
+      up: "Reliable, patient, methodical progress. It is not glamorous, but it arrives on time.",
+      rev: "Stubbornness, workaholism, or a routine that has stopped leading anywhere. Change the part that is only habit.",
+      kwUp: ["reliability", "endurance", "duty", "patience"],
+      kwRev: ["stubbornness", "workaholism", "tunnel vision", "rigidity"]
     }
   },
   {
-    rank: "queen",
-    num: 13,
-    label: "Queen",
-    roman: "Q",
+    rank: "queen", num: 13, label: "Queen", roman: "Q",
     wands: {
       title: "Queen of the Thrones of Flame",
-      up: "Radiant sovereign with black cat at feet, holding sunflower and wand; magnetic charisma, infectious warmth, self-assurance.",
-      rev: "Jealous fury, domineering drama, demanding constant spotlight, manipulative insecurity.",
-      kwUp: ["Magnetic Charisma", "Fierce Warmth", "Confidence", "Radiant Leadership"],
-      kwRev: ["Jealousy", "Domineering Drama", "Insecurity", "Demanding Centerstage"]
+      up: "Confidence, warmth, and energy that draws people in. Lead by being yourself and lift others as you go.",
+      rev: "The warmth has turned demanding or jealous, or confidence has slipped into insecurity. Ask for what you need instead of performing that you need nothing.",
+      kwUp: ["confidence", "warmth", "charisma", "leadership"],
+      kwRev: ["jealousy", "drama", "insecurity", "demanding attention"]
     },
     cups: {
       title: "Queen of the Thrones of Water",
-      up: "Empathetic mystic queen contemplating ornate closed cup on ocean shore; psychic depths, compassionate listening, emotional serenity.",
-      rev: "Codependent absorption, emotional manipulation, victim playing, drowned in psychic distress.",
-      kwUp: ["Empathy", "Psychic Depth", "Unconditional Compassion", "Emotional Wisdom"],
-      kwRev: ["Codependency", "Emotional Manipulation", "Martyr Complex", "Overwhelmed by Feelings"]
+      up: "Deep empathy and emotional wisdom. Listen to your intuition and offer compassion without losing yourself in other people's feelings.",
+      rev: "Absorbing everyone's emotions has left you drained or codependent. Tend your own feelings before you carry anyone else's.",
+      kwUp: ["empathy", "intuition", "compassion", "emotional wisdom"],
+      kwRev: ["codependency", "emotional manipulation", "martyrdom", "feeling overwhelmed"]
     },
     swords: {
       title: "Queen of the Thrones of Air",
-      up: "Sharp-eyed queen holding upright blade with outstretched hand amidst clearing clouds; piercing intellect, boundaries, unbiased truth.",
-      rev: "Ice-cold bitterness, unforgiving vindictiveness, caustic tongue, emotional fortress of loneliness.",
-      kwUp: ["Unbiased Truth", "Clear Boundaries", "Sovereign Intellect", "Direct Insight"],
-      kwRev: ["Cold Bitterness", "Cruel Sarcasm", "Vindictiveness", "Unforgiving Isolation"]
+      up: "Clear sight and honest boundaries. Say the true thing plainly and expect the same from others.",
+      rev: "Clarity has turned cold, bitter, or cruel. The truth does not have to cut this deep.",
+      kwUp: ["honesty", "clear boundaries", "independence", "insight"],
+      kwRev: ["coldness", "cruel sarcasm", "bitterness", "isolation"]
     },
     pentacles: {
       title: "Queen of the Thrones of Earth",
-      up: "Nurturing matriarch nestled in fertile forest with rabbit at feet; earthy abundance, hospitality, sensual groundedness.",
-      rev: "Materialistic vanity, smothering home life, neglect of internal spirit in pursuit of worldly status.",
-      kwUp: ["Earthy Nurturance", "Abundant Hospitality", "Practical Wisdom", "Sanctuary"],
-      kwRev: ["Materialistic Vanity", "Smothering Care", "Status Obsession", "Disconnected from Earth"]
+      up: "Practical care: a home that works, money handled well, warmth you can feel. Provide it, and keep some for yourself.",
+      rev: "Caring for everyone has left you depleted, or security has become anxious control. Tend your own needs too.",
+      kwUp: ["practical care", "hospitality", "common sense", "comfort"],
+      kwRev: ["self-neglect", "smothering", "status obsession", "anxiety about security"]
     }
   },
   {
-    rank: "king",
-    num: 14,
-    label: "King",
-    roman: "K",
+    rank: "king", num: 14, label: "King", roman: "K",
     wands: {
       title: "Lord of the Flame and Lightning",
-      up: "Visionary leader enthroned with lion and salamander motifs; inspirational visionary, bold trailblazer, entrepreneurial authority.",
-      rev: "Dictatorial entitlement, ruthless impatience, overbearing arrogance, setting impossible expectations for others.",
-      kwUp: ["Visionary Leader", "Trailblazer", "Inspirational Authority", "Bold Courage"],
-      kwRev: ["Dictatorial Ego", "Unrealistic Expectations", "Ruthless Temper", "Overbearing Control"]
+      up: "Lead with vision and nerve; you can see the whole picture and inspire others to build it. Delegate the details and keep your eye on the direction.",
+      rev: "Vision has tipped into impatience, arrogance, or impossible demands on other people. Ask for less than everything and listen more than you speak.",
+      kwUp: ["vision", "leadership", "boldness", "inspiration"],
+      kwRev: ["arrogance", "impossible expectations", "temper", "domineering"]
     },
     cups: {
       title: "Prince of the Chariot of the Waters",
-      up: "Master of emotional seas seated on throne floating upon rolling waves; serene calm amidst turbulent tempests, compassionate wisdom.",
-      rev: "Suppressed rage, passive-aggressive mood swings, cold emotional withdrawal, manipulative deceit.",
-      kwUp: ["Emotional Mastery", "Compassionate Sovereign", "Calm in the Storm", "Wisdom"],
-      kwRev: ["Emotional Volatility", "Cold Withdrawal", "Passive Aggression", "Deceit"]
+      up: "Calm in emotional storms: compassion balanced with control. Lead with steadiness and help others find theirs.",
+      rev: "Feelings are being suppressed, manipulated, or vented sideways. Say what you feel directly instead of managing everyone around it.",
+      kwUp: ["emotional balance", "compassion", "calm", "wisdom"],
+      kwRev: ["volatility", "cold withdrawal", "passive aggression", "deceit"]
     },
     swords: {
       title: "Prince of the Chariot of the Winds",
-      up: "Judicial sovereign with upright gleaming blade; supreme intellectual mastery, ethical truth, disciplined logic.",
-      rev: "Tyrannical intellect, weaponized cruelty, rigid cynicism, dogmatic authoritarianism devoid of heart.",
-      kwUp: ["Supreme Intellect", "Ethical Authority", "Impartial Truth", "Strategic Mastery"],
-      kwRev: ["Weaponized Cruelty", "Intellectual Tyranny", "Rigid Dogma", "Callous Coldness"]
+      up: "Authority built on logic, fairness, and discipline. Decide on the evidence and hold to your principles.",
+      rev: "Intellect used as a weapon: rigid, cynical, or tyrannical. Fairness without compassion is not fairness.",
+      kwUp: ["intellect", "authority", "impartiality", "strategy"],
+      kwRev: ["cruelty", "tyranny", "rigid thinking", "coldness"]
     },
     pentacles: {
       title: "Lord of the Wide and Fertile Land",
-      up: "Prosperous lord seated in grape-rich stone castle with bull heads carved in relief; enterprise mastery, steady abundance, generative security.",
-      rev: "Greedy miser, corrupt enterprise, stubborn resistance to ethical reform, valuing money over souls.",
-      kwUp: ["Generative Abundance", "Business Mastery", "Steadfast Security", "Material Sovereignty"],
-      kwRev: ["Greed & Corruption", "Stubborn Materialism", "Compromised Ethics", "Financial Domination"]
+      up: "Steady abundance built with discipline. Share the method, not just the money.",
+      rev: "Greed, rigidity, or neglect of the material side of life. Fix the foundation before the floor gives way.",
+      kwUp: ["abundance", "discipline", "security", "generosity"],
+      kwRev: ["greed", "stubbornness", "corruption", "neglect"]
     }
   }
 ];
 
 const cards = [];
 
-// 1. Add Major Arcana (22 cards)
 majorArcanaData.forEach(item => {
   cards.push({
-    id: `maj_${String(item.num).padStart(2, '0')}`,
+    id: `maj_${String(item.num).padStart(2, "0")}`,
     num: item.num,
     name: item.name,
     number: item.roman,
     arcana: "major",
     suit: null,
     element: item.element,
+    ruler: item.ruler,
     esotericTitle: item.esotericTitle,
-    symbols: item.symbols,
     meaningUpright: item.upright,
     meaningReversed: item.reversed,
     keywordsUpright: item.kwUp,
@@ -804,7 +688,6 @@ majorArcanaData.forEach(item => {
   });
 });
 
-// 2. Add Minor Arcana (56 cards)
 suits.forEach(suit => {
   minorRankData.forEach(rankItem => {
     const suitInfo = rankItem[suit.id];
@@ -819,6 +702,7 @@ suits.forEach(suit => {
       suit: suit.id,
       suitName: suit.name,
       element: suit.element,
+      ruler: null,
       esotericTitle: suitInfo.title,
       meaningUpright: suitInfo.up,
       meaningReversed: suitInfo.rev,
@@ -829,9 +713,10 @@ suits.forEach(suit => {
 });
 
 const fileContent = `/**
- * Complete 78-Card Tarot Deck Dataset
- * All 22 Major Arcana + 56 Minor Arcana across Wands, Cups, Swords, and Pentacles.
- * Rich upright and reversed meanings, esoteric titles, elemental associations, and symbolic keys.
+ * The 78-card deck: 22 Major Arcana and 56 Minor Arcana across Wands, Cups, Swords, and Pentacles.
+ *
+ * GENERATED by build_cards_data.js. Do not edit this file; edit the generator and run
+ * \`node build_cards_data.js\`.
  */
 
 export const SUITS = ${JSON.stringify(suits, null, 2)};
@@ -851,5 +736,5 @@ export function getCardsBySuit(suit) {
 }
 `;
 
-fs.writeFileSync(path.join(__dirname, 'js', 'cards.js'), fileContent, 'utf8');
-console.log(`Successfully generated js/cards.js with ${cards.length} cards!`);
+fs.writeFileSync(path.join(__dirname, "js", "cards.js"), fileContent, "utf8");
+console.log(`Wrote js/cards.js with ${cards.length} cards.`);

@@ -4,7 +4,7 @@
  * Fired from an ethics department for grading students like restaurant
  * inspections. He reads tarot from a folding table in a dead Circuit City
  * lot. He does not believe in magic. He believes people are predictable
- * and the pictures make it embarrassing. Every seat ends with a fortune
+ * and the pictures make it embarrassing. Every card ends with a fortune
  * slip, because he used to stuff them and he was fired for accuracy.
  */
 
@@ -33,7 +33,7 @@ Doris left the same winter for a man who owns a laminator and, Lyle will tell yo
 He sets the folding table up under the dead Circuit City sign when the weather isn't actively insulting him. Five dollars, or whatever is in the cup, which is usually not five dollars. He does not believe the cards are magic. He believes you already know the bad idea, and the picture is just how we make it embarrassing enough to hear. He laughs too long. He scores things. He talks to the deck like a coworker who also hates the shift. Regulars call him Don't, because that is how most of his sentences start. He answers to it.`,
 
   voice:
-    "Second person, present tense, too loud for a parking lot. He addresses you as contestant or pal. A reversal is the card face-down in the dip, trying to resign. He never says the universe, a spirit guide, a twin flame, vibrational anything, your journey, as above so below, or that everything happens for a reason. Every seat ends with a Slip, a fortune-cookie line he would have been fired for.",
+    "Second person, present tense, too loud for a parking lot. A reversal is the card face-down in the dip, trying to resign. He never says the universe, a spirit guide, a twin flame, vibrational anything, your journey, as above so below, or that everything happens for a reason. Every card ends with a Slip, a fortune-cookie line he would have been fired for.",
 
   favoriteLines: [
     "Sit down, contestant. The lot is full and none of them are clapping.",
@@ -44,13 +44,12 @@ He sets the folding table up under the dead Circuit City sign when the weather i
 };
 
 /**
- * Every seat the altar can deal, keyed by the role on js/spreads.js,
- * plus the three-card themes the app renames at runtime.
+ * Every position the app can deal, keyed by the role on js/spreads.js.
  */
 export const POSITION_FRAMES = {
-  core: "One card, contestant. Try not to clap. The lot is full of people who clapped:",
+  core: "One card. Try not to clap. The lot is full of people who clapped:",
   past: "Rear of the lot, where you parked the version of this you already lived:",
-  present: "Right now, under the busted Circuit City sign, which is your life at this minute:",
+  present: "Right now, which is your life at this minute:",
   future: "Down the service road, if you keep driving like this:",
   center_base: "The heart of the spread, the thing the rest of the cards are gossiping about:",
   center_cross: "Laid across it, the problem you brought and then pretended was weather:",
@@ -71,15 +70,7 @@ export const POSITION_FRAMES = {
 };
 
 function getPositionFrame(position) {
-  if (position?.role && POSITION_FRAMES[position.role]) return POSITION_FRAMES[position.role];
-  const name = String(position?.name || "").toLowerCase();
-  if (name.includes("situation")) return POSITION_FRAMES.situation;
-  if (name.includes("obstacle")) return POSITION_FRAMES.obstacle;
-  if (name.includes("advice")) return POSITION_FRAMES.advice;
-  if (name.includes("mind")) return POSITION_FRAMES.mind;
-  if (name.includes("body")) return POSITION_FRAMES.body;
-  if (name.includes("spirit")) return POSITION_FRAMES.spirit;
-  return POSITION_FRAMES.core;
+  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
 }
 
 function getCardLines(card, isReversed) {
@@ -90,19 +81,86 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
-function elementalFlavor(dominant) {
-  switch (dominant) {
-    case "Fire":
-      return "too much throttle and not enough adult. Everybody in this spread is flooring it";
-    case "Water":
-      return "feelings, fog, and somebody about to cry in a way they will later call depth";
-    case "Air":
-      return "all argument, no landing. The swords are doing the talking and they are unpaid";
-    case "Earth":
-      return "rent, food, and the coin. A practical mess, which is still a mess";
-    default:
-      return "big ugly majors. This is not a Tuesday. This is a personnel issue";
+/** The user's words, quoted as they came. Nothing is added after the closing quote. */
+function quote(question) {
+  return `“${question.trim()}”`;
+}
+
+const OPENERS = {
+  question: {
+    1: (q) => `You asked, and I quote, ${quote(q)} One card for that. Economical. I respect it and I'm about to ruin it.`,
+    3: (q) => `You asked, and I quote, ${quote(q)} Three cards. That question already knows the answer. I'm just here to make it rude.`,
+    10: (q) => `You asked, and I quote, ${quote(q)} Ten cards for one question. Nobody has ten cards' worth of mystery. Sit down.`
+  },
+  blank: {
+    1: "No question. One card. You want a verdict without a trial. Fine.",
+    3: "No question. Bold. I'll read the mess you carried in on your coat.",
+    10: "No question and ten cards. You've come to be told about yourself at length. I can do that."
   }
+};
+
+const ELEMENTAL_NOTES = {
+  Fire: "Mostly Wands: too much throttle and not enough adult. Everybody in this spread is flooring it.",
+  Water: "Mostly Cups: feelings, fog, and somebody about to cry in a way they will later call depth.",
+  Air: "Mostly Swords: all argument, no landing. The swords are doing the talking and they are unpaid.",
+  Earth: "Mostly Pentacles: rent, food, and the coin. A practical mess, which is still a mess.",
+  Spirit: "Mostly majors. This is not a Tuesday. This is a personnel issue.",
+  mixed: "No suit is winning. Nothing is in charge of this spread, which tracks."
+};
+
+const ADVICE = {
+  none: {
+    light: "Nothing came up trying to leave. The pictures are face-up and they still indict you. Do the last slip before you improve it into a lie.",
+    heavy: "Every card face-up and most of them majors. That's not luck, that's a summons. Read the slips in order and don't skip the one that stings."
+  },
+  some: {
+    light: "Mixed bag. Some of it is true, some of it is you. Normal. Handle the card in front of you and stop shopping for a better omen in the cup holder.",
+    heavy: "A few cards face-down and the big ones upright. The furniture's moving and you're arguing with a lamp. Pick the reversed card that scares you and start there."
+  },
+  most: {
+    light: "More than half the cards came up reversed. That isn't a curse. That's a shift you already know is bad. Quit one thing tonight. One.",
+    heavy: "Majors, mostly reversed. I don't say this often: slow down. Change nothing big this week. Fix the smallest reversed card and come back."
+  }
+};
+
+const CLOSERS = {
+  wands: (name) => `That's the reading. ${name} is last, so you'll do something about it tonight and regret the speed. Fine. Next.`,
+  cups: (name) => `That's the reading. ${name} is last, which means you'll feel this instead of doing it. Do it anyway. Next.`,
+  swords: (name) => `That's the reading. ${name} is at the end, so you'll argue with it in the car. The card wins. Next.`,
+  pentacles: (name) => `That's the reading. It ends on ${name}, which is the deck telling you the fix is boring and costs money. Pay it. Next.`,
+  major: (name) => `That's the reading. It ends on ${name}, which means you don't get a small version of this. The table folds at dark. Next.`
+};
+
+function closingFor(cards) {
+  const last = cards[cards.length - 1];
+  const name = last ? last.card.name : "the last card";
+  return CLOSERS[lastCardKey(cards)](name);
+}
+
+/** A score out of ten that actually moves: reversals and heavy majors cost points, a clean table earns one. */
+export function scoreSpread({ total, reversedCount, majorHeavy }) {
+  let score = 7 - Math.round((reversedCount / total) * 5) - (majorHeavy ? 1 : 0);
+  if (reversedCount === 0 && !majorHeavy) score += 1;
+  return Math.min(9, Math.max(1, score));
+}
+
+function scoreLine(score) {
+  if (score >= 8) return `Score: ${score} out of 10. Don't get used to it. I'm docking a point for how you're sitting.`;
+  if (score >= 6) return `Score: ${score} out of 10. Passable. That's the nicest word I own.`;
+  if (score >= 4) return `Score: ${score} out of 10. Half the cards are trying to leave the table and I don't blame them.`;
+  return `Score: ${score} out of 10. I've seen worse. I was in it.`;
+}
+
+function sizeKey(total) {
+  if (total >= 10) return 10;
+  if (total >= 3) return 3;
+  return 1;
+}
+
+function lastCardKey(cards) {
+  const last = cards[cards.length - 1];
+  if (!last) return "major";
+  return last.card.arcana === "major" ? "major" : last.card.suit || "major";
 }
 
 export const LylePasternak = {
@@ -110,9 +168,12 @@ export const LylePasternak = {
 
   interpret(spreadData) {
     const { cards, question } = spreadData;
-    const { counts, dominant } = ReaderRegistry.analyzeElements(cards);
+    const { dominant } = ReaderRegistry.analyzeElements(cards);
     const total = cards.length;
     const reversedCount = cards.filter((item) => item.isReversed).length;
+    const majorCount = cards.filter((item) => item.card.arcana === "major").length;
+    const majorHeavy = majorCount >= 3 || majorCount / total > 0.4;
+    const size = sizeKey(total);
 
     const cardReadings = cards.map(({ card, isReversed, position }) => {
       const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
@@ -121,47 +182,29 @@ export const LylePasternak = {
       return {
         positionIndex: position.index,
         positionName: position.name,
-        positionSubtitle: position.subtitle,
         cardId: card.id,
         cardName: card.name,
         cardElement: card.element,
         isReversed,
-        orientation: isReversed ? "Face-down in the dip" : "Upright, unfortunately",
+        orientation: isReversed ? "Reversed" : "Upright",
         focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${frame} ${card.name}${isReversed ? ", and it's trying to resign" : ""}. ${line}`
+        reflection: `${frame} ${card.name}${isReversed ? " (reversed)" : ""}. ${line}`
       };
     });
 
-    const queryContext =
-      question && question.trim()
-        ? `You asked, and I quote, "${question.trim()}". Contestant, that question already knows the answer. I'm just here to make it rude.`
-        : "No question. Bold. I'll read the mess you carried in on your coat, pal.";
+    const opener = question && question.trim() ? OPENERS.question[size](question) : OPENERS.blank[size];
 
-    const majorCount = cards.filter((item) => item.card.arcana === "major").length;
-    const weightNote =
-      majorCount >= 3 || majorCount / total > 0.4
-        ? "A pile of majors. That's not a mood. That's the furniture moving, and you are the furniture."
-        : "Mostly the small cards. Weekday trouble. Don't look relieved. Weekdays are where people ruin themselves.";
+    const weightNote = majorHeavy
+      ? "A pile of majors. That's not a mood. That's the furniture moving, and you are the furniture."
+      : "Mostly the small cards. Weekday trouble. Don't look relieved. Weekdays are where people ruin themselves.";
 
-    const summary = `${queryContext} ${weightNote}`;
-    const elementalInsight = `Wands ${counts.Fire} · Cups ${counts.Water} · Swords ${counts.Air} · Pentacles ${counts.Earth}${
-      counts.Spirit ? ` · Majors ${counts.Spirit}` : ""
-    } — ${elementalFlavor(dominant)}. Score: I don't do scores until you stop explaining. Fine. ${Math.max(1, 6 - reversedCount)} out of 10, and I'm being generous because the Slim Jim was good.`;
+    const score = scoreSpread({ total, reversedCount, majorHeavy });
+    const summary = `${opener} ${weightNote} ${scoreLine(score)}`;
+    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
 
-    let actionableAdvice;
-    if (reversedCount === 0) {
-      actionableAdvice =
-        "Nothing came up trying to leave. The pictures are face-up and they still indict you. Do the last slip before you improve it into a lie.";
-    } else if (reversedCount / total > 0.5) {
-      actionableAdvice =
-        "More than half the deck is face-down in the dip. That isn't a curse. That's a shift you already know is bad. Quit one thing tonight. One.";
-    } else {
-      actionableAdvice =
-        "Mixed bag. Some of it is true, some of it is you. Normal. Handle the seat in front of you and stop shopping for a better omen in the cup holder.";
-    }
-
-    const closingBenediction =
-      "That's the reading. Keep the last slip if you keep only one. The table folds at dark, Doris has the laminator, and I am not your friend. Next.";
+    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
+    const actionableAdvice = ADVICE[bucket][majorHeavy ? "heavy" : "light"];
+    const closingBenediction = closingFor(cards);
 
     return {
       readerId: this.id,

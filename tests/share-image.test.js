@@ -3,7 +3,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { spreadLayout, wrapText } from '../js/share-image.js';
+import { spreadLayout, wrapText, readingFileName } from '../js/share-image.js';
 
 const IMAGE_WIDTH = 1600;
 const MARGIN = 90;
@@ -77,4 +77,12 @@ test('text wraps to the width and cuts long text with an ellipsis', () => {
 
   // A single word wider than the line is kept whole, not dropped
   assert.deepEqual(wrapText('antidisestablishmentarianism', 90, measure), ['antidisestablishmentarianism']);
+});
+
+test('two readings saved on the same day get different file names', () => {
+  const morning = readingFileName(new Date(2026, 9, 1, 9, 5));
+  const afternoon = readingFileName(new Date(2026, 9, 1, 14, 30));
+  assert.equal(morning, 'astralis-reading-2026-10-01-0905.jpg');
+  assert.equal(afternoon, 'astralis-reading-2026-10-01-1430.jpg');
+  assert.notEqual(morning, afternoon);
 });

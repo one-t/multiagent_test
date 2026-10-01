@@ -1,107 +1,100 @@
-# ASTRALIS TAROT — The Candlelit Altar
+# Astralis
 
-A single-page esoteric tarot divination web application built with plain HTML, CSS, and modern JavaScript modules.
+A single-page tarot app in plain HTML, CSS, and JavaScript modules, with no build step and no dependencies.
 
-![Astralis Tarot](screenshot.png)
+Draw one card, three cards, or a ten-card Celtic Cross from a 78-card deck. Turn the cards over one at a time and a reader interprets each one in its position. Finished readings are kept in the browser's history, can be shared as a link, copied as text, or saved as a picture.
 
-## Highlights
+![Astralis](screenshot.png)
 
-- **Complete 78-Card Deck**: Every single Major Arcana (22 cards) and Minor Arcana (56 cards across Wands, Cups, Swords, and Pentacles) is modeled with complete upright and reversed interpretations, elemental associations, keywords, and traditional esoteric titles.
-- **Original Vector SVG Deck Art**: All 78 card faces and the universal reversible card back are drawn as original scalable vector artwork (`viewBox="0 0 300 480"`), featuring sacred geometry, elemental gradients, and custom iconography—free of copyrighted deck copies.
-- **Divination Spreads**:
-  - **1-Card Oracle**: Quick daily meditation or direct question guidance.
-  - **3-Card Triptych**: With selectable thematic frameworks:
-    - *Past / Present / Future*
-    - *Situation / Obstacle / Advice*
-    - *Mind / Body / Spirit*
-  - **10-Card Celtic Cross**: The revered sacred mandala with central base card, perpendicular crossing challenge card, root subconscious, receding past, crowning conscious, imminent future, and the 4-card staff column (Self, Environment, Hopes & Fears, Ultimate Outcome).
-- **3D Card Flip Animations**: CSS 3D transforms (`preserve-3d`, `rotateY`, and `rotateZ` for inverted cards) with hover levitation and golden edge luster.
-- **Dark Candlelit Altar Atmosphere**: Living ambient HTML5 canvas overlay with organic candle flame flickering, radial light diffusion, floating golden motes/embers, and subtle interactive illumination.
-- **Zero-Dependency Web Audio Synthesizer**: Synthesizes card swooshes, paper turning snaps, 528Hz singing bowl chimes, and ambient candle flame crackle + mystical drones directly in code.
-- **"Readers" Panel with Plug-in Interface**:
-  - Modular plug-in contract where any JavaScript module can implement an `interpret(spreadData)` method.
-  - 4 built-in readers with distinct voices and philosophical lenses:
-    - **Madame Vivienne** (*The Mystic Seer*): Mythic archetypes, cosmic currents, poetic prophecy.
-    - **Corvus Thorne** (*The Shadow Oracle*): Jungian shadow analysis, defense mechanisms, raw honesty.
-    - **Dr. Aurelius** (*The Pragmatic Alchemist*): Strategic leverage, actionable execution, decision theory.
-    - **Celeste Nova** (*The Cosmic Astrologer*): Elemental triplicities, planetary rulers, celestial transits.
-  - **Live Plug-in Developer**: In-app code editor enabling seekers to write, validate, and register custom reader plugins in real time!
-- **Card Inspection Modal & Compendium**: High-resolution view of any card with orientation toggle, full meanings, and an interactive 78-card searchable compendium.
+## Running it
 
-## Architecture
-
-```
-multiagent_test/
-├── index.html              # Single-page altar application
-├── css/
-│   └── styles.css          # Dark candlelit aesthetic, 3D flip mechanics, responsive layout
-├── js/
-│   ├── cards.js            # Complete 78-card dataset with upright & reversed meanings
-│   ├── svg-art.js          # Vector artwork renderer for all 78 cards & symmetrical back
-│   ├── spreads.js          # Spread definitions (1-Card, 3-Card, Celtic Cross)
-│   ├── sound.js            # Web Audio API sound synthesizer
-│   ├── candlelight.js      # Procedural candlelight flicker & ember canvas system
-│   ├── reader-interface.js # Reader plug-in registry and elemental analyzer
-│   ├── app.js              # Application state and event controller
-│   └── readers/
-│       ├── mystic-seer.js         # Madame Vivienne
-│       ├── shadow-oracle.js       # Corvus Thorne
-│       ├── pragmatic-alchemist.js # Dr. Aurelius
-│       └── cosmic-astrologer.js   # Celeste Nova
-├── build_cards_data.js     # Generator script for 78 cards dataset
-├── build_svg_art.js        # Generator script for vector SVG deck artwork
-├── server.js               # Lightweight local static server for preview & development
-└── package.json
+```bash
+npm start
 ```
 
-## Plug-in Interface Contract
+Then open <http://127.0.0.1:5173>. The server is `server.js`, a small static file server; set `PORT` to use a different port.
 
-Any JavaScript object conforming to the following structure can be registered into the `ReaderRegistry`:
+```bash
+npm test
+```
 
-```javascript
-export const MyReaderPlugin = {
-  id: "unique_reader_id",
-  name: "Reader Name",
-  title: "Epithet / Subtitle",
-  avatar: "🔮", // or SVG / emoji icon
-  style: "mystic" | "psychological" | "practical" | "astrological" | "custom",
-  bio: "Reader biography...",
-  philosophy: "Reading ethos...",
+runs the test suite with Node's built-in test runner (`tests/`).
 
-  interpret(spreadData) {
-    const { spread, cards, question } = spreadData;
-    // spread: Spread object with id, name, description, positions
-    // cards: Array of { card, isReversed, position, isFlipped }
-    // question: seeker's input inquiry string
+## What is in it
 
+- **Three spreads.** One card, three cards with a choice of positions (past/present/future, situation/obstacle/advice, mind/body/spirit), and the Celtic Cross. Position names, descriptions, and roles live in `js/spreads.js`.
+- **Four decks.** Household Arcana (the house cats, photographed and painted, all 78 cards), Surrealist Altar (gold line drawings, all 78), Familiars (a line-drawn cat on every card), and Feline Mystica (painted cats on the major arcana, aces and most courts; the other 39 cards use the line drawings).
+- **Three readers.** Ruth Calloway, a retired trucker; Cassian Vetch, a letterpress night clerk; Lyle Pasternak, a sacked ethics lecturer in a parking lot. Each has its own line for every card, upright and reversed, and its own framing for every position.
+- **Custom readers.** The Readers drawer has a code editor with a worked example. Paste a reader object and it is added for the session.
+- **Reversals** can be included or not; the setting applies from the next deal.
+- **History and links.** A finished reading is saved on the device and in the address bar. Copy link reopens the same cards, in the same positions, with the same reader.
+- **Card browser.** All 78 cards, searchable by name or keyword, with upright and reversed meanings.
+- Sound effects and an optional background sound are synthesized with the Web Audio API.
+
+## Where things live
+
+```
+index.html              The page
+css/styles.css          All styling
+js/app.js               Application controller: state, dealing, reading panel, dialogs
+js/spreads.js           Spread and position copy (names, descriptions, roles)
+js/cards.js             GENERATED card data; edit build_cards_data.js instead
+js/svg-art.js           GENERATED card art for the Surrealist, Familiars and Feline Mystica decks; edit src/art and run build_svg_art.js
+js/household-deck.js    Household Arcana renderer
+js/reader-interface.js  Reader registry and the suit/major tally helper
+js/readers/             Built-in readers; *-lines.js files hold the per-card text
+js/history.js           Reading records, browser history, link encoding
+js/share-image.js       Save a reading as a picture
+js/shuffle.js           Fisher-Yates shuffle with optional reversals
+js/sound.js             Web Audio sound effects
+js/candlelight.js       Background canvas animation
+assets/                 Painted and photographed card images
+build_cards_data.js     Source of js/cards.js  (node build_cards_data.js)
+build_svg_art.js        Source of js/svg-art.js (node build_svg_art.js)
+server.js               Static file server for local use
+```
+
+`src/` and `readers-panel/` are earlier prototypes. `index.html` does not load them; `tests/legacy-src-cassian.test.js` still exercises `src/`.
+
+## Adding a reader
+
+A reader is an object with an `id`, a `name`, and an `interpret(spreadData)` method. Optional fields shown in the interface are `title` (one line under the name), `bio`, `philosophy` (quoted in the Readers drawer), `avatar`, and `portrait` (an image path).
+
+```js
+export const MyReader = {
+  id: "my_reader",
+  name: "My Reader",
+  title: "One line under the name",
+  bio: "Shown in the Readers drawer.",
+
+  interpret({ spread, cards, question }) {
+    // spread:   { id, name, positions }
+    // cards:    [{ card, isReversed, position }], one per position, in order
+    // question: what the user typed, possibly empty
     return {
       readerId: this.id,
       readerName: this.name,
       readerTitle: this.title,
-      summary: "High-level synthesis of the reading...",
-      elementalInsight: "Analysis of Fire, Water, Air, and Earth distribution...",
-      cardReadings: [
-        {
-          positionIndex: 0,
-          positionName: "Position Name",
-          cardName: "Card Name",
-          orientation: "Upright" | "Reversed",
-          reflection: "Specific interpretation for this card in this position..."
-        }
-      ],
-      actionableAdvice: "Concrete practice or recommendation...",
-      closingBenediction: "Parting blessing or wisdom..."
+      summary: "Shown once every card is turned.",
+      elementalInsight: "One sentence on the balance of suits. The app shows the counts itself.",
+      cardReadings: cards.map(({ card, isReversed, position }) => ({
+        positionIndex: position.index,
+        positionName: position.name,
+        cardName: card.name,
+        isReversed,
+        reflection: "What this card means in this position. The only per-card field that is shown."
+      })),
+      actionableAdvice: "Shown under the heading Advice.",
+      closingBenediction: "Shown last, with no heading."
     };
   }
 };
 ```
 
-## Running Locally
+Key frames on `position.role` rather than on the position name; the roles are listed in `js/spreads.js` and do not change when the copy does. `ReaderRegistry.analyzeElements(cards)` returns the suit and major counts and a `dominant` group, or `null` when nothing leads.
 
-Run with Node.js:
+To ship a reader with the app, import it in `js/app.js` and call `registry.register(...)` beside the others. To try one without editing code, open Readers and use Add a custom reader.
 
-```bash
-node server.js
-```
+## Changing card text
 
-Open `http://localhost:8080` in any modern web browser.
+Edit `build_cards_data.js` and run `node build_cards_data.js`. Each card has an `element`, a `ruler` (majors only), an `esotericTitle`, one or two sentences for upright and reversed, and lower-case keywords. The three readers do not quote this text; it is shown in the card dialog and the card browser, and it is the fallback when a reader fails.
