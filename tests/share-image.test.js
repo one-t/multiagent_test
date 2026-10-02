@@ -3,7 +3,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { spreadLayout, wrapText, readingFileName } from '../js/share-image.js';
+import { spreadLayout, wrapText, readingFileName, embedFont } from '../js/share-image.js';
 
 const IMAGE_WIDTH = 1600;
 const MARGIN = 90;
@@ -85,4 +85,13 @@ test('two readings saved on the same day get different file names', () => {
   assert.equal(morning, 'astralis-reading-2026-10-01-0905.jpg');
   assert.equal(afternoon, 'astralis-reading-2026-10-01-1430.jpg');
   assert.notEqual(morning, afternoon);
+});
+
+test('a card drawn into the picture carries the font its lettering uses', () => {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 480"><text font-family="Cinzel, Georgia, serif">The Star</text></svg>';
+  const out = embedFont(svg, 'Cinzel', 'data:font/woff2;base64,AAAA');
+  assert.match(out, /^<svg [^>]*><style>@font-face \{ font-family: 'Cinzel'; font-weight: 400 900; src: url\(data:font\/woff2;base64,AAAA\) format\('woff2'\); \}<\/style><text/);
+  // A card that does not use the font is left as it is
+  const plain = '<svg viewBox="0 0 300 480"><text font-family="Georgia">X</text></svg>';
+  assert.equal(embedFont(plain, 'Cinzel', 'data:font/woff2;base64,AAAA'), plain);
 });

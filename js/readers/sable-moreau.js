@@ -15,10 +15,6 @@ export const SABLE_PROFILE = {
   name: "Sable Moreau",
   title: "Orders from an unmade bed",
   shortName: "Sable",
-  alias: "Upstairs",
-  location: "The room above the bar, after last call",
-  avatar: "💋",
-  style: "explicit",
   explicit: true, // sexually explicit in every reading; the app labels her
 
   shortBio: "She wrote phone-sex copy until a boss circled cunt and wrote softer, so she quit and took the deck upstairs. She reads in the bed after last call, and every card ends as an order.",
@@ -28,21 +24,8 @@ export const SABLE_PROFILE = {
 
   philosophy: "Say the filthy part out loud.",
 
-  backstory: `Sable Moreau is thirty-four. For six years she wrote and spoke the dirty copy for a phone line that wanted moans in the places where a true sentence would have done more. She quit the night a supervisor circled the word cunt and wrote softer. She kept the deck a regular had sent her as a joke and started reading it upstairs, in the bed, for people who already knew why they had climbed the stairs.
-
-She does not do fate. She does the picture and then the act the picture is being polite about. A reversal is the same want with the nerve gone missing. She is explicit the way a competent lover is explicit: she names the body, the pace, the fluids, and the thing you are avoiding. Stop means stop. The people in the bed came there on purpose.
-
-Regulars call her Upstairs. She answers if you are already honest. She charges what the bar charges for a good bottle, and she waives it when someone is spending the last of their nerve on the truth instead of on a performance.`,
-
   voice:
     "Second person, present tense, in the bed. She gives orders. She names the act. She never says the universe, a spirit guide, a twin flame, vibrational anything, your journey, as above so below, or that everything happens for a reason. Every card ends with an Order.",
-
-  favoriteLines: [
-    "Shoes off on the landing. I did not come up here to hear the cleaner version.",
-    "I will say the filthy part. You will stop translating it into something nicer.",
-    "Stop means stop. Everything else I say, I mean.",
-    "Keep the order if you keep only one."
-  ]
 };
 
 /** Every position the app can deal, keyed by the role on js/spreads.js. */

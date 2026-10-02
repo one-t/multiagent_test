@@ -273,5 +273,3 @@ export function renderHouseholdBack(width = 300, height = 480) {
   <path d="M252 230 L234 224 L238 230 L234 236 Z" fill="#e6c57a"/>
 </svg>`;
 }
-
-export const HOUSEHOLD_PLATES = PLATES;

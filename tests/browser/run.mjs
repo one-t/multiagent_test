@@ -4,6 +4,7 @@
  * (astralis-shots) and their paths are printed at the end.
  */
 import { launch } from './driver.mjs';
+import { encodeRecord } from '../../js/history.js';
 
 const results = [];
 function check(name, ok, detail = '') {
@@ -11,7 +12,7 @@ function check(name, ok, detail = '') {
   if (!ok) console.log(`  FAIL  ${name}${detail ? `  ->  ${typeof detail === 'string' ? detail : JSON.stringify(detail)}` : ''}`);
 }
 
-const { page, close } = await launch();
+const { page, url, close } = await launch();
 const shots = [];
 const shot = async (name, options) => shots.push(await page.shot(name, options));
 
@@ -302,6 +303,48 @@ try {
   s = await look();
   check('a reading that cannot be saved says so', s.status.startsWith("Couldn't save this reading."), s.status);
   await page.goto();
+
+  // ------------------------------------------------------------ the question as typed
+  await page.eval(`localStorage.clear(); sessionStorage.clear(); localStorage.setItem('astralis.settings.v1', JSON.stringify({ spread: 'single' })); true`);
+  await page.goto();
+  await page.click('#queryInput');
+  await page.type('should I [really] quit?');
+  await page.click('.card-wrapper');
+  await page.wait(900);
+  const opening = await page.eval(`(() => { const o = document.getElementById('readingOpening'); return { text: o.textContent, italic: [...o.querySelectorAll('em')].map(e => e.textContent) }; })()`);
+  check('square brackets in a question are shown as typed', opening.text.includes('“should I [really] quit?”') && opening.italic.length === 0, opening);
+
+  // ------------------------------------------------------------ a link from someone else
+  const link = (fields) => `#r=${encodeRecord({ spread: 'single', theme: '', deck: 'household', q: '', at: 1700000000000, cards: [[5, 0]], ...fields })}`;
+  await page.eval(`localStorage.clear(); sessionStorage.clear(); true`);
+  await page.goto(`${url}${link({ reader: 'lyle_pasternak', deck: 'feline_mystica', q: 'from a friend' })}`);
+  s = await look();
+  const kept = await page.eval(`JSON.parse(localStorage.getItem('astralis.history.v1') || '[]').length`);
+  check('a link from someone else is called a shared reading', s.status.startsWith('Opened a shared reading from'), s.status);
+  check('a shared reading is not put in your History', kept === 0, kept);
+  check('a shared reading shows its question and its reader', s.title === '“from a friend”' && s.reader === 'Lyle Pasternak', s);
+  await page.reload();
+  s = await look();
+  check('a reload keeps the shared reading, question and all', s.title === '“from a friend”' && s.status.startsWith('Opened a shared reading'), s);
+
+  await page.goto(`${url}${link({ reader: 'nobody', deck: 'nope', at: 1700000000001, cards: [[6, 1]] })}`);
+  s = await look();
+  check('a link naming a reader that is not here is read by your own reader', s.reader === 'Cassian Vetch' && /Cassian Vetch is reading/.test(s.notice || ''), s);
+  check('a link naming a deck that is not here uses your own deck', (await page.eval(`document.getElementById('deckPickerName').textContent`)) === 'Household Arcana');
+
+  // ------------------------------------------------------------ a link opened mid-reading
+  await page.eval(`localStorage.clear(); sessionStorage.clear(); localStorage.setItem('astralis.settings.v1', JSON.stringify({ spread: 'three_card' })); true`);
+  await page.goto(url);
+  await page.click('.card-wrapper');
+  await page.wait(900);
+  await page.eval(`location.hash = ${JSON.stringify(link({ reader: 'ruth_calloway', at: 1700000000002 }))}; true`);
+  await page.wait(900);
+  s = await look();
+  check('opening a link mid-reading puts the unfinished reading away, with Undo', s.cards === 1 && s.status.includes('Your unfinished reading was put away.') && s.status.includes('Undo'), s.status);
+  await page.click('#statusActionBtn');
+  await page.wait(600);
+  s = await look();
+  check('Undo brings the unfinished reading back, and the link leaves the address bar', s.cards === 3 && s.turned === 1 && s.hash === '', s);
 
   // ------------------------------------------------------------ widths
   const celtic = async () => {

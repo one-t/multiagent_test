@@ -15,10 +15,6 @@ export const CAL_PROFILE = {
   name: "Cal Navarro",
   title: "Ex-performer, greedy on purpose",
   shortName: "Cal",
-  alias: "Come Up",
-  location: "A walk-up with the cards beside the bed",
-  avatar: "🫦",
-  style: "explicit",
   explicit: true, // sexually explicit in every reading; the app labels him
 
   shortBio: "He quit adult film when they faked the come in the edit, and he reads in a walk-up with the deck on the nightstand. Every card ends with what he wants done to him, or with his mouth.",
@@ -28,21 +24,8 @@ export const CAL_PROFILE = {
 
   philosophy: "I want you, and the card knows where.",
 
-  backstory: `Cal Navarro is thirty-eight. He spent his late twenties performing in explicit films where the pleasure was scheduled and the sound was fixed in post. He left when a director told him to moan over a take in which nobody had actually come. He kept a tarot deck from a lover who said he was already doing readings, he was just using his mouth instead of the pictures.
-
-He reads in the walk-up. The cards live beside the bed. He is greedy, specific, and a little shameless, and he still tells the truth about the card rather than using it as an excuse to grab. A reversal is the same hunger with the nerve dropped. The people who sit down came there to be wanted out loud. Stop means stop. He charges like a decent dinner, and he does not charge someone who is clearly spending their last courage on being honest.
-
-Regulars call him Come Up, which is both the invitation and the joke. He answers to it.`,
-
   voice:
     "Second person, present tense, already in the room. He says what he wants done to him and what he wants to do. He never says the universe, a spirit guide, a twin flame, vibrational anything, your journey, as above so below, or that everything happens for a reason. Every card ends with a Want.",
-
-  favoriteLines: [
-    "Sit on the bed. I want you. The card says where, and stop means stop.",
-    "I will tell you what I want. The card has to survive that.",
-    "Stop means stop. The rest of this I mean.",
-    "Keep the want if you keep only one."
-  ]
 };
 
 /** Every position the app can deal, keyed by the role on js/spreads.js. */

@@ -614,12 +614,13 @@ function snapshotTable() {
   };
 }
 
-/** Bring back the unfinished reading the last deal replaced. */
+/** Bring back the unfinished reading the last deal, or the link just opened, replaced. */
 function undoDeal() {
   const saved = state.undo;
   if (!saved) return;
 
   state.undo = null;
+  clearReadingLink(); // an unfinished reading has no address of its own
   state.dealId++;
   state.currentSpreadId = saved.currentSpreadId;
   state.threeCardTheme = saved.threeCardTheme;
@@ -1199,12 +1200,18 @@ function renderReadingPanel() {
 /**
  * Reader text, with [stage directions] set in italics so they read as what the
  * reader does, not what the reader says. Everything goes in as text.
+ * `asTyped` is the person's own words quoted in the text: brackets in it are theirs, not a stage direction.
  */
-function appendSpeech(node, text) {
-  String(text || '').split(/(\[[^\]]+\])/).forEach(part => {
+function appendSpeech(node, text, asTyped = '') {
+  const HOLD = '\u0000';
+  let source = String(text || '');
+  const holding = Boolean(asTyped) && source.includes(asTyped);
+  if (holding) source = source.split(asTyped).join(HOLD);
+  const put = part => (holding ? part.split(HOLD).join(asTyped) : part);
+  source.split(/(\[[^\]]+\])/).forEach(part => {
     if (!part) return;
-    if (part.startsWith('[') && part.endsWith(']')) node.appendChild(el('em', 'reader-action', part.slice(1, -1)));
-    else node.appendChild(document.createTextNode(part));
+    if (part.startsWith('[') && part.endsWith(']')) node.appendChild(el('em', 'reader-action', put(part.slice(1, -1))));
+    else node.appendChild(document.createTextNode(put(part)));
   });
   return node;
 }
@@ -1222,8 +1229,10 @@ function updateReadingOpening() {
   const text = started
     ? (state.reading && state.reading.opening) || ''
     : (reader && reader.greeting) || '';
+  // Readers quote the question in curly quotes (js/readers/compose.js)
+  const question = started && state.reading ? state.reading.question : '';
   node.replaceChildren();
-  appendSpeech(node, text);
+  appendSpeech(node, text, question ? `“${question}”` : '');
   node.hidden = !text;
   node.classList.toggle('is-greeting', !started);
 }
@@ -1498,6 +1507,7 @@ function readingAsText() {
       text: (reading.cardReadings[idx] || {}).reflection || ''
     })),
     summary: reading.summary,
+    suits: reading.elementalInsight,
     advice: reading.actionableAdvice,
     closing: reading.closingBenediction
   });
@@ -1609,9 +1619,7 @@ function chooseReader(readerId) {
   if (!changed) return;
 
   refreshReading();
-  if (isReadingComplete()) {
-    showStatus(`Now read by ${reader.name}.`);
-  } else if (anyCardTurned()) {
+  if (anyCardTurned()) {
     showStatus(`Now read by ${reader.name}.`);
   } else {
     showStatus(`${reader.name} will read these cards.`);
@@ -2066,8 +2074,11 @@ function readingLink(record, { includeQuestion }) {
 
 /**
  * Keep a finished reading: in this browser's history, and in the address bar
- * so a reload brings it back. The address never carries the question; that
- * only goes into a link the person asks for.
+ * so a reload brings it back. The address never carries the person's own
+ * question; that only goes into a link they ask for.
+ *
+ * A reading someone else shared is not kept in History. Its address keeps the
+ * question it arrived with, which is already in the link.
  */
 function commitReading() {
   if (!isReadingComplete()) return;
@@ -2076,11 +2087,12 @@ function commitReading() {
   clearDraft();
 
   const record = currentRecord();
-  if (!writeHistory(upsertRecord(readHistory(), record))) {
+  const shared = Boolean(state.restored && state.restored.shared);
+  if (!shared && !writeHistory(upsertRecord(readHistory(), record))) {
     showStatus("Couldn't save this reading. Your browser is blocking storage (private window, or storage is full).", { problem: true });
   }
   try {
-    window.history.replaceState(null, '', `#r=${encodeRecord({ ...record, q: '' })}`);
+    window.history.replaceState(null, '', `#r=${encodeRecord(shared ? record : { ...record, q: '' })}`);
   } catch (err) {
     // Some embedded pages may not change their address. The reading is still on screen.
   }
@@ -2183,23 +2195,28 @@ async function saveReadingImage() {
  * Lay a saved reading back out: same positions, same cards.
  *
  * The deck and reader it was saved with are used for viewing it. They are not
- * written to the person's own settings.
+ * written to the person's own settings. One that is not available here is
+ * replaced by the person's own.
  *
  * @param {object} record
- * @param {{ flipped?: boolean[]|null }} [options] Which cards were face up, for an unfinished reading;
+ * @param {object} [options]
+ * @param {boolean[]|null} [options.flipped] Which cards were face up, for an unfinished reading;
  *   a finished one comes back with every card turned.
+ * @param {boolean} [options.shared] Someone else's reading, opened from a link
+ * @param {object|null} [options.undo] The unfinished reading this one replaces, from snapshotTable()
  */
-function restoreRecord(record, { flipped = null } = {}) {
+function restoreRecord(record, { flipped = null, shared = false, undo = null } = {}) {
   const unfinished = Array.isArray(flipped);
 
-  state.undo = null;
+  state.undo = undo;
   state.dealId++;
   state.currentSpreadId = record.spread;
   if (record.spread === 'three_card' && record.theme) state.threeCardTheme = record.theme;
   syncSpreadControls();
 
-  if (DECK_THEMES.includes(record.deck)) setDeckThemeState(record.deck);
-  const readerFound = record.reader ? registry.setActive(record.reader) : true;
+  setDeckThemeState(DECK_THEMES.includes(record.deck) ? record.deck : prefs.deckTheme);
+  const readerFound = Boolean(record.reader) && registry.setActive(record.reader);
+  if (!readerFound) registry.setActive(prefs.readerId);
 
   state.userQuery = record.q;
   elements.queryInput.value = record.q;
@@ -2214,7 +2231,7 @@ function restoreRecord(record, { flipped = null } = {}) {
   }));
   state.reading = null;
   state.completedAt = unfinished ? null : record.at;
-  state.restored = unfinished ? null : { at: record.at, readerId: record.reader, readerMissing: !readerFound };
+  state.restored = unfinished ? null : { at: record.at, readerId: record.reader, readerMissing: Boolean(record.reader) && !readerFound, shared };
 
   updateSpreadHeader();
   renderSpread({ animate: false });
@@ -2227,7 +2244,9 @@ function restoreRecord(record, { flipped = null } = {}) {
     showStatus('Your unfinished reading is back.');
     saveDraft();
   } else {
-    showStatus(`Reopened your reading from ${formatDateTime(record.at)}.`);
+    const opened = shared ? `Opened a shared reading from ${formatDateTime(record.at)}.` : `Reopened your reading from ${formatDateTime(record.at)}.`;
+    if (undo) showStatus(`${opened} Your unfinished reading was put away.`, { action: { label: 'Undo', run: undoDeal } });
+    else showStatus(opened);
     commitReading();
   }
 }
@@ -2241,13 +2260,13 @@ function restoreFromLocation() {
     clearReadingLink();
     return false;
   }
-  // The address bar never carries the question. If this is one of the person's
-  // own readings, the question is in their History.
-  if (!record.q) {
-    const own = readHistory().find(item => item.id === record.id);
-    if (own && own.q) record = { ...record, q: own.q };
-  }
-  restoreRecord(record);
+  // A reading in the person's History is theirs, and its question is kept there.
+  // Anything else came from someone else's link.
+  const own = readHistory().find(item => item.id === record.id);
+  if (own && !record.q && own.q) record = { ...record, q: own.q };
+  // A link opened in the middle of a reading puts that reading away, with Undo
+  const undo = hasUnfinishedReading() ? snapshotTable() : null;
+  restoreRecord(record, { shared: !own, undo });
   return true;
 }
 

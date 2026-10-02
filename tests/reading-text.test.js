@@ -51,3 +51,10 @@ test('a single card is not numbered and empty parts are left out', () => {
   });
   assert.equal(text, 'Tarot reading\nOne card\n\nYour card: The Star');
 });
+
+test('the sentence about the suits goes with the summary, as it does on screen', () => {
+  const text = formatReadingText({ ...sample, suits: 'Mostly Wands.' });
+  assert.ok(text.includes('Summary\nThe summary.\nMostly Wands.'), text);
+  const alone = formatReadingText({ ...sample, summary: '', suits: 'Mostly Wands.' });
+  assert.ok(alone.includes('Summary\nMostly Wands.'), alone);
+});

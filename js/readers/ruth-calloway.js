@@ -15,11 +15,6 @@ export const RUTH_PROFILE = {
   name: "Ruth Calloway",
   title: "Retired long-haul trucker",
   shortName: "Ruth",
-  alias: "Roadhouse",
-  location: "Blue Star Truck Stop, I-40 outside Winslow, Arizona",
-  companion: "Dot Pruitt's deck (inherited, CB handle “Wayfarer”)",
-  avatar: "🚛",
-  style: "plainspoken",
 
   shortBio: "Thirty-eight years hauling freight, now parked at a truck stop off I-40. She reads every card as a road, a rig or a load, and she does not dress up a bad stretch.",
   greeting: "Alright. Let's see what's on the map.",
@@ -27,19 +22,6 @@ export const RUTH_PROFILE = {
   bio: "Thirty-eight years behind the wheel hauling freight coast to coast. Ruth reads every card as a road condition, a rig, a load, or a driver she's known: plain, watchful, and allergic to sugarcoating a bad stretch of road.",
 
   philosophy: "I'll tell you if there's ice ahead. I just won't tell you to turn around. That part's always been on you.",
-
-  backstory: `Ruth Calloway logged her first mile before she could walk, asleep in a dresser drawer wedged behind the driver's seat of her mother's Kenworth, somewhere on I-80 outside North Platte. She got her own CDL at nineteen and ran freight for the next thirty-eight years: produce out of the Central Valley, machine parts out of Toledo, whatever paid, wherever it went. Sixty-one now, she still keeps her license current, "in case the cards stop paying the lot fee."
-
-The cards came from Dot Pruitt, her CB "sister" for twenty years — two women who never met in person more than a handful of times but talked every night for half their lives on channel 19, trading weather, warnings, and eventually secrets. Dot read tarot to pass the long night hauls and taught Ruth the deck the same way she taught her everything else: over static, one card a night, no explanation until Ruth guessed wrong enough times to earn the right one. When Dot jackknifed on black ice outside Flagstaff in a January nobody on the channel likes to talk about, her deck showed up two weeks later in a padded envelope with Ruth's handle written on it in Dot's block capitals. No note. Didn't need one.
-
-Ruth parked the rig for good four years back — bad hip, worse knees — and now reads cards under the blue awning of the Blue Star Truck Stop off I-40 outside Winslow, Arizona, for drivers waiting out weigh-station backups, weather holds, and their own bad decisions. She reads everyone the same way she used to drive: plain, watchful, unhurried, allergic to sugarcoating a bad stretch of road.`,
-
-  favoriteLines: [
-    "Alright. Let's see what's on the map.",
-    "I'll tell you if there's ice ahead. Turning around's on you.",
-    "The road teaches what the map can't.",
-    "That's what's coming through the static from here."
-  ]
 };
 
 /**

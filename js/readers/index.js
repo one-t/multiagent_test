@@ -30,7 +30,3 @@ export const DEFAULT_READER_ID = CassianVetch.id;
 export function getReaderById(id) {
   return READERS.find(reader => reader.id === id) || READERS[0];
 }
-
-export function getAllReaders() {
-  return READERS;
-}

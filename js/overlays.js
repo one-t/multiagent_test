@@ -28,10 +28,6 @@ export function isOverlayOpen(backdrop) {
   return stack.some(entry => entry.backdrop === backdrop);
 }
 
-export function topOverlay() {
-  return stack.length ? stack[stack.length - 1].backdrop : null;
-}
-
 /**
  * @param {HTMLElement} backdrop The overlay's outermost element
  * @param {() => void} close Called for Escape

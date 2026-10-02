@@ -283,7 +283,6 @@ test('Cassian: every card ends in a stamp, and a reversal is printed upside down
   const reading = cassian.CassianVetch.interpret(deal('single', null, ['maj_00'], { reversed: [0], question: '' }));
   assert.match(reading.cardReadings[0].lead, /The Fool, printed upside down\.$/);
   assert.match(reading.opening, /No slip/);
-  assert.match(cassian.CassianVetch.backstory, /Adele Vetch/);
 });
 
 test('Lyle: slips are curly-quoted, and the score is for spreads and moves with them', () => {
@@ -313,7 +312,6 @@ test('Ruth: "hon" arrives only with a card, and her years add up', () => {
   const reading = ruth.RuthCalloway.interpret(deal('three_card', 'past_present_future', ['wands_2', 'wands_3', 'wands_4'], { question: '' }));
   assert.doesNotMatch([reading.opening, reading.summary, reading.elementalInsight, reading.actionableAdvice, reading.closingBenediction].join('\n'), /\bhon\b/);
   assert.match(ruth.RuthCalloway.bio, /Thirty-eight years/);
-  assert.match(ruth.RuthCalloway.backstory, /thirty-eight years/);
 });
 
 test('Sable and Cal: every card has its own order and its own want, and they are not the same person', () => {

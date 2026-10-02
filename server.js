@@ -31,7 +31,20 @@ const server = http.createServer((request, response) => {
     response.end("Bad request");
     return;
   }
+  // A null byte makes the file system throw, which would stop the server
+  if (pathname.includes("\0")) {
+    response.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+    response.end("Bad request");
+    return;
+  }
   if (pathname.endsWith("/")) pathname += "index.html";
+
+  // Hidden files and folders (.git, .gitignore) are not part of the app
+  if (pathname.split(/[\\/]/).some(part => part.startsWith("."))) {
+    response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    response.end("Not found");
+    return;
+  }
 
   const requested = path.normalize(path.join(root, pathname));
   if (requested !== root && !requested.startsWith(root + path.sep)) {

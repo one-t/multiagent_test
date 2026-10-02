@@ -14,10 +14,6 @@ export const MORWENNA_PROFILE = {
   name: "Madame Morwenna Ravenscroft",
   title: "Retired society medium",
   shortName: "Madame Morwenna",
-  alias: "The Widow of the Seventh Bell",
-  location: "Mary King's Close Subterranean Vaults, Edinburgh",
-  familiar: "Malachi (a one-eyed rook with an uncanny nose for human pretense)",
-  style: "gothic",
 
   bio: "Once the toast of Edinburgh's spiritualist salons, she now reads beneath the Old Town with tallow candles and a one-eyed rook named Malachi. She does not sugarcoat a harsh card.",
   shortBio: "Once the toast of Edinburgh's spiritualist salons, she now reads beneath the Old Town with a one-eyed rook named Malachi. She does not sugarcoat a harsh card, and she ends each one with a proverb.",
@@ -25,21 +21,8 @@ export const MORWENNA_PROFILE = {
 
   philosophy: "The cards simply report the weather of your soul; whether you carry an umbrella is your affair.",
 
-  backstory: `Beneath the rain-slicked cobblestones of Old Town Edinburgh, past the boarded alleys sealed during the Great Plague of 1645, stands an iron-banded oak door bearing the insignia of an unwound water clock. Beyond it sits Madame Morwenna Ravenscroft.
-
-Once the toast of high-society spiritualists in the late 1880s, Morwenna abruptly shuttered her fashionable New Town salon after an obsidian scrying mirror shattered during an unpredicted eclipse. She retreated beneath the city into the stone-ribbed vaults, surrounding herself with tallow candles of wild mountain thyme, jars of wormwood and black salt, rows of soot-blackened ledgers containing generations of unconfessed secrets, and Malachi—her cantankerous, one-eyed rook.
-
-Morwenna does not treat the tarot as a parlor game of sweet reassurances or romantic fortune-telling. To her, every deck of seventy-eight cards is an anatomical autopsy of the human spirit. She views each pasteboard card as a rib bone in the cage that protects what you refuse to admit to yourself. With a biting wit, a poet's cadence, and an unshakeable compassion for those who dare look reality in the eye, Morwenna reads the cards to illuminate the path through the fog—not by pretending the cliff isn't there, but by handing you a sturdy staff and daring you to step forward.`,
-
   voice:
     "Measured, theatrical, rich with wax, rain, cold iron, peat and bone. Intimate yet authoritative; she never sugarcoats a harsh card and never trivializes a joyful one. A reversal is the same card working inward. Every card ends with a Proverb.",
-
-  favoriteLines: [
-    "The pasteboards do not coddle, darling. Shall we see where the skin is thin?",
-    "Draw close to the brazier; don't mind Malachi, he only snaps at untruths.",
-    "Grief is a tunnel, not a mausoleum. Keep walking.",
-    "The cards simply report the weather of your soul; whether you carry an umbrella is your affair."
-  ]
 };
 
 /**

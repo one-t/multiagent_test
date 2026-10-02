@@ -74,13 +74,12 @@ export class ReaderRegistry {
   }
 
   /**
-   * Executes the active (or specified) reader's interpretation on the spread
+   * Executes the active reader's interpretation on the spread
    * @param {Object} spreadData
-   * @param {string} [readerId]
    * @returns {Object} Structured reading output
    */
-  interpret(spreadData, readerId = null) {
-    const reader = readerId ? this.get(readerId) : this.getActive();
+  interpret(spreadData) {
+    const reader = this.getActive();
     if (!reader) {
       throw new Error("No active reader registered.");
     }
@@ -146,7 +145,6 @@ export class ReaderRegistry {
       cardReadings: cards.map(({ card, isReversed, position }) => ({
         positionIndex: position ? position.index : 0,
         positionName: position ? position.name : "",
-        positionSubtitle: position ? position.subtitle : "",
         cardId: card.id,
         cardName: card.name,
         cardElement: card.element,

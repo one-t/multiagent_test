@@ -15,10 +15,6 @@ export const PIPPIN_PROFILE = {
   name: "Pippin",
   title: "Tuxedo cat, no words",
   shortName: "Pippin",
-  alias: "Pippin",
-  location: "The green velvet tarot table",
-  avatar: "🐈‍⬛",
-  style: "feline",
 
   shortBio: "A round tuxedo cat who lives on the tarot table and does not use words. The reading is the sound, and what the cat does to the card.",
   greeting: "Mrrrrp? [sniffs your hand, then sits on the deck]",
@@ -27,20 +23,8 @@ export const PIPPIN_PROFILE = {
 
   philosophy: "mrrrrp? ... ek-ek-ek-ek ... PURRRRRRRR.",
 
-  backstory: `Pippin is a round tuxedo cat with white whiskers, four white socks, and large saucer eyes who lives on the green velvet tarot table.
-
-Pippin does not speak English, Scottish, Latin, or Greek. Human words are clumsy, heavy boxes that cannot fit under the radiator and make far too much useless noise. Instead, Pippin communicates through feline vocalization and body language: inquisitive trills, high-frequency chittering at flies on the window pane, sudden outraged yowls, drowsy purr-clicks, and the razor-sharp hiss-spit of impending doom.
-
-Every card's temperature, urgency, danger, and joy comes through in pitch, timing, ear-swivels, pupil dilation, and tactical swatting. If Pippin head-butts the card, you're blessed; if Pippin baps it off the table and stares into the baseboard, you'd better check your life choices.`,
-
   voice:
     "Entirely cat noises, with what the cat does in square brackets. Upright cards get purrs, chirps, pounces and cheek-scenting. Reversals get crab-hops, sneezes, a bristled tail, or a disapproving silence followed by grooming a hind leg.",
-
-  favoriteLines: [
-    "Mrrrrp?",
-    "Ek-ek-ek-ek!",
-    "PURRRRRRRRRRRR"
-  ]
 };
 
 /** Every position the app can deal, keyed by the role on js/spreads.js. */

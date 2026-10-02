@@ -12,6 +12,7 @@
  * @param {string} [reading.opening] What the reader says before the cards
  * @param {Array<{position: string, cardName: string, isReversed: boolean, text: string}>} reading.cards
  * @param {string} [reading.summary]
+ * @param {string} [reading.suits] The reader's sentence about the balance of suits
  * @param {string} [reading.advice]
  * @param {string} [reading.closing]
  * @returns {string}
@@ -37,7 +38,7 @@ export function formatReadingText(reading) {
     blocks.push(text ? `${title}\n${text}` : title);
   });
 
-  const summary = clean(reading.summary);
+  const summary = [clean(reading.summary), clean(reading.suits)].filter(Boolean).join('\n');
   if (summary) blocks.push(`Summary\n${summary}`);
   const advice = clean(reading.advice);
   if (advice) blocks.push(`Advice\n${advice}`);

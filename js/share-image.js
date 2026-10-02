@@ -6,6 +6,8 @@
  * a browser. `renderReadingImage` needs a DOM (canvas, Image, fetch).
  */
 
+import { assetUrl } from './assets.js';
+
 const CARD_RATIO = 1.6; // plates are 300 x 480
 const IMAGE_WIDTH = 1600;
 const MARGIN = 90;
@@ -128,8 +130,21 @@ async function inlineImages(svg) {
   return out;
 }
 
+/**
+ * An SVG drawn as an image cannot use the page's fonts either, so the card's
+ * lettering would fall back to Georgia. Put the font inside the SVG.
+ */
+export function embedFont(svg, family, dataUrl) {
+  if (!svg.includes(family)) return svg;
+  const style = `<style>@font-face { font-family: '${family}'; font-weight: 400 900; src: url(${dataUrl}) format('woff2'); }</style>`;
+  return svg.replace(/^(\s*<svg[^>]*>)/, `$1${style}`);
+}
+
+const CARD_FONT = { family: 'Cinzel', url: assetUrl('fonts/cinzel.woff2') };
+
 async function svgToImage(svg) {
-  const blobUrl = URL.createObjectURL(new Blob([await inlineImages(svg)], { type: 'image/svg+xml' }));
+  const withFont = svg.includes(CARD_FONT.family) ? embedFont(svg, CARD_FONT.family, await toDataUrl(CARD_FONT.url)) : svg;
+  const blobUrl = URL.createObjectURL(new Blob([await inlineImages(withFont)], { type: 'image/svg+xml' }));
   try {
     const img = new Image();
     img.src = blobUrl;

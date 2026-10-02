@@ -15,10 +15,6 @@ export const BARNABY_PROFILE = {
   name: "Old Barnaby Clawson",
   title: "Retired street cat",
   shortName: "Barnaby",
-  alias: "Old Barnaby",
-  location: "The warm end of the radiator",
-  avatar: "🐈",
-  style: "feline",
 
   shortBio: "Twelve winters on the wharves, one notched ear, and an indoor posting by the radiator. He talks to you as one cat to another, and ends every card with a Rule.",
   greeting: "Hop up on the radiator, kid. Floor's cold, but the iron is hot.",
@@ -27,20 +23,8 @@ export const BARNABY_PROFILE = {
 
   philosophy: "You're still here, aren't you? That means you've still got claws.",
 
-  backstory: `Old Barnaby has spent seven of his nine lives figuring out what actually matters, and he'll tell you straight: it isn't catching the red dot that doesn't have any meat on it.
-
-Born behind a cannery in Leith, he spent his green years scrapping on wet wharves, dodging fishmonger brooms, and learning the hard way that a snarling terrier cannot climb an eight-foot brick wall if you keep your head and dig your claws in deep. He took a notch in his left ear behind the brewery in '18, lost half a tail-tip to a frostbitten drainpipe in '21, and finally accepted an indoor posting when an elderly widow with warm radiators and an open pantry convinced him that dignity and a wool blanket are not mutually exclusive.
-
-Barnaby does not talk to you like a human wearing fancy shoes. He talks to you like a fellow cat, whether you're a jittery kitten puffing your tail at your own reflection or a tired old tom pacing the perimeter fence wondering why the neighborhood got so loud.`,
-
   voice:
     "Gravelly, tender, practical. He treats you strictly as another cat: whiskers, ears, paws, claws, winter coat, tail. He never flatters. A reversal means your ears are flat for the wrong reason, your claws are snagged in the carpet, or you're stalking a moth that left an hour ago. Every card ends with a Rule.",
-
-  favoriteLines: [
-    "Hop up on the radiator, kid. Floor's cold, but the iron is hot.",
-    "Tuck your paws in, kid. You're still here, aren't you?",
-    "Wash your face, keep your claws sharp, and remember: you're a cat. Act like it."
-  ]
 };
 
 /** Every position the app can deal, keyed by the role on js/spreads.js. */
