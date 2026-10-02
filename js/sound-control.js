@@ -5,8 +5,8 @@
  *   effects  the deal, the card turn and the closing chime
  *   full     those, plus the quiet candle crackle in the background
  *
- * The visible label says what pressing will do. The accessible name
- * also says the current state.
+ * The visible label says what it is set to; the tooltip says what pressing
+ * will do; the accessible name says both.
  */
 
 import { sound } from './sound.js';
@@ -14,9 +14,9 @@ import { sound } from './sound.js';
 export const SOUND_STATES = ['off', 'effects', 'full'];
 
 const LABELS = {
-  off: { now: 'Sound off', next: 'Turn sound on' },
-  effects: { now: 'Card sounds on', next: 'Add background sound' },
-  full: { now: 'Background sound on', next: 'Turn sound off' }
+  off: { now: 'Sound off', next: 'Turn on card sounds' },
+  effects: { now: 'Card sounds', next: 'Add the candle sound' },
+  full: { now: 'Cards and candle', next: 'Turn sound off' }
 };
 
 const ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -50,7 +50,7 @@ export function setupSoundControl(button, { initial, onChange }) {
     if (fromGesture || state !== 'full') sound.setAmbiance(state === 'full');
 
     button.dataset.state = state;
-    label.textContent = LABELS[state].next;
+    label.textContent = LABELS[state].now;
     button.setAttribute('aria-label', `${LABELS[state].now}. ${LABELS[state].next}.`);
     button.title = LABELS[state].next;
   };

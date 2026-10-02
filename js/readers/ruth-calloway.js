@@ -8,18 +8,21 @@
  * position the app can deal.
  */
 
-import { ReaderRegistry } from '../reader-interface.js';
+import { composeReading, quoteQuestion } from "./compose.js";
 
 export const RUTH_PROFILE = {
   id: "ruth_calloway",
   name: "Ruth Calloway",
-  title: "Blue Star Truck Stop, I-40",
+  title: "Retired long-haul trucker",
   shortName: "Ruth",
   alias: "Roadhouse",
   location: "Blue Star Truck Stop, I-40 outside Winslow, Arizona",
   companion: "Dot Pruitt's deck (inherited, CB handle “Wayfarer”)",
   avatar: "🚛",
   style: "plainspoken",
+
+  shortBio: "Thirty-eight years hauling freight, now parked at a truck stop off I-40. She reads every card as a road, a rig or a load, and she does not dress up a bad stretch.",
+  greeting: "Alright. Let's see what's on the map.",
 
   bio: "Thirty-eight years behind the wheel hauling freight coast to coast. Ruth reads every card as a road condition, a rig, a load, or a driver she's known: plain, watchful, and allergic to sugarcoating a bad stretch of road.",
 
@@ -386,10 +389,6 @@ export const POSITION_FRAMES = {
   spirit: "The thing under the engine noise, the part you already know:"
 };
 
-function getPositionFrame(position) {
-  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
-}
-
 function getCardLines(card, isReversed) {
   const entry = CARD_INTERPRETATIONS[card.id];
   if (!entry) {
@@ -400,16 +399,11 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
-/** The user's words, quoted as they came. Nothing is added after the closing quote. */
-function quote(question) {
-  return `“${question.trim()}”`;
-}
-
 const OPENERS = {
   question: {
-    1: (q) => `You asked ${quote(q)} One card for that. Alright, let's see what's on the map.`,
-    3: (q) => `You asked ${quote(q)} Three cards. Let's see what's coming through on that.`,
-    10: (q) => `You asked ${quote(q)} Ten cards is the long haul. Pour a coffee.`
+    1: (q) => `You asked ${quoteQuestion(q)} One card for that. Alright, let's see what's on the map.`,
+    3: (q) => `You asked ${quoteQuestion(q)} Three cards. Let's see what's coming through on that.`,
+    10: (q) => `You asked ${quoteQuestion(q)} Ten cards is the long haul. Pour a coffee.`
   },
   blank: {
     1: "No question on the table. One card, then. Let's see what it says.",
@@ -447,81 +441,37 @@ const CLOSERS = {
   wands: (name) => `That's what's coming through the static from here. Last card's ${name}, so you'll want to gun it. Check your mirrors first.`,
   cups: (name) => `That's what's coming through from here. It ends on ${name}, which means you'll feel this before you do anything about it. That's fine. Then do something.`,
   swords: (name) => `That's the read from here. It ends on ${name}, so you'll argue with it most of the way home. The card doesn't mind. Rest of the drive's on you.`,
-  pentacles: (name) => `That's the read. It ends on ${name}, which is the road telling you the fix is practical and probably costs money. Pay it. Rest of the drive's on you.`,
+  pentacles: (name) => `That's the read. It ends on ${name}: cargo, paychecks, the plain stuff. Whatever needs fixing here gets fixed with a wrench, not a wish. Rest of the drive's on you.`,
   major: (name) => `That's what's coming through the static from here. It ends on ${name}, and there's no small version of that. Rest of the drive's on you.`
 };
 
-function closingFor(cards) {
-  const last = cards[cards.length - 1];
-  const name = last ? last.card.name : "the last card";
-  return CLOSERS[lastCardKey(cards)](name);
-}
+// Said after the cards, when there are three or more: how heavy the spread is
+const WEIGHT = {
+  heavy: "Lot of Major Arcana in this spread. That's not truck-stop chatter, that's the kind of haul that reroutes you for good.",
+  light: "Mostly Minor Arcana here: day-to-day driving, not the big rerouting. Still matters. Most of any road is day-to-day driving."
+};
 
-function sizeKey(total) {
-  if (total >= 10) return 10;
-  if (total >= 3) return 3;
-  return 1;
-}
+// The closing for a single card, where there is no "last card" to point at
+const CLOSER_ONE = (name) => `That's the card: ${name}. One's enough to drive on. Rest of the road's on you.`;
 
-function lastCardKey(cards) {
-  const last = cards[cards.length - 1];
-  if (!last) return "major";
-  return last.card.arcana === "major" ? "major" : last.card.suit || "major";
-}
+/** Everything this reader says, for compose.js to assemble. */
+export const VOICE = {
+  profile: RUTH_PROFILE,
+  frames: POSITION_FRAMES,
+  line: getCardLines,
+  openers: OPENERS,
+  weight: WEIGHT,
+  suitNotes: ELEMENTAL_NOTES,
+  advice: ADVICE,
+  closers: CLOSERS,
+  closerOne: CLOSER_ONE
+};
 
 export const RuthCalloway = {
   ...RUTH_PROFILE,
 
   interpret(spreadData) {
-    const { cards, question } = spreadData;
-    const { dominant } = ReaderRegistry.analyzeElements(cards);
-    const total = cards.length;
-    const reversedCount = cards.filter(c => c.isReversed).length;
-    const majorCount = cards.filter(c => c.card.arcana === "major").length;
-    const majorHeavy = majorCount >= 3 || majorCount / total > 0.4;
-    const size = sizeKey(total);
-
-    const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
-      const frame = getPositionFrame(position);
-      const line = getCardLines(card, isReversed);
-
-      return {
-        positionIndex: position.index,
-        positionName: position.name,
-        cardId: card.id,
-        cardName: card.name,
-        cardElement: card.element,
-        isReversed,
-        orientation: isReversed ? "Reversed" : "Upright",
-        focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${frame} ${card.name}${isReversed ? " (reversed)" : ""}. ${line}`
-      };
-    });
-
-    const opener = question && question.trim() ? OPENERS.question[size](question) : OPENERS.blank[size];
-
-    const weightNote = majorHeavy
-      ? "Lot of Major Arcana in this spread. That's not truck-stop chatter, that's the kind of haul that reroutes you for good."
-      : "Mostly Minor Arcana here: day-to-day driving, not the big rerouting. Still matters. Most of any road is day-to-day driving.";
-
-    const summary = `${opener} ${weightNote}`;
-    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
-
-    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
-    const actionableAdvice = ADVICE[bucket][majorHeavy ? "heavy" : "light"];
-    const closingBenediction = closingFor(cards);
-
-    return {
-      readerId: this.id,
-      readerName: this.name,
-      readerTitle: this.title,
-      summary,
-      elementalInsight,
-      cardReadings,
-      actionableAdvice,
-      closingBenediction
-    };
+    return composeReading(VOICE, spreadData);
   }
 };
 

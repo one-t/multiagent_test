@@ -2,14 +2,14 @@
  * Spread definitions: one card, three cards (three frames), and the ten-card Celtic Cross.
  *
  * Every position carries a `role`. Readers key their position frames on it, so a
- * renamed or re-ordered position must keep its role. Descriptions are shown as
- * tooltips on the position tags.
+ * renamed or re-ordered position must keep its role. Descriptions are shown in
+ * the reading list while a card is face down, and in the card dialog.
  */
 
 const PAST_PRESENT_FUTURE = [
   { index: 0, name: "Past", description: "Where this came from.", role: "past", gridArea: "left" },
   { index: 1, name: "Present", description: "What is happening now.", role: "present", gridArea: "center" },
-  { index: 2, name: "Future", description: "Where this is likely to end up if nothing changes.", role: "future", gridArea: "right" }
+  { index: 2, name: "Future", description: "Where this is heading.", role: "future", gridArea: "right" }
 ];
 
 export const SPREADS = {
@@ -22,7 +22,7 @@ export const SPREADS = {
       {
         index: 0,
         name: "Your card",
-        description: "What the cards say about your question.",
+        description: "The card for your question.",
         role: "core",
         gridArea: "center"
       }
@@ -71,11 +71,11 @@ export const SPREADS = {
     cardCount: 10,
     description: "Ten cards: the situation, what crosses it, what lies behind and ahead, and where it leads.",
     positions: [
-      { index: 0, name: "Present", description: "What is happening now.", role: "center_base", slot: "cross-center" },
+      { index: 0, name: "The matter", description: "What this is about, right now.", role: "center_base", slot: "cross-center" },
       { index: 1, name: "Challenge", description: "What crosses it, for good or ill.", role: "center_cross", slot: "cross-crossing", isCrossing: true },
       { index: 2, name: "Root", description: "What this grew out of, below your notice.", role: "below", slot: "cross-bottom" },
       { index: 3, name: "Recent past", description: "What is just leaving.", role: "left", slot: "cross-left" },
-      { index: 4, name: "Aim", description: "What you are hoping to reach.", role: "above", slot: "cross-top" },
+      { index: 4, name: "What you want", description: "What you are reaching for.", role: "above", slot: "cross-top" },
       { index: 5, name: "Near future", description: "What is coming next.", role: "right", slot: "cross-right" },
       { index: 6, name: "You", description: "How you are holding yourself in this.", role: "staff_1", slot: "staff-1" },
       { index: 7, name: "Others", description: "The people and pressures around you.", role: "staff_2", slot: "staff-2" },

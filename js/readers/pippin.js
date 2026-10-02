@@ -7,18 +7,21 @@
  * reversal is a startled, offended or sideways cat.
  */
 
-import { ReaderRegistry } from "../reader-interface.js";
+import { composeReading, quoteQuestion } from "./compose.js";
 import { CARD_INTERPRETATIONS } from "./pippin-lines.js";
 
 export const PIPPIN_PROFILE = {
   id: "pippin",
   name: "Pippin",
-  title: "The cat on the table",
+  title: "Tuxedo cat, no words",
   shortName: "Pippin",
   alias: "Pippin",
   location: "The green velvet tarot table",
   avatar: "🐈‍⬛",
   style: "feline",
+
+  shortBio: "A round tuxedo cat who lives on the tarot table and does not use words. The reading is the sound, and what the cat does to the card.",
+  greeting: "Mrrrrp? [sniffs your hand, then sits on the deck]",
 
   bio: "A round tuxedo cat with four white socks who lives on the tarot table. Pippin does not use words. The reading is the sound, and what the cat does to the card.",
 
@@ -64,10 +67,6 @@ export const POSITION_FRAMES = {
   spirit: "Prrrrrrrr. [closes both eyes slowly, opens them, and holds your gaze]:"
 };
 
-function getPositionFrame(position) {
-  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
-}
-
 function getCardLines(card, isReversed) {
   const entry = CARD_INTERPRETATIONS[card.id];
   if (!entry) {
@@ -76,76 +75,62 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
+// What Pippin does goes in [square brackets]; the app sets it in italics.
 const OPENERS = {
-  1: "Mrrrrp? [hops onto the green baize table, circles your wrist twice, and butts warm forehead into your palm].",
-  3: "Chirp! Prrr-rrt! [kneads the green velvet cloth three times with both paws, then sits down firmly].",
-  10: "MEOW-purrrr-chunk! [ten cards spread out; eyes widen into huge black saucers, tail swishing with intense feline concentration]."
+  question: {
+    1: (q) => `Mrrp? [tilts head at ${quoteQuestion(q)} and blinks once, slowly] Mrrrrp? [hops onto the table, circles your wrist twice, and butts a warm forehead into your palm]`,
+    3: (q) => `Mrrp? [tilts head at ${quoteQuestion(q)} and blinks once, slowly] Chirp! Prrr-rrt! [kneads the green velvet cloth three times with both paws, then sits down firmly]`,
+    10: (q) => `Mrrp? [tilts head at ${quoteQuestion(q)} and blinks once, slowly] MEOW-purrrr-chunk! [ten cards spread out; eyes widen into huge black saucers, tail swishing]`
+  },
+  blank: {
+    1: "Mrrrrp? [hops onto the table, circles your wrist twice, and butts a warm forehead into your palm]",
+    3: "Chirp! Prrr-rrt! [kneads the green velvet cloth three times with both paws, then sits down firmly]",
+    10: "MEOW-purrrr-chunk! [ten cards spread out; eyes widen into huge black saucers, tail swishing]"
+  }
 };
 
 const ELEMENTAL_NOTES = {
-  Fire: "Mrrrow-wow-wow! [tears down the hallway and back twice, skids, tail straight up]. Mostly Wands.",
-  Water: "Prrrr... mew. [dips one paw in the water glass, watches the drops fall, drinks from the paw]. Mostly Cups.",
-  Air: "Ek-ek-ek-ek! [chatters at the window, jaw trembling, does not move a single paw]. Mostly Swords.",
-  Earth: "Mrrp. [walks to the bowl, checks it, sits down beside it, and waits]. Mostly Pentacles.",
-  Spirit: "Mrrrrr-OW. [stands very still with whiskers forward and every hair lifted]. Mostly Major Arcana.",
-  mixed: "Mrrp? [sniffs each card in turn and settles on none of them]. No one suit leads."
+  Fire: "Mrrrow-wow-wow! [tears down the hallway and back twice, skids, tail straight up]",
+  Water: "Prrrr... mew. [dips one paw in the water glass, watches the drops fall, drinks from the paw]",
+  Air: "Ek-ek-ek-ek! [chatters at the window, jaw trembling, does not move a single paw]",
+  Earth: "Mrrp. [walks to the bowl, checks it, sits down beside it, and waits]",
+  Spirit: "Mrrrrr-OW. [stands very still with whiskers forward and every hair lifted]",
+  mixed: "Mrrp? [sniffs each card in turn and settles on none of them]"
 };
 
 const ADVICE = {
-  none: "PURRRRRRRR [rolls onto back, all four white socks in the air, and lets you see the belly]. Every card upright.",
-  some: "Mrrp. Prrt. [pats the upright cards, then looks at a reversed one and looks back at you]. Start with the one being stared at.",
-  most: "Hiss-snort! [backs up three steps with tail bristled, then sits down and washes one paw very slowly]. Most cards reversed: slow down first."
+  none: "PURRRRRRRR [rolls onto back, all four white socks in the air, and lets you see the belly]",
+  some: "Mrrp. Prrt. [pats the upright cards, then looks at a reversed one and looks back at you]",
+  most: "Hiss-snort! [backs up three steps with tail bristled, then sits down and washes one paw very slowly]"
 };
 
-const SIGN_OFF = "PURRRRRRRRRRRRRRRRRRRRRR [head-butts the cards, steps directly onto your keyboard, and falls asleep across your hand].";
+const SIGN_OFF = "PURRRRRRRRRRRRRRRRRRRRRR [head-butts the cards, steps directly onto your keyboard, and falls asleep across your hand]";
 
-function sizeKey(total) {
-  if (total >= 10) return 10;
-  if (total >= 3) return 3;
-  return 1;
-}
+const CLOSERS = {
+  wands: () => SIGN_OFF,
+  cups: () => SIGN_OFF,
+  swords: () => SIGN_OFF,
+  pentacles: () => SIGN_OFF,
+  major: () => SIGN_OFF
+};
+
+/** Everything this reader says, for compose.js to assemble. */
+export const VOICE = {
+  profile: PIPPIN_PROFILE,
+  frames: POSITION_FRAMES,
+  line: getCardLines,
+  openers: OPENERS,
+  suitNotes: ELEMENTAL_NOTES,
+  advice: ADVICE,
+  closers: CLOSERS,
+  closerOne: () => SIGN_OFF
+};
 
 export const Pippin = {
   ...PIPPIN_PROFILE,
 
   interpret(spreadData) {
-    const { cards, question } = spreadData;
-    const { dominant } = ReaderRegistry.analyzeElements(cards);
-    const total = cards.length;
-    const reversedCount = cards.filter((item) => item.isReversed).length;
-
-    const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
-      return {
-        positionIndex: position.index,
-        positionName: position.name,
-        cardId: card.id,
-        cardName: card.name,
-        cardElement: card.element,
-        isReversed,
-        orientation: isReversed ? "Reversed" : "Upright",
-        focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${getPositionFrame(position)} ${card.name}${isReversed ? " (reversed)" : ""}. ${getCardLines(card, isReversed)}`
-      };
-    });
-
-    const asked = question && question.trim()
-      ? `Mrrp? [tilts head at “${question.trim()}” and blinks once, slowly].`
-      : "Mrrp. [no question; sits down anyway].";
-    const summary = `${asked} ${OPENERS[sizeKey(total)]}`;
-    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
-    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
-
-    return {
-      readerId: this.id,
-      readerName: this.name,
-      readerTitle: this.title,
-      summary,
-      elementalInsight,
-      cardReadings,
-      actionableAdvice: ADVICE[bucket],
-      closingBenediction: SIGN_OFF
-    };
+    return composeReading(VOICE, spreadData);
   }
 };
 

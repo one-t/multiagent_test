@@ -9,6 +9,7 @@
  * @param {string} reading.spreadLabel
  * @param {string} [reading.dateLabel]
  * @param {string} [reading.question]
+ * @param {string} [reading.opening] What the reader says before the cards
  * @param {Array<{position: string, cardName: string, isReversed: boolean, text: string}>} reading.cards
  * @param {string} [reading.summary]
  * @param {string} [reading.advice]
@@ -27,6 +28,8 @@ export function formatReadingText(reading) {
 
   const question = clean(reading.question);
   if (question) blocks.push(`Question: ${question}`);
+  const opening = clean(reading.opening);
+  if (opening) blocks.push(opening);
 
   reading.cards.forEach((card, index) => {
     const title = `${numbered ? `${index + 1}. ` : ''}${clean(card.position)}: ${clean(card.cardName)}${card.isReversed ? ' (reversed)' : ''}`;

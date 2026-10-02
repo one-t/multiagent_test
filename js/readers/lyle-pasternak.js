@@ -8,19 +8,22 @@
  * slip, because he used to stuff them and he was fired for accuracy.
  */
 
-import { ReaderRegistry } from "../reader-interface.js";
+import { composeReading, quoteQuestion } from "./compose.js";
 import { CARD_INTERPRETATIONS } from "./lyle-lines.js";
 
 export const LYLE_PROFILE = {
   id: "lyle_pasternak",
   name: "Lyle Pasternak",
-  title: "The Parking-Lot Ethicist",
+  title: "Sacked ethics lecturer",
   shortName: "Lyle",
   alias: "Don't",
   location: "Folding table, dead Circuit City lot, off the service road",
   companion: "A deck in a Ziploc, next to half a Slim Jim",
   avatar: "🎟️",
   style: "unhinged",
+
+  shortBio: "He was fired from teaching ethics and now reads from a card table in an empty parking lot. He marks your spread out of ten and ends every card with a fortune-cookie slip.",
+  greeting: "Sit down. The lot is full and none of them are clapping.",
 
   bio: "Former substitute ethics lecturer. Fired. Now scores your life out of ten from a card table in a parking lot the store abandoned. He argues with the cards, mentions his ex-wife Doris and her laminator too often, and is right often enough that people come back angry.",
 
@@ -69,10 +72,6 @@ export const POSITION_FRAMES = {
   spirit: "The part under the part, the bit you already know and keep paying me to unsay:"
 };
 
-function getPositionFrame(position) {
-  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
-}
-
 function getCardLines(card, isReversed) {
   const entry = CARD_INTERPRETATIONS[card.id];
   if (!entry) {
@@ -81,16 +80,11 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
-/** The user's words, quoted as they came. Nothing is added after the closing quote. */
-function quote(question) {
-  return `“${question.trim()}”`;
-}
-
 const OPENERS = {
   question: {
-    1: (q) => `You asked, and I quote, ${quote(q)} One card for that. Economical. I respect it and I'm about to ruin it.`,
-    3: (q) => `You asked, and I quote, ${quote(q)} Three cards. That question already knows the answer. I'm just here to make it rude.`,
-    10: (q) => `You asked, and I quote, ${quote(q)} Ten cards for one question. Nobody has ten cards' worth of mystery. Sit down.`
+    1: (q) => `You asked, and I quote, ${quoteQuestion(q)} One card for that. Economical. I respect it and I'm about to ruin it.`,
+    3: (q) => `You asked, and I quote, ${quoteQuestion(q)} Three cards. That question already knows the answer. I'm just here to make it rude.`,
+    10: (q) => `You asked, and I quote, ${quoteQuestion(q)} Ten cards for one question. Nobody has ten cards' worth of mystery. Sit down.`
   },
   blank: {
     1: "No question. One card. You want a verdict without a trial. Fine.",
@@ -127,15 +121,18 @@ const CLOSERS = {
   wands: (name) => `That's the reading. ${name} is last, so you'll do something about it tonight and regret the speed. Fine. Next.`,
   cups: (name) => `That's the reading. ${name} is last, which means you'll feel this instead of doing it. Do it anyway. Next.`,
   swords: (name) => `That's the reading. ${name} is at the end, so you'll argue with it in the car. The card wins. Next.`,
-  pentacles: (name) => `That's the reading. It ends on ${name}, which is the deck telling you the fix is boring and costs money. Pay it. Next.`,
+  pentacles: (name) => `That's the reading. It ends on ${name}, so the answer is on your bank statement and you have been skimming it. Read it properly. Next.`,
   major: (name) => `That's the reading. It ends on ${name}, which means you don't get a small version of this. The table folds at dark. Next.`
 };
 
-function closingFor(cards) {
-  const last = cards[cards.length - 1];
-  const name = last ? last.card.name : "the last card";
-  return CLOSERS[lastCardKey(cards)](name);
-}
+// Said after the cards, when there are three or more: how heavy the spread is
+const WEIGHT = {
+  heavy: "A pile of majors. That's not a mood. That's the furniture moving, and you are the furniture.",
+  light: "Mostly the small cards. Weekday trouble. Don't look relieved. Weekdays are where people ruin themselves."
+};
+
+// The closing for a single card, where there is no "last card" to point at
+const CLOSER_ONE = (name) => `That's the reading. One card, ${name}, and it had your number. Keep the slip. Next.`;
 
 /** A score out of ten that actually moves: reversals and heavy majors cost points, a clean table earns one. */
 export function scoreSpread({ total, reversedCount, majorHeavy }) {
@@ -151,71 +148,27 @@ function scoreLine(score) {
   return `Score: ${score} out of 10. I've seen worse. I was in it.`;
 }
 
-function sizeKey(total) {
-  if (total >= 10) return 10;
-  if (total >= 3) return 3;
-  return 1;
-}
-
-function lastCardKey(cards) {
-  const last = cards[cards.length - 1];
-  if (!last) return "major";
-  return last.card.arcana === "major" ? "major" : last.card.suit || "major";
-}
+/** Everything this reader says, for compose.js to assemble. */
+export const VOICE = {
+  profile: LYLE_PROFILE,
+  frames: POSITION_FRAMES,
+  line: getCardLines,
+  signatureTag: "Slip",
+  openers: OPENERS,
+  weight: WEIGHT,
+  // The score is for a spread; one card does not get marked out of ten
+  aside: (facts) => scoreLine(scoreSpread(facts)),
+  suitNotes: ELEMENTAL_NOTES,
+  advice: ADVICE,
+  closers: CLOSERS,
+  closerOne: CLOSER_ONE
+};
 
 export const LylePasternak = {
   ...LYLE_PROFILE,
 
   interpret(spreadData) {
-    const { cards, question } = spreadData;
-    const { dominant } = ReaderRegistry.analyzeElements(cards);
-    const total = cards.length;
-    const reversedCount = cards.filter((item) => item.isReversed).length;
-    const majorCount = cards.filter((item) => item.card.arcana === "major").length;
-    const majorHeavy = majorCount >= 3 || majorCount / total > 0.4;
-    const size = sizeKey(total);
-
-    const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
-      const frame = getPositionFrame(position);
-      const line = getCardLines(card, isReversed);
-      return {
-        positionIndex: position.index,
-        positionName: position.name,
-        cardId: card.id,
-        cardName: card.name,
-        cardElement: card.element,
-        isReversed,
-        orientation: isReversed ? "Reversed" : "Upright",
-        focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${frame} ${card.name}${isReversed ? " (reversed)" : ""}. ${line}`
-      };
-    });
-
-    const opener = question && question.trim() ? OPENERS.question[size](question) : OPENERS.blank[size];
-
-    const weightNote = majorHeavy
-      ? "A pile of majors. That's not a mood. That's the furniture moving, and you are the furniture."
-      : "Mostly the small cards. Weekday trouble. Don't look relieved. Weekdays are where people ruin themselves.";
-
-    const score = scoreSpread({ total, reversedCount, majorHeavy });
-    const summary = `${opener} ${weightNote} ${scoreLine(score)}`;
-    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
-
-    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
-    const actionableAdvice = ADVICE[bucket][majorHeavy ? "heavy" : "light"];
-    const closingBenediction = closingFor(cards);
-
-    return {
-      readerId: this.id,
-      readerName: this.name,
-      readerTitle: this.title,
-      summary,
-      elementalInsight,
-      cardReadings,
-      actionableAdvice,
-      closingBenediction
-    };
+    return composeReading(VOICE, spreadData);
   }
 };
 

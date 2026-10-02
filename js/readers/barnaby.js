@@ -7,18 +7,21 @@
  * ends with a Rule.
  */
 
-import { ReaderRegistry } from "../reader-interface.js";
+import { composeReading, quoteQuestion } from "./compose.js";
 import { CARD_INTERPRETATIONS } from "./barnaby-lines.js";
 
 export const BARNABY_PROFILE = {
   id: "barnaby",
   name: "Old Barnaby Clawson",
-  title: "Elder street cat, retired to the radiator",
+  title: "Retired street cat",
   shortName: "Barnaby",
   alias: "Old Barnaby",
   location: "The warm end of the radiator",
   avatar: "🐈",
   style: "feline",
+
+  shortBio: "Twelve winters on the wharves, one notched ear, and an indoor posting by the radiator. He talks to you as one cat to another, and ends every card with a Rule.",
+  greeting: "Hop up on the radiator, kid. Floor's cold, but the iron is hot.",
 
   bio: "Twelve winters by the woodstove, one notched ear, and no patience for a cat who forgets how to land on four paws. He talks to you as a fellow cat.",
 
@@ -64,10 +67,6 @@ export const POSITION_FRAMES = {
   spirit: "The thing you knew before your eyes opened, same as you knew where the milk was:"
 };
 
-function getPositionFrame(position) {
-  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
-}
-
 function getCardLines(card, isReversed) {
   const entry = CARD_INTERPRETATIONS[card.id];
   if (!entry) {
@@ -77,9 +76,16 @@ function getCardLines(card, isReversed) {
 }
 
 const OPENERS = {
-  1: "Hop up on the radiator, kid. Floor's cold, but the iron is hot. Let's see what you dragged in under your whiskers.",
-  3: "Three cards knocked off the table. Tuck your paws in and listen to your elders.",
-  10: "The whole nine yards of territory laid out on the rug. Ten stations from the raw chest-purr to the final sunbeam. Keep your tail still and don't twitch your whiskers till I'm done."
+  question: {
+    1: (q) => `You came in yowling ${quoteQuestion(q)} Fair enough. Hop up on the radiator, kid. Floor's cold, but the iron is hot.`,
+    3: (q) => `You came in yowling ${quoteQuestion(q)} Fair enough. Three cards knocked off the table. Tuck your paws in and listen to your elders.`,
+    10: (q) => `You came in yowling ${quoteQuestion(q)} That's a ten-card yowl. The whole territory, laid out on the rug. Keep your tail still till I'm done.`
+  },
+  blank: {
+    1: "No question. A cat doesn't need one to sit down. Hop up on the radiator, kid.",
+    3: "No question. Three cards knocked off the table anyway. Tuck your paws in and listen to your elders.",
+    10: "No question, and the whole territory laid out on the rug. Ten stations. Keep your tail still and don't twitch your whiskers till I'm done."
+  }
 };
 
 const ELEMENTAL_NOTES = {
@@ -97,55 +103,34 @@ const ADVICE = {
   most: "More than half of these came up backwards. Your claws are snagged in the carpet, kid. Stop pulling. Lift the paw straight up, one claw at a time."
 };
 
-const SIGN_OFF = "That's the layout, kid. Wash your face, keep your claws sharp, and remember: you're a cat. Act like it.";
+const CLOSERS = {
+  wands: (name) => `Last card's ${name}, so you'll bolt out the cat flap the second I stop talking. Look both ways first. That's the layout, kid.`,
+  cups: (name) => `It ends on ${name}. Go and sit with whoever you sit with, and let them scratch your ears. That's the layout, kid.`,
+  swords: (name) => `It ends on ${name}, so you'll lie awake on the windowsill chewing it over. Chew, then sleep. That's the layout, kid.`,
+  pentacles: (name) => `It ends on ${name}. Check the bowl, check the fence, check the warm spot, in that order. That's the layout, kid.`,
+  major: (name) => `It ends on ${name}, and that's no moth. Wash your face, keep your claws sharp, and remember: you're a cat. Act like it.`
+};
 
-function sizeKey(total) {
-  if (total >= 10) return 10;
-  if (total >= 3) return 3;
-  return 1;
-}
+const CLOSER_ONE = (name) => `That's your card, kid: ${name}. Wash your face, keep your claws sharp, and remember: you're a cat. Act like it.`;
+
+/** Everything this reader says, for compose.js to assemble. */
+export const VOICE = {
+  profile: BARNABY_PROFILE,
+  frames: POSITION_FRAMES,
+  line: getCardLines,
+  signatureTag: "Rule",
+  openers: OPENERS,
+  suitNotes: ELEMENTAL_NOTES,
+  advice: ADVICE,
+  closers: CLOSERS,
+  closerOne: CLOSER_ONE
+};
 
 export const Barnaby = {
   ...BARNABY_PROFILE,
 
   interpret(spreadData) {
-    const { cards, question } = spreadData;
-    const { dominant } = ReaderRegistry.analyzeElements(cards);
-    const total = cards.length;
-    const reversedCount = cards.filter((item) => item.isReversed).length;
-
-    const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
-      return {
-        positionIndex: position.index,
-        positionName: position.name,
-        cardId: card.id,
-        cardName: card.name,
-        cardElement: card.element,
-        isReversed,
-        orientation: isReversed ? "Reversed" : "Upright",
-        focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${getPositionFrame(position)} ${card.name}${isReversed ? " (reversed)" : ""}. ${getCardLines(card, isReversed)}`
-      };
-    });
-
-    const asked = question && question.trim()
-      ? `You came in yowling “${question.trim()}” Fair enough.`
-      : "No question. A cat doesn't need one to sit down.";
-    const summary = `${asked} ${OPENERS[sizeKey(total)]}`;
-    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
-    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
-
-    return {
-      readerId: this.id,
-      readerName: this.name,
-      readerTitle: this.title,
-      summary,
-      elementalInsight,
-      cardReadings,
-      actionableAdvice: ADVICE[bucket],
-      closingBenediction: SIGN_OFF
-    };
+    return composeReading(VOICE, spreadData);
   }
 };
 

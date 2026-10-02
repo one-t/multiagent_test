@@ -736,5 +736,12 @@ export function getCardsBySuit(suit) {
 }
 `;
 
-fs.writeFileSync(path.join(__dirname, "js", "cards.js"), fileContent, "utf8");
+// node build_cards_data.js --check: change nothing, and fail if js/cards.js is not what this would write
+const outPath = path.join(__dirname, "js", "cards.js");
+if (process.argv.includes("--check")) {
+  const same = fs.readFileSync(outPath, "utf8").replace(/\r\n/g, "\n") === fileContent.replace(/\r\n/g, "\n");
+  console.log(same ? "js/cards.js is up to date." : "js/cards.js differs from what build_cards_data.js would write.");
+  process.exit(same ? 0 : 1);
+}
+fs.writeFileSync(outPath, fileContent, "utf8");
 console.log(`Wrote js/cards.js with ${cards.length} cards.`);

@@ -21,15 +21,7 @@ import { CandlelightSystem } from './candlelight.js';
 import { assetUrl, localiseAssets, useMidPlates, useThumbs } from './assets.js';
 import { openOverlay, closeOverlay, isOverlayOpen, setupOverlays, wireRadioGroup, syncRadioGroup } from './overlays.js';
 
-// Built-in readers
-import { RuthCalloway } from './readers/ruth-calloway.js';
-import { CassianVetch } from './readers/cassian-vetch.js';
-import { LylePasternak } from './readers/lyle-pasternak.js';
-import { SableMoreau } from './readers/sable-moreau.js';
-import { CalNavarro } from './readers/cal-navarro.js';
-import { Barnaby } from './readers/barnaby.js';
-import { Pippin } from './readers/pippin.js';
-import { morwennaReader } from './readers/morwenna.js';
+import { READERS, DEFAULT_READER_ID } from './readers/index.js';
 
 // -------------------------------------------------------------
 // APP STATE
@@ -64,7 +56,7 @@ const prefs = {
   spread: 'single',
   threeCardTheme: DEFAULT_THREE_CARD_THEME,
   allowReversals: true,
-  readerId: CassianVetch.id,
+  readerId: DEFAULT_READER_ID,
   sound: 'off'
 };
 
@@ -76,15 +68,8 @@ const modal = {
   fromSpread: false
 };
 
-// Register default readers
-registry.register(RuthCalloway);
-registry.register(CassianVetch);
-registry.register(LylePasternak);
-registry.register(SableMoreau);
-registry.register(CalNavarro);
-registry.register(morwennaReader);
-registry.register(Barnaby);
-registry.register(Pippin);
+// The built-in readers, in the order the list shows them
+READERS.forEach(reader => registry.register(reader));
 const BUILT_IN_READER_IDS = new Set(registry.getAll().map(reader => reader.id));
 
 // -------------------------------------------------------------
@@ -118,6 +103,13 @@ const elements = {
   shuffleDealBtn: byId('shuffleDealBtn'),
   revealAllBtn: byId('revealAllBtn'),
   stageSpreadDesc: byId('stageSpreadDesc'),
+  setupFull: byId('setupFull'),
+  setupCompact: byId('setupCompact'),
+  setupCompactText: byId('setupCompactText'),
+  setupExpandBtn: byId('setupExpandBtn'),
+  setupCollapseBtn: byId('setupCollapseBtn'),
+  setupTurnAllBtn: byId('setupTurnAllBtn'),
+  setupDealAgainBtn: byId('setupDealAgainBtn'),
 
   // Status
   statusLine: byId('statusLine'),
@@ -211,7 +203,7 @@ function prefersReducedMotion() {
 }
 
 function isSideBySide() {
-  return window.matchMedia('(min-width: 1100px)').matches;
+  return window.matchMedia('(min-width: 900px)').matches;
 }
 
 function scrollBehavior() {
@@ -243,8 +235,13 @@ function clearStatus() {
   showStatus('');
 }
 
-function cardCountLabel(count) {
-  return count === 1 ? 'One card' : `${count} cards`;
+function dealtLabel(count) {
+  return `Dealt ${count} ${count === 1 ? 'card' : 'cards'}.`;
+}
+
+/** "Tap" where the main pointer is a finger, "Click" everywhere else. */
+function pressVerb() {
+  return window.matchMedia('(pointer: coarse)').matches ? 'Tap' : 'Click';
 }
 
 function anyCardTurned() {
@@ -341,6 +338,7 @@ function initApp() {
   setupSkipLink();
   setDeckThemeState(state.deckTheme);
   setupSpreadControls();
+  setupSetupBar();
   setupQuestionField();
   setupSound();
   setupReadersDrawer();
@@ -441,7 +439,7 @@ function chooseDeck(theme) {
   redrawForDeck();
   commitReading();
   saveDraft();
-  showStatus(`Deck changed to ${deckInfo(theme).name}. The same cards are on the table.`);
+  showStatus(`Deck: ${deckInfo(theme).name}.`);
 }
 
 // -------------------------------------------------------------
@@ -501,11 +499,11 @@ function setupSpreadControls() {
     state.allowReversals = e.target.checked;
     prefs.allowReversals = state.allowReversals;
     saveSettings();
-    const choice = state.allowReversals ? 'Reversed cards are included' : 'Reversed cards are left out';
+    const choice = state.allowReversals ? 'included' : 'left out';
     if (anyCardTurned()) {
-      showStatus(`${choice} from the next deal. The cards on the table stay as they are.`);
+      showStatus(`Reversed cards will be ${choice} from the next deal.`);
     } else {
-      dealSpread({ note: `${choice}.` });
+      dealSpread({ note: `Reversed cards ${choice}.` });
     }
   });
 
@@ -531,21 +529,68 @@ function updateSpreadHeader() {
 
 /** Once a card has been turned there is a reading on the table, and dealing again replaces it. */
 function syncDealButton() {
-  elements.shuffleDealBtn.textContent = anyCardTurned() ? 'Deal again' : 'Shuffle and deal';
-  // Nothing left to turn: the button goes, so it is never a control that does nothing
-  elements.revealAllBtn.hidden = isReadingComplete();
+  elements.shuffleDealBtn.textContent = anyCardTurned() ? 'Deal again' : 'Deal';
+  // Nothing left to turn, or only one card to turn: the button goes, so it is never a control that adds nothing
+  elements.revealAllBtn.hidden = isReadingComplete() || state.drawnCards.length < 2;
+  syncSetupBar();
 }
 
-/** One line under the cards saying what selecting a card will do. */
+let setupOpenedByHand = false;
+
+/**
+ * Once a card is turned, the set-up bar folds down to one line (what is being
+ * read, and the two things still worth doing) so the cards and the reading get
+ * the room. "Change" opens it again.
+ */
+function syncSetupBar() {
+  const started = anyCardTurned();
+  if (!started) setupOpenedByHand = false;
+  const compact = started && !setupOpenedByHand;
+  const focusWasInside = elements.setupFull.contains(document.activeElement);
+
+  elements.setupFull.hidden = compact;
+  elements.setupCompact.hidden = !compact;
+  elements.setupCollapseBtn.hidden = !started;
+  if (!compact) return;
+
+  const question = readingQuestion();
+  elements.setupCompactText.textContent = question ? `${currentSpreadTitle()} · “${question}”` : currentSpreadTitle();
+  elements.setupTurnAllBtn.hidden = isReadingComplete() || state.drawnCards.length < 2;
+  // Whoever was using a control that has just folded away keeps the keyboard
+  if (focusWasInside) {
+    (elements.setupTurnAllBtn.hidden ? elements.setupDealAgainBtn : elements.setupTurnAllBtn).focus({ preventScroll: true });
+  }
+}
+
+function setupSetupBar() {
+  elements.setupExpandBtn.addEventListener('click', () => {
+    setupOpenedByHand = true;
+    syncSetupBar();
+    elements.queryInput.focus({ preventScroll: true });
+  });
+  elements.setupCollapseBtn.addEventListener('click', () => {
+    setupOpenedByHand = false;
+    syncSetupBar();
+    elements.setupExpandBtn.focus({ preventScroll: true });
+  });
+  elements.setupTurnAllBtn.addEventListener('click', () => revealAllCards());
+  elements.setupDealAgainBtn.addEventListener('click', () => {
+    dealSpread();
+    elements.shuffleDealBtn.focus({ preventScroll: true });
+  });
+}
+
+/** One line under the cards saying what pressing a card will do. */
 function updateSpreadHint() {
-  const count = state.drawnCards.length;
+  const card = state.drawnCards.length === 1 ? 'the card' : 'a card';
+  const verb = pressVerb();
   let hint;
   if (isReadingComplete()) {
-    hint = count === 1 ? 'Select the card to see it large, with its meanings.' : 'Select any card to see it large, with its meanings.';
+    hint = `${verb} ${card} for a closer look.`;
   } else if (anyCardTurned()) {
-    hint = 'Select a face-down card to turn it over, or a turned card to see it large.';
+    hint = `${verb} a face-down card to turn it over, or a turned card for a closer look.`;
   } else {
-    hint = count === 1 ? 'Select the card to turn it over.' : 'Select a card to turn it over. Any order will do.';
+    hint = `${verb} ${card} to turn it over.`;
   }
   elements.spreadHint.textContent = hint;
 }
@@ -594,7 +639,7 @@ function undoDeal() {
   syncQuestionField();
   updateSpreadHint();
   saveDraft();
-  showStatus('Your reading is back on the table.');
+  showStatus('Your reading is back.');
 }
 
 /**
@@ -616,11 +661,11 @@ function dealSpread({ silent = false, before = null, note = '' } = {}) {
   if (wasRestored) {
     if (state.deckTheme !== prefs.deckTheme) {
       setDeckThemeState(prefs.deckTheme);
-      returned.push(deckInfo(prefs.deckTheme).name);
+      returned.push('deck');
     }
     const active = registry.getActive();
     if (active && active.id !== prefs.readerId && registry.setActive(prefs.readerId)) {
-      returned.push(registry.getActive().name);
+      returned.push('reader');
     }
   }
 
@@ -656,11 +701,18 @@ function dealSpread({ silent = false, before = null, note = '' } = {}) {
     clearStatus();
     return;
   }
-  const parts = [note, `${cardCountLabel(state.drawnCards.length)} dealt face down.`];
-  if (returned.length) parts.push(`Back to your own ${returned.join(' and ')}.`);
+  // The Celtic Cross on a laptop, or any spread on a phone, does not fit under the set-up bar:
+  // bring the status line and the cards to the top so the whole spread can be seen
+  requestAnimationFrame(() => {
+    const box = elements.cardsLayoutContainer.getBoundingClientRect();
+    if (box.bottom > window.innerHeight) elements.statusLine.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+  });
+
+  const parts = [note, dealtLabel(state.drawnCards.length)];
+  if (returned.length) parts.push(`Using your own ${returned.join(' and ')} again.`);
   if (undo) {
-    parts.push('The reading you had started was set aside.');
-    showStatus(parts.filter(Boolean).join(' '), { action: { label: 'Bring it back', run: undoDeal } });
+    parts.push('Your unfinished reading was put away.');
+    showStatus(parts.filter(Boolean).join(' '), { action: { label: 'Undo', run: undoDeal } });
   } else {
     showStatus(parts.filter(Boolean).join(' '));
   }
@@ -729,8 +781,8 @@ function syncQuestionField() {
   const differs = anyCardTurned() && value.trim() !== readingQuestion();
   if (differs) {
     const earlier = readingQuestion();
-    note.append(earlier ? 'The cards on the table are being read for your earlier question. ' : 'The cards on the table are being read without a question. ');
-    const again = button('link-btn', 'Deal again for this question');
+    note.append(earlier ? 'These cards were dealt for your earlier question. ' : 'These cards were dealt without a question. ');
+    const again = button('link-btn', 'Deal again');
     again.addEventListener('click', () => dealSpread());
     note.appendChild(again);
   } else if (pasteWasCut && value.length >= QUESTION_LIMIT) {
@@ -958,6 +1010,7 @@ function flipCard(idx, { scroll = false, quiet = false } = {}) {
 
   revealEntry(idx, { scroll });
   updateReadingNotice();
+  updateReadingOpening();
   updateQuestionTitle();
   syncDealButton();
   syncQuestionField();
@@ -1052,16 +1105,15 @@ function readingQuestion() {
 }
 
 /**
- * The question heads the reading. Without one, the heading is there for
- * screen readers only until a card is turned; then it says "Open reading".
+ * The question heads the reading. Without one there is no headline: the
+ * heading is kept for screen readers, and the spread name above it does the job.
  */
 function updateQuestionTitle() {
   const title = elements.readingSection.querySelector('.question-title');
   if (!title) return;
   const question = readingQuestion();
-  const started = anyCardTurned();
-  title.textContent = question ? `“${question}”` : (started ? 'Open reading' : 'Reading');
-  title.classList.toggle('sr-only', !question && !started);
+  title.textContent = question ? `“${question}”` : 'Reading';
+  title.classList.toggle('sr-only', !question);
   title.classList.toggle('is-long', question.length > 90 && question.length <= 180);
   title.classList.toggle('is-very-long', question.length > 180);
 }
@@ -1085,6 +1137,7 @@ function renderReadingPanel() {
   const info = el('div', 'reader-header-info');
   info.appendChild(el('p', 'reader-name', reader ? reader.name : 'Reader'));
   if (reader && reader.title) info.appendChild(el('p', 'reader-subtitle', reader.title));
+  if (reader && reader.explicit) info.appendChild(el('span', 'explicit-tag', 'Explicit'));
   badge.appendChild(info);
   header.appendChild(badge);
 
@@ -1116,6 +1169,12 @@ function renderReadingPanel() {
   actions.hidden = !complete;
   section.appendChild(actions);
 
+  // What the reader says first: a greeting while the cards are down, then their opening for this question
+  const opening = el('p', 'reading-opening');
+  opening.id = 'readingOpening';
+  section.appendChild(opening);
+  updateReadingOpening();
+
   // One row per position
   const list = el('ol', 'reading-cards-grid');
   state.drawnCards.forEach((item, idx) => {
@@ -1135,6 +1194,52 @@ function renderReadingPanel() {
   section.appendChild(synthesis);
 
   syncDealButton();
+}
+
+/**
+ * Reader text, with [stage directions] set in italics so they read as what the
+ * reader does, not what the reader says. Everything goes in as text.
+ */
+function appendSpeech(node, text) {
+  String(text || '').split(/(\[[^\]]+\])/).forEach(part => {
+    if (!part) return;
+    if (part.startsWith('[') && part.endsWith(']')) node.appendChild(el('em', 'reader-action', part.slice(1, -1)));
+    else node.appendChild(document.createTextNode(part));
+  });
+  return node;
+}
+
+function speech(tag, className, text) {
+  return appendSpeech(el(tag, className), text);
+}
+
+/** Before a card is turned the reader greets you; after, they open the reading for your question. */
+function updateReadingOpening() {
+  const node = document.getElementById('readingOpening');
+  if (!node) return;
+  const reader = registry.getActive();
+  const started = anyCardTurned();
+  const text = started
+    ? (state.reading && state.reading.opening) || ''
+    : (reader && reader.greeting) || '';
+  node.replaceChildren();
+  appendSpeech(node, text);
+  node.hidden = !text;
+  node.classList.toggle('is-greeting', !started);
+}
+
+/** One card's reading: the lead-in and the line, then the reader's sign-off for that card on its own line. */
+function appendCardReading(container, data) {
+  if (!data.lead && !data.body) {
+    container.appendChild(speech('p', 'entry-prose', data.reflection || ''));
+    return;
+  }
+  container.appendChild(speech('p', 'entry-prose', [data.lead, data.body].filter(Boolean).join(' ')));
+  if (!data.signature) return;
+  const sign = el('p', 'entry-signature');
+  if (data.signatureLabel) sign.appendChild(el('span', 'entry-signature-label', data.signatureLabel));
+  appendSpeech(sign, data.signature);
+  container.appendChild(sign);
 }
 
 /** Anything about this reading the person should know before reading it. */
@@ -1171,7 +1276,7 @@ function updateReadingDate() {
   date.hidden = !show;
   if (!show) return;
   const when = formatDateTime(state.completedAt);
-  date.textContent = state.restored ? `Reopened. First read ${when}.` : `Read ${when}.`;
+  date.textContent = state.restored ? `From ${when}` : when;
 }
 
 function buildReadingActions() {
@@ -1203,10 +1308,10 @@ function buildReadingActions() {
   const options = el('div', 'link-options');
   options.id = 'linkOptions';
   options.hidden = true;
-  options.appendChild(el('p', null, 'The link holds the cards, the deck and the reader. It can also hold your question, which anyone with the link could then read.'));
-  const withQuestion = button('btn btn-ghost', 'Copy with my question');
+  options.appendChild(el('p', null, 'Include your question in the link? Anyone with the link can read it.'));
+  const withQuestion = button('btn btn-ghost', 'Include it');
   withQuestion.addEventListener('click', () => copyReadingLink({ includeQuestion: true }));
-  const withoutQuestion = button('btn btn-ghost', 'Copy without my question');
+  const withoutQuestion = button('btn btn-ghost', 'Leave it out');
   withoutQuestion.addEventListener('click', () => copyReadingLink({ includeQuestion: false }));
   options.append(withQuestion, withoutQuestion);
 
@@ -1264,7 +1369,7 @@ function fillEntry(entry, idx) {
   drawn.appendChild(el('span', `entry-orientation ${item.isReversed ? 'reversed' : ''}`, orientationLabel(item)));
   head.appendChild(drawn);
   body.appendChild(head);
-  body.appendChild(el('p', 'entry-prose', data.reflection || ''));
+  appendCardReading(body, data);
   entry.appendChild(body);
 }
 
@@ -1330,13 +1435,13 @@ function fillSynthesis(synthesis) {
   synthesis.replaceChildren();
 
   const summary = el('div', 'reading-summary-box');
-  if (reading.summary) summary.appendChild(el('p', 'summary-text', reading.summary));
+  if (reading.summary) summary.appendChild(speech('p', 'summary-text', reading.summary));
 
   // A tally of one card says nothing. Show the balance only when there is one.
   // The numbers are the app's; the reader adds a sentence about them.
   if (state.drawnCards.length >= 3) {
     summary.appendChild(buildSuitTally());
-    if (reading.elementalInsight) summary.appendChild(el('p', 'elemental-note', reading.elementalInsight));
+    if (reading.elementalInsight) summary.appendChild(speech('p', 'elemental-note', reading.elementalInsight));
   }
   if (summary.childNodes.length) synthesis.appendChild(summary);
 
@@ -1344,12 +1449,12 @@ function fillSynthesis(synthesis) {
   if (reading.actionableAdvice) {
     const advice = el('div', 'conclusion-block');
     advice.appendChild(el('h3', null, 'Advice'));
-    advice.appendChild(el('p', null, reading.actionableAdvice));
+    advice.appendChild(speech('p', null, reading.actionableAdvice));
     conclusion.appendChild(advice);
   }
   if (reading.closingBenediction) {
     const closing = el('div', 'conclusion-block');
-    closing.appendChild(el('p', 'closing-words', reading.closingBenediction));
+    closing.appendChild(speech('p', 'closing-words', reading.closingBenediction));
     conclusion.appendChild(closing);
   }
   if (conclusion.childNodes.length) synthesis.appendChild(conclusion);
@@ -1385,6 +1490,7 @@ function readingAsText() {
     spreadLabel: currentSpreadTitle(),
     dateLabel: state.completedAt ? new Date(state.completedAt).toLocaleDateString(undefined, { dateStyle: 'long' }) : '',
     question: reading.question,
+    opening: reading.opening,
     cards: state.drawnCards.map((item, idx) => ({
       position: item.position.name,
       cardName: item.card.name,
@@ -1504,15 +1610,15 @@ function chooseReader(readerId) {
 
   refreshReading();
   if (isReadingComplete()) {
-    showStatus(`${reader.name} is now reading these cards. History keeps this reading under ${reader.name}.`);
+    showStatus(`Now read by ${reader.name}.`);
   } else if (anyCardTurned()) {
-    showStatus(`${reader.name} is now reading these cards.`);
+    showStatus(`Now read by ${reader.name}.`);
   } else {
     showStatus(`${reader.name} will read these cards.`);
   }
 }
 
-/** A list reads better when every entry is about the same length: the first sentence or two of the bio. */
+/** The two sentences a reader wrote for the list. A custom reader without them gets the start of its bio. */
 function shortBio(reader, limit = 170) {
   if (reader.shortBio) return reader.shortBio;
   const text = String(reader.bio || '').trim();
@@ -1543,6 +1649,7 @@ function updateReadersListUI(readers, active) {
     const meta = el('span', 'reader-card-meta');
     meta.appendChild(el('span', 'reader-card-name', reader.name));
     if (reader.title) meta.appendChild(el('span', 'reader-style-tag', reader.title));
+    if (reader.explicit) meta.appendChild(el('span', 'explicit-tag', 'Explicit'));
     top.appendChild(meta);
     // Said in words, not only shown by the gold outline
     if (isActive) top.appendChild(el('span', 'reader-card-current', 'Reading now'));
@@ -1587,8 +1694,11 @@ return {
       readerId: this.id,
       readerName: this.name,
       readerTitle: this.title,
-      // Shown once every card is turned. Each may be an empty string.
-      summary: question ? \`Your question was “\${question}”\` : "Open reading.",
+      // Shown above the cards as soon as one is turned.
+      opening: question ? \`Your question was “\${question}”\` : "No question this time.",
+      // The rest is shown once every card is turned. Each may be an empty string.
+      // Anything in [square brackets] is set in italics, for what the reader does.
+      summary: "",
       elementalInsight: "",      // one sentence about the balance of suits; the app shows the counts
       cardReadings,
       actionableAdvice: "Read the reversed cards first.",
@@ -1683,6 +1793,8 @@ function openCardDialog(list, pos, { fromSpread = false } = {}) {
   openOverlay(elements.cardModalBackdrop, closeCardDialog, elements.closeCardModal);
 }
 
+const ZODIAC_SIGNS = new Set(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']);
+
 /** Fill the dialog for the current card. Focus is left wherever it is. */
 function renderModalCard() {
   const entry = modal.list[modal.pos];
@@ -1701,15 +1813,17 @@ function renderModalCard() {
   }
 
   elements.modalCardName.textContent = card.name;
-  elements.modalEsotericTitle.textContent = card.esotericTitle || '';
+  elements.modalEsotericTitle.textContent = card.esotericTitle ? `Traditional title: ${card.esotericTitle}` : '';
   elements.modalEsotericTitle.hidden = !card.esotericTitle;
   elements.modalArcanaBadge.textContent = card.arcana === 'major' ? 'Major Arcana' : `Minor Arcana · ${card.suitName || card.suit}`;
   // Older card data kept the ruler in the element field ("Fire / Mars"); show them as two chips either way.
   const [element, ruler] = String(card.element || '').split(/\s*\/\s*/);
-  elements.modalElementBadge.textContent = element || '';
+  elements.modalElementBadge.textContent = element ? `Element: ${element}` : '';
   elements.modalElementBadge.hidden = !element;
-  elements.modalRulerBadge.textContent = card.ruler || ruler || '';
-  elements.modalRulerBadge.hidden = !(card.ruler || ruler);
+  // The traditional correspondence is a planet for some cards and a zodiac sign for others
+  const governs = card.ruler || ruler || '';
+  elements.modalRulerBadge.textContent = governs ? `${ZODIAC_SIGNS.has(governs) ? 'Sign' : 'Planet'}: ${governs}` : '';
+  elements.modalRulerBadge.hidden = !governs;
 
   elements.modalMeaningUpright.textContent = card.meaningUpright || '';
   elements.modalMeaningReversed.textContent = card.meaningReversed || '';
@@ -1724,7 +1838,8 @@ function renderModalCard() {
     elements.modalPositionName.textContent = `${seatLabel(item, spreadIndex)} · ${state.reading.readerName}`;
     elements.modalPositionDesc.textContent = item.position.description || '';
     elements.modalPositionDesc.hidden = !item.position.description;
-    elements.modalReflection.textContent = data.reflection || '';
+    elements.modalReflection.replaceChildren();
+    appendCardReading(elements.modalReflection, data);
   }
 
   // The step buttons keep their place even with nothing to step to, so the middle button never moves
@@ -1733,10 +1848,7 @@ function renderModalCard() {
     btn.disabled = !canStep;
     btn.classList.toggle('is-idle', !canStep);
   }
-  const partial = modal.fromSpread && modal.list.length < state.drawnCards.length;
-  elements.modalStep.textContent = canStep
-    ? `${modal.pos + 1} of ${modal.list.length} ${partial ? 'turned cards' : 'cards'} · the arrow keys also step`
-    : '';
+  elements.modalStep.textContent = canStep ? `${modal.pos + 1} of ${modal.list.length}` : '';
 
   updateModalOrientationUI();
 }
@@ -1762,13 +1874,13 @@ function updateModalOrientationUI() {
   const chipReversed = modal.fromSpread ? entry.isReversed : shown;
   elements.modalOrientationBadge.classList.toggle('is-reversed', chipReversed);
   elements.modalOrientationBadge.textContent = modal.fromSpread
-    ? (entry.isReversed ? 'Drawn reversed' : 'Drawn upright')
+    ? (entry.isReversed ? 'Reversed in your reading' : 'Upright in your reading')
     : (shown ? 'Reversed' : 'Upright');
 
   elements.modalUprightSection.classList.toggle('is-shown', !shown);
   elements.modalReversedSection.classList.toggle('is-shown', shown);
-  elements.modalUprightFlag.textContent = modal.fromSpread && !entry.isReversed ? 'as drawn' : '';
-  elements.modalReversedFlag.textContent = modal.fromSpread && entry.isReversed ? 'as drawn' : '';
+  elements.modalUprightFlag.textContent = modal.fromSpread && !entry.isReversed ? 'in your reading' : '';
+  elements.modalReversedFlag.textContent = modal.fromSpread && entry.isReversed ? 'in your reading' : '';
 }
 
 function closeCardDialog() {
@@ -1878,16 +1990,8 @@ function renderCompendiumCards() {
 // -------------------------------------------------------------
 // READER AVATARS: a portrait where one exists, a monogram otherwise
 // -------------------------------------------------------------
-const READER_PORTRAITS = {
-  cassian_vetch: assetUrl('readers/cassian_vetch.jpg'),
-  ruth_calloway: assetUrl('readers/ruth_calloway.jpg'),
-  lyle_pasternak: assetUrl('readers/lyle_pasternak.jpg'),
-  cal_navarro: assetUrl('readers/cal_navarro.jpg'),
-  sable_moreau: assetUrl('readers/sable_moreau.jpg'),
-  morwenna_ravenscroft: assetUrl('readers/morwenna_ravenscroft.jpg'),
-  barnaby: assetUrl('readers/barnaby.jpg'),
-  pippin: assetUrl('readers/pippin.jpg')
-};
+// Every built-in reader has a portrait. The app shows them at 30 to 52px, so it loads the 192px copies.
+const READER_PORTRAITS = Object.fromEntries(READERS.map(reader => [reader.id, assetUrl(`readers/small/${reader.id}.jpg`)]));
 
 function readerInitials(name) {
   const words = String(name || '')
@@ -1973,7 +2077,7 @@ function commitReading() {
 
   const record = currentRecord();
   if (!writeHistory(upsertRecord(readHistory(), record))) {
-    showStatus('This reading could not be saved to History: the browser is not letting this page store anything (private browsing, or storage is full).', { problem: true });
+    showStatus("Couldn't save this reading. Your browser is blocking storage (private window, or storage is full).", { problem: true });
   }
   try {
     window.history.replaceState(null, '', `#r=${encodeRecord({ ...record, q: '' })}`);
@@ -2120,10 +2224,10 @@ function restoreRecord(record, { flipped = null } = {}) {
 
   // The status comes first: saving may have something more important to say
   if (unfinished) {
-    showStatus('Your unfinished reading is back on the table.');
+    showStatus('Your unfinished reading is back.');
     saveDraft();
   } else {
-    showStatus(`Reading from ${formatDateTime(record.at)} reopened.`);
+    showStatus(`Reopened your reading from ${formatDateTime(record.at)}.`);
     commitReading();
   }
 }
@@ -2225,8 +2329,8 @@ function setupHistory() {
   elements.clearHistoryBtn.addEventListener('click', () => {
     if (elements.clearHistoryBtn.dataset.armed !== 'true') {
       elements.clearHistoryBtn.dataset.armed = 'true';
-      elements.clearHistoryBtn.textContent = 'Press again to delete every reading';
-      announce('Press again to delete every reading.');
+      elements.clearHistoryBtn.textContent = 'Delete all? Press again';
+      announce('Delete all readings? Press again to confirm.');
       clearArmTimer = setTimeout(disarmClearAll, 6000);
       return;
     }
@@ -2267,7 +2371,7 @@ function historyRow(record) {
 
   const open = button('history-open');
   open.appendChild(el('span', 'history-date', formatDateTime(record.at)));
-  const question = el('span', 'history-question', record.q ? `“${record.q}”` : 'Open reading');
+  const question = el('span', 'history-question', record.q ? `“${record.q}”` : 'No question');
   question.classList.toggle('is-empty', !record.q);
   open.appendChild(question);
 
@@ -2323,10 +2427,10 @@ function syncHistoryChrome() {
 
   const note = elements.historyNote;
   if (!storageWorks()) {
-    note.textContent = 'This browser is not letting the page store anything (private browsing, or storage is full), so readings are not being kept.';
+    note.textContent = 'Your browser is blocking storage (private window, or storage is full), so readings are not being kept.';
     note.classList.add('is-problem');
   } else {
-    note.textContent = `The ${HISTORY_LIMIT} most recent readings are kept, on this device only. Older ones drop off the end.`;
+    note.textContent = `Keeps your last ${HISTORY_LIMIT} readings, on this device only.`;
     note.classList.remove('is-problem');
   }
   note.hidden = count === 0 && storageWorks();
@@ -2349,7 +2453,7 @@ function renderHistoryList() {
 // DECK PICKER
 // -------------------------------------------------------------
 const DECK_INFO = {
-  household: { name: 'Household Arcana', blurb: 'The house cats, photographed and painted. All 78 cards.' },
+  household: { name: 'Household Arcana', blurb: 'Painted portraits of the house cats. All 78 cards.' },
   feline_mystica: { name: 'Feline Mystica', blurb: '' } // written from what has actually been painted
 };
 const DECK_SAMPLE_CARD = 'maj_08'; // Strength has a face in every deck
@@ -2368,7 +2472,7 @@ function deckInfo(theme) {
   if (painted >= total) return { ...info, blurb: `Painted cats on every card. All ${total} cards.`, partial: '' };
   return {
     ...info,
-    blurb: `Painted cats on ${painted} of the ${total} cards so far. The other ${total - painted} use line drawings, so a spread can mix the two.`,
+    blurb: `Painted cats on ${painted} of the ${total} cards so far. The other ${total - painted} are placeholders until the deck is finished.`,
     partial: `${painted} of ${total} painted`
   };
 }

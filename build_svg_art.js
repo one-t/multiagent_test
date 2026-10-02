@@ -248,11 +248,7 @@ export const renderFelineMysticaCardBackSvg = _renderFelineMysticaCardBackSvg;
   const outPath = path.join(__dirname, 'js', 'svg-art.js');
   // node build_svg_art.js --check: change nothing, and fail if js/svg-art.js is not what this would write
   if (process.argv.includes('--check')) {
-    const same = fs.readFileSync(outPath, 'utf8').replace(/
-/g, '
-') === bundledScript.replace(/
-/g, '
-');
+    const same = fs.readFileSync(outPath, 'utf8').replace(/\r\n/g, '\n') === bundledScript.replace(/\r\n/g, '\n');
     console.log(same ? 'js/svg-art.js is up to date.' : 'js/svg-art.js differs from what build_svg_art.js would write.');
     process.exit(same ? 0 : 1);
   }

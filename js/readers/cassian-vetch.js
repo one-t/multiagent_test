@@ -7,18 +7,21 @@
  * Complete reading logic for all 78 cards and every position the app can deal.
  */
 
-import { ReaderRegistry } from "../reader-interface.js";
+import { composeReading, quoteQuestion } from "./compose.js";
 import { CARD_INTERPRETATIONS } from "./cassian-lines.js";
 
 export const CASSIAN_PROFILE = {
   id: "cassian_vetch",
   name: "Cassian Vetch",
-  title: "Night clerk of Vetch and Daughter",
+  title: "Letterpress night clerk",
   shortName: "Cassian",
   alias: "The Night Clerk",
   location: "The after-hours window, Vetch & Daughter",
   avatar: "🪟",
   style: "letterpress",
+
+  shortBio: "He keeps the night window at his late mother's letterpress shop and reads after midnight. Every card ends with a stamp: one thing small enough to do before morning.",
+  greeting: "Window's open. I'm Cassian.",
 
   bio: "Cassian keeps the night window at Vetch and Daughter, the letterpress shop his mother ran and the city forgot to demolish. He reads after midnight, treats a reversal as a slipped plate, and ends every card with a stamp: one thing small enough to do before morning.",
 
@@ -68,10 +71,6 @@ export const POSITION_FRAMES = {
   spirit: "The sentence under the sentence, the one you already know:",
 };
 
-function getPositionFrame(position) {
-  return POSITION_FRAMES[position?.role] || POSITION_FRAMES.core;
-}
-
 function getCardLines(card, isReversed) {
   const entry = CARD_INTERPRETATIONS[card.id];
   if (!entry) {
@@ -80,16 +79,11 @@ function getCardLines(card, isReversed) {
   return isReversed ? entry.reversed : entry.upright;
 }
 
-/** The user's words, quoted as they came. Nothing is added after the closing quote. */
-function quoteSlip(question) {
-  return `“${question.trim()}”`;
-}
-
 const OPENERS = {
   question: {
-    1: (q) => `Slip received: ${quoteSlip(q)} One sheet for it. Good. Most questions are answered on one.`,
-    3: (q) => `Slip received. I am reading it the way it came in: ${quoteSlip(q)} Three sheets, then a stamp.`,
-    10: (q) => `Slip received: ${quoteSlip(q)} Ten sheets for one slip. That is a book, not a card. We will set it anyway.`,
+    1: (q) => `Slip received: ${quoteQuestion(q)} One sheet for it. Good. Most questions are answered on one.`,
+    3: (q) => `Slip received. I am reading it the way it came in: ${quoteQuestion(q)} Three sheets, then a stamp.`,
+    10: (q) => `Slip received: ${quoteQuestion(q)} Ten sheets for one slip. That is a book, not a card. We will set it anyway.`,
   },
   blank: {
     1: "No slip. That is allowed. One sheet, the one you are already holding.",
@@ -130,77 +124,36 @@ const CLOSERS = {
   major: (name) => `That's the sheet. It ends on ${name}. You do not get the small version of this. Keep the stamp on the last card if you keep only one.`,
 };
 
-function closingFor(cards) {
-  const last = cards[cards.length - 1];
-  const name = last ? last.card.name : "the last card";
-  return CLOSERS[lastCardKey(cards)](name);
-}
+// Said after the cards, when there are three or more: how heavy the spread is
+const WEIGHT = {
+  heavy: "A lot of major plates in this forme. That is not a small job. It will move the furniture.",
+  light: "Mostly the everyday sorts: pips, courts, the work of a week. Still ink. Most of a life is weekdays."
+};
 
-function sizeKey(total) {
-  if (total >= 10) return 10;
-  if (total >= 3) return 3;
-  return 1;
-}
+// The closing for a single card, where there is no "last card" to point at
+const CLOSER_ONE = (name) => `That's the sheet: ${name}. One card, one stamp. Keep it. The window stays open another minute.`;
 
-function lastCardKey(cards) {
-  const last = cards[cards.length - 1];
-  if (!last) return "major";
-  return last.card.arcana === "major" ? "major" : last.card.suit || "major";
-}
+/** Everything this reader says, for compose.js to assemble. */
+export const VOICE = {
+  profile: CASSIAN_PROFILE,
+  frames: POSITION_FRAMES,
+  line: getCardLines,
+  reversedMark: ", printed upside down",
+  signatureTag: "Stamp",
+  openers: OPENERS,
+  weight: WEIGHT,
+  suitNotes: ELEMENTAL_NOTES,
+  advice: ADVICE,
+  closers: CLOSERS,
+  closerOne: CLOSER_ONE
+};
 
 export const CassianVetch = {
   ...CASSIAN_PROFILE,
 
   interpret(spreadData) {
-    const { cards, question } = spreadData;
-    const { dominant } = ReaderRegistry.analyzeElements(cards);
-    const total = cards.length;
-    const reversedCount = cards.filter((item) => item.isReversed).length;
-    const majorCount = cards.filter((item) => item.card.arcana === "major").length;
-    const majorHeavy = majorCount >= 3 || majorCount / total > 0.4;
-    const size = sizeKey(total);
-
-    const cardReadings = cards.map(({ card, isReversed, position }) => {
-      const keywords = isReversed ? card.keywordsReversed : card.keywordsUpright;
-      const frame = getPositionFrame(position);
-      const line = getCardLines(card, isReversed);
-      return {
-        positionIndex: position.index,
-        positionName: position.name,
-        cardId: card.id,
-        cardName: card.name,
-        cardElement: card.element,
-        isReversed,
-        orientation: isReversed ? "Reversed" : "Upright",
-        focalKeyword: (keywords && keywords[0]) || "",
-        reflection: `${frame} ${card.name}${isReversed ? ", printed upside down" : ""}. ${line}`,
-      };
-    });
-
-    const opener = question && question.trim() ? OPENERS.question[size](question) : OPENERS.blank[size];
-
-    const weightNote = majorHeavy
-      ? "A lot of major plates in this forme. That is not a small job. It will move the furniture."
-      : "Mostly the everyday sorts: pips, courts, the work of a week. Still ink. Most of a life is weekdays.";
-
-    const summary = `${opener} ${weightNote}`;
-    const elementalInsight = ELEMENTAL_NOTES[dominant] || ELEMENTAL_NOTES.mixed;
-
-    const bucket = reversedCount === 0 ? "none" : reversedCount / total > 0.5 ? "most" : "some";
-    const actionableAdvice = ADVICE[bucket][majorHeavy ? "heavy" : "light"];
-    const closingBenediction = closingFor(cards);
-
-    return {
-      readerId: this.id,
-      readerName: this.name,
-      readerTitle: this.title,
-      summary,
-      elementalInsight,
-      cardReadings,
-      actionableAdvice,
-      closingBenediction,
-    };
-  },
+    return composeReading(VOICE, spreadData);
+  }
 };
 
 export default CassianVetch;

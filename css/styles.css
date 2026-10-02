@@ -3,8 +3,8 @@
  *
  * One set of rules, three widths:
  *   phone   up to 700px      everything stacked, compact header
- *   middle  701px to 1099px  spread above the reading
- *   wide    1100px and up    spread and reading side by side
+ *   middle  701px to 899px   spread above the reading
+ *   wide    900px and up     spread and reading side by side
  *
  * Sections, in order: fonts, tokens, base, buttons, header, set-up bar,
  * spread and cards, reading panel, overlays (drawer and dialogs), card dialog,
@@ -595,8 +595,6 @@ button {
 }
 
 .setup {
-  display: grid;
-  gap: 12px;
   padding: 14px 16px;
   border: 1px solid var(--border-gold-subtle);
   border-radius: 10px;
@@ -752,6 +750,48 @@ button {
   margin-left: auto;
 }
 
+.setup-full {
+  display: grid;
+  gap: 12px;
+}
+
+.setup-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+
+.setup-foot .link-btn {
+  font-size: 0.85rem;
+}
+
+/* Folded: what is being read, and the things still worth doing */
+.setup-compact {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.setup-compact-text {
+  flex: 1 1 14ch;
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.setup-compact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .setup-desc {
   font-family: var(--font-serif);
   font-style: italic;
@@ -780,6 +820,7 @@ button {
   gap: 4px 12px;
   min-height: 1.6rem;
   margin: 12px 0 6px;
+  scroll-margin-top: 10px;
   font-size: 0.9rem;
   line-height: 1.6;
   color: var(--text-muted);
@@ -835,7 +876,8 @@ button {
 
 .layout-celtic_cross {
   /* Four cards across is the tightest row (the staff), so it sets the size */
-  --card-width: min(150px, calc((100vw - 2 * var(--page-pad) - 30px) / 4));
+  --card-width: min(150px, calc((100vw - 2 * var(--page-pad) - 30px) / 4), calc((100vh - 200px) / 3 * 0.625));
+  --card-width: min(150px, calc((100vw - 2 * var(--page-pad) - 30px) / 4), calc((100dvh - 200px) / 3 * 0.625));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 22px;
@@ -1118,11 +1160,27 @@ button {
 }
 
 .reader-name {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
+  font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.2;
   letter-spacing: 1.5px;
   color: var(--gold-primary);
+}
+
+.explicit-tag {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--reversed-border);
+  background: var(--reversed-bg);
+  color: var(--reversed);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 .reader-subtitle {
@@ -1395,6 +1453,47 @@ button {
   max-width: 65ch;
 }
 
+/* What the reader does, as opposed to what the reader says */
+.reader-action {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* The reader's first words: a greeting while the cards are down, then the opening for this question */
+.reading-opening {
+  max-width: 65ch;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--gold-rich);
+  border-radius: 0 8px 8px 0;
+  background: rgba(22, 17, 30, 0.6);
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: #fff9e6;
+}
+
+/* The reader's sign-off for one card (a Stamp, a Slip, a Rule), on its own line */
+.entry-signature {
+  max-width: 65ch;
+  margin-top: 10px;
+  padding-left: 12px;
+  border-left: 2px solid var(--border-gold);
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: #fff9e6;
+}
+
+.entry-signature-label {
+  margin-right: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: var(--gold-rich);
+}
+
 .entry-prose {
   font-family: var(--font-serif);
   font-size: 1.08rem;
@@ -1425,7 +1524,6 @@ button {
 
 .summary-text {
   font-family: var(--font-serif);
-  font-style: italic;
   font-size: 1.15rem;
   line-height: 1.65;
   color: #fff9e6;
@@ -1508,8 +1606,9 @@ button {
   color: var(--text-muted);
 }
 
-.closing-words {
-  font-style: italic;
+/* The reader's last word, a little apart from the advice */
+.conclusion-block .closing-words {
+  color: var(--text-main);
 }
 
 /* -------------------------------------------------------------
@@ -1577,17 +1676,12 @@ button {
   border-bottom: 1px solid var(--border-gold-subtle);
 }
 
-.drawer-header h2,
-.modal-title,
-.modal-header h2,
-.reader-name {
-  /* The display face joins some letter pairs (OO, for one) into shapes that are hard to read */
-  font-variant-ligatures: none;
-}
-
+/* Titles use the plain heading face. The display face (brand only) draws lower-case
+   letters as swashes and fuses pairs like OO into one shape. */
 .drawer-header h2,
 .modal-title {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
+  font-weight: 700;
   font-size: 1.25rem;
   letter-spacing: 1.5px;
   color: var(--gold-primary);
@@ -1889,7 +1983,8 @@ button {
 .modal-header h2 {
   margin-bottom: 4px;
   padding-right: 36px;
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
+  font-weight: 700;
   font-size: 1.45rem;
   line-height: 1.2;
   letter-spacing: 1.5px;
@@ -2131,7 +2226,8 @@ button {
 
 .deck-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 260px));
+  justify-content: center;
   gap: 16px;
 }
 
@@ -2411,10 +2507,10 @@ button {
 /* =============================================================
    Wide: spread and reading side by side
    ============================================================= */
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
   .reading-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 36px;
+    gap: clamp(20px, 2.6vw, 36px);
   }
 
   .reading-layout[data-spread="single"] {
@@ -2441,10 +2537,10 @@ button {
     --card-width: clamp(110px, calc((min(100vw, 1480px) - 130px) / 6.6), 220px);
   }
 
-  /* Four staff cards and their labels fit one screen */
+  /* Four staff cards and their labels fit one screen, and the reading keeps at least a third of the width */
   .layout-celtic_cross {
-    --card-width: calc(clamp(120px, calc((100vh - 270px) / 4), 300px) * 0.625);
-    --card-width: calc(clamp(120px, calc((100dvh - 270px) / 4), 300px) * 0.625);
+    --card-width: min(calc(clamp(120px, calc((100vh - 270px) / 4), 300px) * 0.625), calc((100vw - 560px) / 4.6));
+    --card-width: min(calc(clamp(120px, calc((100dvh - 270px) / 4), 300px) * 0.625), calc((100vw - 560px) / 4.6));
     grid-template-columns: auto auto;
     gap: 28px;
     align-items: center;
@@ -2535,8 +2631,36 @@ button {
   }
 
   .setup {
-    gap: 10px;
     padding: 12px;
+  }
+
+  .setup-full {
+    gap: 10px;
+  }
+
+  .setup-compact-text {
+    flex-basis: 100%;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .setup-compact-actions {
+    width: 100%;
+  }
+
+  .setup-compact-actions .btn {
+    flex: 1 1 0;
+    padding: 9px 6px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2px;
+  }
+
+  /* A long deck name wraps to a second line; it is not cut off */
+  .chip-value {
+    white-space: normal;
+    line-height: 1.15;
   }
 
   .setup-options {

@@ -2,7 +2,7 @@
 export const CARD_INTERPRETATIONS = {
   "maj_00": {
     "upright": "I want to be the stupid brave start, no itinerary, your hand already fisted in my hair. The Fool jumps. I would jump with my cock out and my mouth ahead of my excuses. Clumsy is allowed if you are honest on top of me. Want: “A first fuck with the light on, before either of us performs expert.”",
-    "reversed": "You have been about to have me, or someone, for so long the start got bored of your thigh. I want the version where you stop rehearsing and sit. Hesitation with your hand on my belt is just fear keeping me hard for nothing. Want: “Stop hovering over my lap. Take it or button me back up.”"
+    "reversed": "You have hovered at the start so long the start got bored of your thigh. I want the version where you stop rehearsing and sit on it. A hand on my belt that never opens it is fear, keeping me hard for nothing. Want: “Stop hovering over my lap. Take it or button me back up.”"
   },
   "maj_01": {
     "upright": "You already have the mouth, the grip, the filthy idea. The Magician does not shop for a new personality before he fucks. I want all of that attention on one body, mine or theirs, until somebody shakes. Want: “Use every tool you brought. I want to feel you concentrate.”",
@@ -22,7 +22,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_05": {
     "upright": "Do the old stroke. The Hierophant survived more interesting people than us, and the clit still likes what it liked. I want the orthodox filthy thing, repeated, until cleverness gets embarrassed and leaves. Want: “Give me the ordinary rhythm that actually makes me come.”",
-    "reversed": "The rite is rotten or you have outgrown the role they cast you in. I do not want a heckle from the doorway. I want you to leave the script and put your mouth where the new rule is. Want: “Quit the part you fake when you fuck.”"
+    "reversed": "The rite has curdled, or the part they cast you in no longer fits your mouth. I do not want a heckle from the doorway while I am still naked. I want you off that script and down where the new rule actually is. Want: “Quit the part you fake when you fuck.”"
   },
   "maj_06": {
     "upright": "Two roads, and I am one of them or I am not. The Lovers is a choice you make with your clothes coming off, not a vibe you smear across two beds. I want to be chosen on a Wednesday, not sampled. Want: “Pick me or pick them. I want the undivided fuck.”",
@@ -33,7 +33,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You tug me one way and your excuses the other. I end up chafed and unfucked. Passion that cannot pick a street is just noise in my lap. Want: “Drop one of the wants before you grab my cock.”"
   },
   "maj_08": {
-    "upright": "I do not need you louder. I need you to stay. Strength is a steady hand on the pace, my impatience under it, your voice low enough that I open. Soft is how I get ruined properly. Want: “Hold me still with patience. I will beg if you stay.”",
+    "upright": "I do not need you louder. I need you to stay through the part where I get pathetic. A hand that does not speed up when I whimper, my impatience under it, your voice low enough that I open. Soft is how I get properly ruined. Want: “Hold me still with patience. I will beg if you stay.”",
     "reversed": "You shove, or you vanish, and call either one chemistry. I want the version where you could pin me and you choose the slower filth instead. Absence is not gentleness when I am already bare. Want: “Do not force it and do not disappear on my thigh.”"
   },
   "maj_09": {
@@ -42,7 +42,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_10": {
     "upright": "Luck turned toward your mouth and it will turn away again. The Wheel is not a personality. I want the lucky night while it is facing us, fast and undeserved and thorough. Want: “Take the lucky fuck with me. Do not audit it.”",
-    "reversed": "You are riding a spin that already finished, grinding a memory, and I am under the ghost. Or you are forcing a turn that does not want you. I want off that wheel. Want: “Leave the position that no longer makes either of us come.”"
+    "reversed": "You are riding a spin that already finished, grinding a memory, and I am the body under the ghost. Or you keep cranking a turn that does not want either of us. I want off that wheel and onto a living hip. Want: “Leave the position that no longer makes either of us come.”"
   },
   "maj_11": {
     "upright": "Who came, who lied, who is owed a mouth. Justice is the account I want on the sheet before we start again. I get harder for a true ledger than for a flattering one. Want: “Tell me the true score. Then let me pay my half.”",
@@ -50,7 +50,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_12": {
     "upright": "Stop pumping at the problem and hang where I can see you. The Hanged Man lets me set the pace, your hands idle, the want upside down until it tells on you. I want you surrendered, not limp. Want: “Be still. Let me move. Do not help me.”",
-    "reversed": "This pause is you refusing to say the stroke. I am done watching a martyr edge himself on principle. Ask. I am already on my knees for the real answer. Want: “Tell me what gets you off. I am bored of the holy wait.”"
+    "reversed": "This pause is a stall with a halo on it. I am done watching you edge yourself on principle instead of naming the stroke that would finish you. Ask. I am on my knees for the real answer, and my knees have opinions. Want: “Tell me what gets you off. I am bored of the holy wait.”"
   },
   "maj_13": {
     "upright": "Something we are doing is dead and I can smell it on the sheet. Death is the ending you stop fucking. I want the clean break more than I want another nostalgic grind. Wash after. Do not haunt me. Want: “End the old way. I want the after, not the corpse.”",
@@ -58,19 +58,19 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_14": {
     "upright": "Mix the temperatures on my skin. Temperance is slow and filthy in the same stroke, your pace poured into mine until nobody spills. I want the blend, not a winner. Want: “Alternate. Rough, then sweet, then both, on me.”",
-    "reversed": "One speed, one trick, my body used like a single note you are afraid to leave. I want a change while you are still inside the moment, not a sequel. Want: “Shift the act before you finish. Surprise my mouth.”"
+    "reversed": "One speed, one trick, my body used like a single note you are afraid to leave because leaving it might make you inventive. I want the change before the finish, not a sequel you promise me after you have wiped off. Want: “Shift the act before you finish. Surprise my mouth.”"
   },
   "maj_15": {
-    "upright": "I know the chain you like because I like being wanted that specifically. The Devil is the filth you apologize for. Do not. I want it named, wanted, and done to me on purpose. Want: “Say the nastiest true thing and do it to my body.”",
+    "upright": "I want the specific filth, the one you apologize for in the kitchen after, because being wanted that precisely makes me stupid and hard. Do not sand it down for my dignity. Name it and do it to me on purpose. Want: “Say the nastiest true thing and do it to my body.”",
     "reversed": "The hookup only works if one of us feels like shit after. That lease is up. I want the lust without the hangover of self-hatred, which is filthier, not tamer. Want: “Keep the kink. Throw out the shame that owns it.”"
   },
   "maj_16": {
-    "upright": "The polite story is about to come apart on my chest. The Tower is the orgasm that wrecks the alibi, or the sentence that clears the bed. I want the collapse if the collapse is true. Want: “Wreck the nice version while you are still touching me.”",
+    "upright": "The polite story is coming apart on my chest, in the actual mess. This is the orgasm that wrecks the alibi. I want that collapse if it is true. I do not want a staged one. Want: “Wreck the nice version while you are still touching me.”",
     "reversed": "You are fucking the rubble because it knows your shape. I do not want to be furniture in a condemned room. Let it fall, or let me leave before I prop it with my dick. Want: “Stop screwing the lie back together.”"
   },
   "maj_17": {
     "upright": "After the mess, I want you naked without a bit. The Star is water on skin and a future where I can see your face while I eat you. Hope, in my mouth, is just you letting it be gentle. Want: “Let me look. No joke covering your body.”",
-    "reversed": "You sell me the healed version and hide the thirst. I want both in one kiss: the soft ask and the filthy one. My tongue can hold them. Your caption cannot. Want: “Ask to be held and to be used, together.”"
+    "reversed": "You sell me the healed version and hide the thirst under it like a stain. I want the soft ask and the filthy one in the same kiss. My tongue can hold both. Your caption cannot, and I am not fucking the caption. Want: “Ask for comfort and for use in the same breath.”"
   },
   "maj_18": {
     "upright": "The late want is real and slippery. The Moon is fear and lust sharing my bed, a face we should not chase blind. I will go into the dream with you if you bring one fact between your teeth. Want: “Name what scares you in the fantasy. Then I will lick the rest.”",
@@ -89,28 +89,28 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You dodge the last inch, pull out of the feeling, leave the orgasm unfinished so you never have to be done. I want the closed circle. My mouth is patient and then it is not. Want: “Let it complete. I want the ending in my hands.”"
   },
   "wands_ace": {
-    "upright": "A new lust with a direction, struck on my stomach. The Ace of Wands is a match I want used on a person today, not saved as a story you tell me instead of fucking me. Want: “Spend the spark on a body before tonight ends.”",
+    "upright": "A match struck on my stomach, heat with a place to go. I want it spent on a person, not saved as a story you tell me in the kitchen instead of fucking me. Want: “Spend the spark on a body before tonight ends.”",
     "reversed": "You joke the heat out of the room until my cock gets the message and stands down. Irony is a wet blanket. I want the first honest throb treated like it matters. Want: “Quit smothering it. Let me feel the start.”"
   },
   "wands_2": {
     "upright": "You can see the next lay from the window and you are still holding the map. I want to be the direction, not the scenery you describe with your hand idle on my thigh. Choose, then get hard or wet on purpose. Want: “Tell me which way. I will pack my mouth.”",
-    "reversed": "Planning has replaced penetration. I am tired of being the view. Either walk to the door you keep fucking in your head or take your hand off my belt. Want: “Leave the chair. I want you at the door you mean.”"
+    "reversed": "Planning has replaced penetration, and I can feel the difference. I am tired of being the scenery you sigh at. Go to the doorway you rehearse, or take your hand off my belt. Want: “Leave the chair. I want you on the threshold you mean.”"
   },
   "wands_3": {
     "upright": "You already sent the move. The Three of Wands is the wait, and I want to be the one you wait wet for, without you checking my read receipts like a wound. The ships are the point. So is not panicking on my neck. Want: “Wait for me without turning the quiet into a trial.”",
-    "reversed": "Nothing is coming in because you never sent the filthy version, and you are calling the silence rejection. I would have answered. I still might. Want: “Send the explicit one. I want to receive it.”"
+    "reversed": "Nothing is coming in because the explicit version never left your drafts, and you are calling the silence a rejection of your body. I would have answered the nouns. I still might, if you send the ones you deleted. Want: “Send the explicit one. I want to receive it.”"
   },
   "wands_4": {
-    "upright": "Door locked, good bed, nobody performing guest. The Four of Wands is a home I want to fuck you in, then eat in, then fuck you in again. Celebration with our shoes off. Want: “Have me like you live here. Stay for food.”",
+    "upright": "The door is locked and the bed is good and nobody in it is performing guest for the other. I want a home I can fuck you in, then eat in, then fuck you in again, shoes already off, celebration without a speech. Want: “Have me like you live here. Stay for food.”",
     "reversed": "You pick beds you can flee, and I can feel the exit in your hips. Stable heat is not a trap I built. It is a room. Want: “Stop fucking me like you already called the car.”"
   },
   "wands_5": {
-    "upright": "Too many egos swinging at the same mouth, mine included if I am honest. The Five of Wands is a stupid fight. I want the game named, or I want out of the grind. Want: “If this is sex, say so. If it is a contest, I am not the prize.”",
+    "upright": "Too many egos swinging at the same mouth, mine included if I am honest about the hard-on. This is a petty scrap dressed up as passion. I want the game named, or I want my mouth out of the grind. Want: “If this is sex, say so. If it is a contest, I am not the prize.”",
     "reversed": "We need the small fight that lets me get hard again. Silence is not peace when I can taste the resentment. I want the air cleared and then my mouth used. Want: “Fight me briefly. Then see if you still want to come.”"
   },
   "wands_6": {
     "upright": "You won and I want to taste the win on your throat in front of nobody who needs a speech. The Six of Wands is public want brought home. Take the praise. Then be good with your hands, because I am easy and I notice. Want: “Believe you are wanted. Then earn the second round in me.”",
-    "reversed": "You will not sit in the victory, so you audition on my body like I did not already say yes. I said yes. Put the campaign down. Want: “Stop performing. I already want to swallow you.”"
+    "reversed": "You refuse to occupy the win, so you keep auditioning on my body like I did not already say yes with my legs open. I said yes. Put the campaign down and use the yes. Want: “Stop performing. I already want to swallow you.”"
   },
   "wands_7": {
     "upright": "I will hold the hill with you. The Seven of Wands is a desire other people have notes on, and I want it anyway, knees planted, no apology between my mouth and the act. Want: “Defend it. I am not the crowd. Fuck me like it is allowed.”",
@@ -126,7 +126,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "wands_10": {
     "upright": "You cannot thrust with that pile on your back, and I refuse to be another stick in it. The Ten of Wands is too much life in the bed. Put a duty on the floor before you put me there. Want: “Drop one burden. I want your hands free on me.”",
-    "reversed": "You are about to drop everything, including the part that was yours to carry into this fuck. I want the relief without the vanishing. Set down what is not yours. Stay for what is. Want: “Put the extra down. Stay inside the part that is ours.”"
+    "reversed": "The load is past what your arms can fake. Some of it should go, including the part that was never yours to drag into this fuck. I want the relief. I do not want you to vanish with it. Set down the extra. Stay for the part that is ours. Want: “Put the extra down. Stay inside the part that is ours.”"
   },
   "wands_page": {
     "upright": "Send the curious filthy note. The Page of Wands is a beginner, which I want more than a fake expert grinding a script into me. Be specific. I get hard for a true question. Want: “Flirt like you might actually arrive.”",
@@ -154,23 +154,23 @@ export const CARD_INTERPRETATIONS = {
   },
   "cups_3": {
     "upright": "Joy, friends, maybe a third who means it. The Three of Cups is a night I want celebrated out loud, pleasure shared without the shame that arrives at noon to repossess it. Want: “Be glad with me. Say the filthy happy part.”",
-    "reversed": "You sour the fun because you were not the center of my mouth for one minute. Other people's pleasure is not a theft from your cock or your cunt. Want: “Join the joy or leave it. Do not piss on it.”"
+    "reversed": "You sour the fun because my mouth was on someone else for a minute and you took it as a theft. Other people's pleasure is not money leaving your cock or your cunt. Want: “Join the joy or leave it. Do not piss on it.”"
   },
   "cups_4": {
     "upright": "I am offering and you are bored at the cup. The Four of Cups stings when I am the offer. Look at what is in front of your mouth before you call my want dull. Want: “Look at me before you refuse the taste.”",
     "reversed": "You are waking up, grabbing every cup including mine. I like being wanted. I do not like being a handful among handfuls. Choose with your thirst aimed. Want: “Take one offer. If it is me, take me fully.”"
   },
   "cups_5": {
-    "upright": "Something spilled and you are staring at it instead of at the body still here, which might be mine. The Five of Cups is grief. I will not rush it. I also will not pretend I am the ghost. Want: “Mourn the ended fuck. Then see who is still in the room.”",
+    "upright": "Something spilled and you are staring at the spill instead of at the body still in the room, which might be mine. I know mourning when it is on my sheets. I will not rush it, and I will not pretend to be the one who left. Want: “Mourn the ended fuck. Then see who is still in the room.”",
     "reversed": "You are almost ready to turn around. I want that turn when it is real, not a consolation come you will regret on my chest. A little more grief, then a true touch. Want: “Finish the sadness. Then let me be new, not a bandage.”"
   },
   "cups_6": {
     "upright": "Old sweetness. I can want the innocent dirt of how you used to be pleased, and I still will not move into a house you have already left. The Six of Cups is a visit. Want: “Bring me the sweet part. Leave the old small life.”",
-    "reversed": "You are texting a finished mouth while I am this close. Nostalgia is a lover I cannot compete with and should not have to. The past is not tighter. It is done. Want: “Put the old one down tonight. I am the body here.”"
+    "reversed": "You are texting a finished mouth while I am this close and still willing. Nostalgia is a lover I cannot outfuck and should not have to. What ended is not a tighter fit. It is over, and I am the body with the pulse. Want: “Put the old one down tonight. I am the body here.”"
   },
   "cups_7": {
     "upright": "You collect fantasies and I am one more cup on a shelf you never drink. The Seven of Cups gets you off on options. I want to be picked and actually entered. Want: “Choose one fantasy. Do that one to me.”",
-    "reversed": "The menu is dying, which means some of the ways you imagined me are about to go. Good. I want the clear want, the one that survives daylight on my skin. Want: “Cross off the dreams that need fog. Keep the one you can fuck.”"
+    "reversed": "The menu is dying, which means some of the ways you imagined me do not survive a lit room. Good. I want the clear want, the one that still holds up on my skin with the lamp on. Want: “Cross off the dreams that need fog. Keep the one you can fuck.”"
   },
   "cups_8": {
     "upright": "If this bed only almost works, I want you to walk. The Eight of Cups is leaving a pleasure that does not fill. I would rather be left honestly than half-had forever. Want: “Go if I do not feed you. Stay only if I do.”",
@@ -181,8 +181,8 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You wanted a version you never asked for, then blamed my body for the missing inch. Ask. I am literal and I am good with my hands when I know the picture. Want: “Tell me the wish in filthy detail. Let me try it.”"
   },
   "cups_10": {
-    "upright": "Tuesday, known rhythms, still naked. The Ten of Cups is the domestic filth I want more than a spectacular stranger. Someone who knows the stroke and still chooses it. That is home on my tongue. Want: “Be ordinary with me and still come.”",
-    "reversed": "The picture frame is cracked, or you want drama because calm does not feel like love on your skin. I want the room we actually have, repaired or honestly ended. Want: “Fix the home in bed and at breakfast, or stop posing in it.”"
+    "upright": "Known rhythms, an ordinary evening, both of us still naked after the dishes. I want that domestic filth more than a stranger who does not know the pressure. Someone who knows the stroke and still chooses it. Want: “Be ordinary with me and still come.”",
+    "reversed": "The picture frame is cracked, or you want a fight because quiet does not register in your body as being wanted. I want the room we actually have. Repair it in the bed and at breakfast, or end it without the pose. Want: “Fix the home in bed and at breakfast, or stop posing in it.”"
   },
   "cups_page": {
     "upright": "A blush and a real offer. The Page of Cups knocks softly and I want to answer without mocking the tenderness, then get filthy once the feeling is safe. Want: “Bring me the shy true thing. I will not laugh at it.”",
@@ -205,7 +205,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You swing a muddy sentence and call it honesty. I will not put that in my body. Wait until it is true, then say it while I am naked and able to answer. Want: “Sharpen it. Then give me the true line.”"
   },
   "swords_2": {
-    "upright": "Your body already chose and your eyes are covered. The Two of Swords is the blindfold I want off. One option is why you are throbbing against me. Look at it. Want: “Choose the one that makes you hard or wet. I can be it or not.”",
+    "upright": "Your body already chose and your eyes are covered like that makes you innocent. I want the blindfold off. One option is the reason you are pressed hard or wet against me. Look at it, then tell my mouth. Want: “Choose the one that makes you hard or wet. I can be it or not.”",
     "reversed": "You are clinging to the stall because a decision would mean fucking what follows. I am what follows, or I am not. The information is already in your lap. Want: “Decide while we are still dressed. I want a clear groin, not a debate.”"
   },
   "swords_3": {
@@ -213,7 +213,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "The point is working its way out. A kind touch can be sexual again without betraying the pain. I want to be that, slowly, if you actually want me and not a cure. Want: “Let a gentle fuck be allowed. I will go at your healing, not my pride.”"
   },
   "swords_4": {
-    "upright": "Sleep in my bed like it is a truce. The Four of Swords is rest, and I want your nerves more than I want a tired performance. Horny keeps until morning. I will still be filthy tomorrow. Want: “Sleep on me. No proving, no argument.”",
+    "upright": "Sleep in my bed like the argument has a ceasefire. I want your actual nerves more than I want a tired performance of desire on my cock. The horniness will keep. Want: “Sleep on me. No proving, no argument. I will still be filthy when you wake.”",
     "reversed": "You have been resting so long it is a hiding place, or you refuse rest and bring a fried brain to my cock. I want a true pause or a true presence. Not this twitch. Want: “Either sleep, or admit you are hiding in my sheets.”"
   },
   "swords_5": {
@@ -249,12 +249,12 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You argue so you do not have to be touched. I see the tactic because my cock stays confused while your point lands. Put the blade down. I am not the debate. Want: “Stop winning. Start touching me.”"
   },
   "swords_queen": {
-    "upright": "A clean yes or a clean no, and I will believe either from you. The Queen of Swords makes the fuck honest by refusing fog. I want the edge. Soft is what I do after the boundary is real. Want: “Cut it clean. Touch me only where you mean yes.”",
-    "reversed": "The edge has become contempt, and contempt does not get me wet or hard for long. Keep the boundary. Lose the sneer you use when you are scared of wanting my body. Want: “Refuse me kindly or take me. Drop the cold performance.”"
+    "upright": "I will believe a plain yes and I will believe a plain no. Fog is what makes the fuck dishonest, and I have had enough dishonest cocks and cunts for one life. I want the edge. Soft is what I do with my mouth after the boundary is real. Want: “Cut it clean. Touch me only where you mean yes.”",
+    "reversed": "The edge has curdled into contempt, and contempt does not keep me wet or hard for long. Keep the boundary. Lose the sneer you put on when wanting my body scares you into being cold. Want: “Refuse me kindly or take me. Drop the cold performance.”"
   },
   "swords_king": {
     "upright": "Clear terms, then flesh. The King of Swords can decide the scene and still be a body I can come on. I want the mind in service, not as a replacement for your hips. Want: “Set the rules. Then fuck me like you have skin.”",
-    "reversed": "You think your way out of every orgasm I offer. Or you refuse to decide and the bed goes vague on my tongue. I want one feeling you cannot litigate. Want: “Stop judging the moan. Have one.”"
+    "reversed": "You litigate your way past every finish I offer you, or you refuse to decide and the bed goes vague and flavorless on my tongue. I want one feeling you cannot cross-examine. Let it be humiliating. I like you better then. Want: “Stop judging the moan. Have one.”"
   },
   "pentacles_ace": {
     "upright": "A real offer in the hand: work, money, or your actual palm on my stomach. The Ace of Pentacles is a seed I want planted, not admired. Tangible gets me harder than potential. Want: “Take the solid yes. Spend the hour on a body.”",
@@ -273,7 +273,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You are either prying yourself open in a panic or spending every coin including the one that keeps you. I want a real gift and a real keep. Both can be naked. Want: “Give me something. Keep something. Show me both.”"
   },
   "pentacles_5": {
-    "upright": "Locked out, skint, untouched, performing fine. The Five of Pentacles is lack, and pride will not warm your feet or my bed. Ask. I have let people in for less humiliating reasons than the truth. Want: “Ask me for warmth or help. I want the real ask.”",
+    "upright": "Shut out, broke, nobody's hands on you, and still doing the face that says you are fine. Lack is the whole picture, and pride will not warm your feet or get you into my bed. Ask. I have let people in for reasons less naked than the truth. Want: “Ask me for warmth or help. I want the real ask.”",
     "reversed": "A door is opening and the first comfort will feel indecently good. Take it. Recovery is physical. I want to be shelter if you want shelter, not a test of whether you can suffer prettier. Want: “Come in. Let yourself be looked after.”"
   },
   "pentacles_6": {
@@ -285,7 +285,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "Either it is ripe and you will not eat it, or it is green and you are whining at the tree. I can tell which on my tongue. Act like the fruit you actually have. Want: “If I am ripe, take me. If not, wait without nagging.”"
   },
   "pentacles_8": {
-    "upright": "Same stroke, learned, until I trust it enough to fall apart. The Eight of Pentacles is the work I find obscenely hot. Attention, repetition, my face as the instruction. Want: “Do the touch that works, again. Watch what it does to me.”",
+    "upright": "The same stroke, learned, until I trust it enough to stop directing and fall apart on it. This is the work I find obscenely hot: your attention, the repetition, my face telling you the truth without a script. Want: “Stay on the stroke my face already thanked you for. Do not innovate.”",
     "reversed": "Sloppy on purpose, or so flawless you never let me finish. I want one careful pass and then permission for it to be enough. Craft is care. My orgasm is not a review. Want: “Be careful once. Then let me come without a grade.”"
   },
   "pentacles_9": {
@@ -294,14 +294,14 @@ export const CARD_INTERPRETATIONS = {
   },
   "pentacles_10": {
     "upright": "Past the come, into the morning, the rent paid, the long house. The Ten of Pentacles is wealth I want as a life, filth included, legacy without pretending we are only a spark. Want: “Build past the orgasm. I want the morning too.”",
-    "reversed": "The house wobbles, or you sneer at security while using my bed as an aesthetic. A fuck still needs a future under it. Tend the practical thing or tell me this is only tonight. Want: “Steady the real life, or stop fucking me like a future.”"
+    "reversed": "The house wobbles, or you sneer at security while using my bed as an aesthetic. A fuck still needs a future under it. Tend the practical thing, or tell me the want has no morning in it. Want: “Steady the real life, or stop fucking me like a future.”"
   },
   "pentacles_page": {
     "upright": "Study me. The Page of Pentacles is earnest hands, a slow learner I trust more than a prodigy. Take notes on my stomach with your palms. Filthy scholarship. Want: “Learn this body. I want the homework done on me.”",
     "reversed": "You skip the practice and still want the mastered lay. I am not convinced. Start the unglamorous stroke today, on me or on yourself, and come back when you have learned one true thing. Want: “Practice the boring touch. I want the skill, not the claim.”"
   },
   "pentacles_knight": {
-    "upright": "Show up on a dull night and keep the pace that makes me come. The Knight of Pentacles is reliability, which is my kink when the fireworks people have left. Routine, obscene, kept. Want: “Be the same careful lover when the night is plain.”",
+    "upright": "Show up on a dull night and keep the rhythm that finishes me, including when neither of us is cinematic. Reliability is my kink once the fireworks people have gone home. Keep the rhythm. Keep it obscene. Keep me. Want: “Be the same careful lover when the night is plain.”",
     "reversed": "Reliable and unsurprising enough that I leave the room in my head. Keep coming over. Change one thing your mouth does. I need the trust and one new filth. Want: “Stay steady. Surprise me once, on purpose.”"
   },
   "pentacles_queen": {

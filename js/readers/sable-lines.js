@@ -5,7 +5,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You keep almost starting. You get wet or hard and then you schedule the want to death. A leap you only rehearse is fear with its hand in its pants. Order: “Tonight you start, or you admit you like the ache of almost.”"
   },
   "maj_01": {
-    "upright": "Everything required is already in the room: your mouth, your hands, the nerve. The Magician is focus, not a costume. Point all of it at one body and stop warming up. Order: “One person. Both hands. Finish what you put in.”",
+    "upright": "Mouth, hands, nerve, and a cunt or cock that notices if you scatter: all of it is already in reach. Focus is the filthy skill. Point all of it at one body and stop the warm-up grind. Order: “One person. Both hands. Finish what you put in.”",
     "reversed": "All performance, no fuck. You talk a filthy game and fold the moment someone believes you. Tools on the table mean nothing if you only wave them. Order: “Stop announcing it. Put your fingers to work.”"
   },
   "maj_02": {
@@ -17,15 +17,15 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You have been starving the garden and calling the hunger discipline. Your tits, your stomach, your want are tired of being a picture. Rest is part of getting properly fucked. Order: “Eat, sleep, then let someone take their time on you.”"
   },
   "maj_04": {
-    "upright": "Somebody has to run the fuck, and tonight it can be you without a hostage scene. A word for stop, a word for more, then your hips. That is the whole empire. Order: “Set the rule. Enforce it with your hips, not a speech.”",
+    "upright": "The fuck needs someone in charge, and that someone can be you, with no hostage taken. A word for stop, a word for deeper, then your hips doing what the word promised. That is the whole empire, and it is mostly pelvis. Order: “Set the rule. Enforce it with your hips, not a speech.”",
     "reversed": "You are gripping the headboard because the real want will not sit still. Clenched teeth are not command. Loosen the jaw. Keep the boundary. Order: “Keep one limit. Drop the rest of the performance.”"
   },
   "maj_05": {
     "upright": "There is a boring way to touch someone that works because bodies invented it before your clever idea. Ask, go slow, repeat the stroke that made them swear. Clever is how people skip the clit. Order: “Do the obvious stroke until they shake. Then do not stop.”",
-    "reversed": "The old script is rotten, or you have outgrown the position they put you in. Leave it on purpose. Do not heckle from the doorway half dressed. Order: “Quit the role in bed you have been faking.”"
+    "reversed": "The old bed-script has gone rancid, or the role they stuffed you into no longer fits around your mouth. Walk out of it on purpose. Do not stand in the doorway, knickers in your fist, heckling the people still fucking. Order: “Quit the role in bed you have been faking.”"
   },
   "maj_06": {
-    "upright": "A real choice, not a vibe. Two bodies, or two ways of being had, and you do not get both plus a whine. Choose the one you can still want on a Wednesday. Order: “Choose. Take your clothes off for that one only.”",
+    "upright": "Two bodies, or two ways of being had, and you do not get both plus a whine in the group chat. This is a decision, not a mood you smear around and blame on chemistry. Pick a body you still want when the performance stops. Order: “Choose. Take your clothes off for that one only.”",
     "reversed": "You are split and calling the split chemistry. Two beds, one coward. That is not a kink until everybody knows. Order: “Pick a body, or tell both the truth before anyone comes.”"
   },
   "maj_07": {
@@ -50,7 +50,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_12": {
     "upright": "Stop thrusting at the problem. Surrender is a position. Let them set the pace, let your hand pause, look at the want upside down. Order: “Be still. Let them move on you. Do not help.”",
-    "reversed": "You are stalling and calling it surrender. Martyrdom in bed is you refusing to say what gets you off. The pause has expired. Order: “Ask for the stroke you actually come from.”"
+    "reversed": "You are stalling and calling the stall a spiritual position. Martyrdom in bed is a way of keeping the real stroke unsaid while someone works on you for free. The pause has gone off. Order: “Ask for the stroke you actually come from.”"
   },
   "maj_13": {
     "upright": "A way you fuck, a person, a story where you only serve, is over. Death is not a mood you can moan through. End it or you will haunt the old sheet. Order: “End it clean. Wash. Do not text them after you come.”",
@@ -58,19 +58,19 @@ export const CARD_INTERPRETATIONS = {
   },
   "maj_14": {
     "upright": "Mix it. Slow and filthy, tender and specific, your pace and theirs in one glass. Temperance is the fuck that does not spill because somebody is paying attention. Order: “Their pace, then yours, then both, without a winner.”",
-    "reversed": "You are one note: too rough, too polite, too fast, too theoretical. Excess is boring when the temperature cannot change. Order: “Change one thing while you are still inside the act.”"
+    "reversed": "You are one note: too rough, too polite, too fast, or all theory and no slick. Excess gets dull when the temperature cannot change before the finish locks your hips into the same grunt. Order: “Shift the pace, the depth, or the filth before you come.”"
   },
   "maj_15": {
-    "upright": "You know the chain you like. The Devil is the want you call a problem because it makes you drip in a way your manners hate. Name it. Wanted, specific, done on purpose. Order: “Say the filthiest true act and do that one.”",
+    "upright": "There is a specific filth that gets you dripping, and you have been filing it under problem because your manners hate how precise it is. Name the act. Then do it like you ordered it off a menu, not like it happened to your helpless body. Order: “Say the filthiest true act and do that one.”",
     "reversed": "The chain is cheap now. Habit, shame, a person who only feels like sex when you are smaller than you are. A hookup that needs your self-hatred is a bad lease. Order: “Drop the fuck that only works if you hate yourself.”"
   },
   "maj_16": {
-    "upright": "The lie is coming down. A pose, a couple, the story that you do not want it this bad. The Tower is the orgasm that ruins the alibi. Let the polite version fall off the bed. Order: “Say the truth that wrecks the nice version.”",
+    "upright": "The lie is cracking: the pose, the couple, the story that you do not want it this bad. What falls is the version of you that only gets off when nothing true has been said. Let that version hit the floor and stay there. Order: “Say the sentence that drops the polite body off the bed.”",
     "reversed": "You are propping the wreck because the rubble is familiar under your hands. You only come when nothing is at stake. That is the tell. Order: “Stop rebuilding the lie with your mouth.”"
   },
   "maj_17": {
     "upright": "After the wreck, be naked without making it a bit. The Star is skin, water, a future fuck that is gentle because you mean it. Let someone see the want without a joke in front of it. Order: “Be seen. No punchline between you and the want.”",
-    "reversed": "You perform healing and keep the real thirst offstage. Your body does not believe the soft caption. Ask for comfort in the same breath as the filth. Order: “Ask to be held and fucked in the same sentence.”"
+    "reversed": "You perform recovery and park the real thirst where it cannot stain the caption. Your skin does not believe the soft voice. Arms around you, and a cock or a mouth, belong in the same breath. Order: “Ask for arms around you and something in you, in the same breath.”"
   },
   "maj_18": {
     "upright": "Not everything you want survives daylight, and the dream can still be true. The Moon is the late picture: fear, lust, a face you should not touch yet. Walk toward it with one fact, not a speech. Order: “Name the fear under the fantasy before you chase the body.”",
@@ -89,20 +89,20 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You keep almost arriving. A climax you dodge, a life you will not close, an orgasm you interrupt to stay in control. The unfinished fuck becomes your personality. Order: “Close one circle with your body this week.”"
   },
   "wands_ace": {
-    "upright": "A live match, not a mood. The Ace of Wands is new lust with a direction. Use it on a real body before you turn it into a story you tell instead of a fuck you have. Order: “Light it today. One person. Your hands busy.”",
+    "upright": "A live match, not a mood you are going to journal about. Fresh heat, and it has somewhere to go. Put it on a real body before it turns into an anecdote you tell instead of a fuck you have. Order: “Light it today. One person. Your hands busy.”",
     "reversed": "The spark is wet. You feel the start and smother it with irony, which is how a match becomes a stick. Order: “Stop joking the heat away. Act on the first honest throb.”"
   },
   "wands_2": {
-    "upright": "You can see the next fuck from here and you are still holding the plan instead of the person. One hand on the map, one hand on the world. Get aroused in a direction. Order: “Pick the direction. Tell them what you intend to do.”",
-    "reversed": "You plan so you never have to be inside the choice. The view from the window is not a cock or a cunt. It is delay. Order: “Leave the chair. Go to the door you keep picturing.”"
+    "upright": "The next fuck is visible from where you are standing, and you are still clutching the plan instead of a person. A plan is not a hand on someone. Get aroused toward one direction and say the direction out loud. Order: “Pick the direction. Tell them what you intend to do.”",
+    "reversed": "You plan so you never have to be inside the choice. The view is not a cock or a cunt. It is delay with a nice window and dry hands. Order: “Leave the chair. Walk to the threshold you keep fucking in your head.”"
   },
   "wands_3": {
     "upright": "You already made the move. The Three of Wands is you waiting, wet, trying not to check twice. Let the wait be heat, not a panic you rub raw. Order: “Wait. Do not beg the silence to perform for you.”",
-    "reversed": "They are late and you are rewriting the voyage as humiliation, or you never sent the filthy message at all. Check which before you pout. Order: “If you sent it, wait. If you did not, send the explicit version.”"
+    "reversed": "They are late and you are rewriting the wait as a humiliation ritual, or the explicit message is still sitting in your drafts with your hand in your pants. Check which before you pout. Order: “If you sent it, wait. If you did not, send the explicit version.”"
   },
   "wands_4": {
     "upright": "A home for the want. Door locked, good bed, people glad you came. The Four of Wands is celebration you can fuck, not a speech about how rare this is. Order: “Fuck like you live here. Then eat.”",
-    "reversed": "The party is off, or you will not let a heat be stable. Instability is not deeper. It is just you keeping your shoes on. Order: “Stop picking beds you already plan to flee.”"
+    "reversed": "The party is off, or you refuse a heat the moment it could become a place you return to. Instability is not deeper. It is you keeping your shoes lined up by the bed like an exit. Order: “Stop picking beds you already plan to flee.”"
   },
   "wands_5": {
     "upright": "Everybody is swinging and nobody is on the actual clit of the matter. The Five of Wands is petty competition for the same mouth. Step out, or play on purpose. Order: “Name the game. If it is not sex, stop grinding on it.”",
@@ -110,7 +110,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "wands_6": {
     "upright": "You won and it shows on your throat. The Six of Wands is being wanted where people can see. Take the praise into bed without getting smug enough to be bad with your hands. Order: “Accept that they want you. Earn the second round.”",
-    "reversed": "A victory you will not sit in, or applause you bought cheap. Recognition that makes you cruel is a lonely fuck in a costume. Order: “If they want you, believe them once. Do not audition.”"
+    "reversed": "A win you refuse to occupy, or applause you bought cheap and then got cruel inside. Recognition that turns you mean is a lonely fuck in a costume, and the costume is not hot. Order: “If they want you, believe them once. Do not audition.”"
   },
   "wands_7": {
     "upright": "Hold the ground. The Seven of Wands is you defending a desire everyone has a note on. You do not owe them a softer kink. Plant your knees. Order: “Defend the want. Do not apologize for the position.”",
@@ -126,7 +126,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "wands_10": {
     "upright": "Too much on your back: lovers, grudges, the performance, while you insist the weight is passion. The Ten of Wands will not let you thrust. Put something down. Order: “Drop one duty before you get in the bed.”",
-    "reversed": "You are about to drop it all, which may be right, or you are refusing a load that is actually yours. Tell the difference dressed. Order: “Set down what is not yours to carry into sex.”"
+    "reversed": "The load is at the breaking point. Setting it down may be the right move, or you may be shrugging off a load that belongs in the bed with you. Tell those apart while you still have your clothes on. Order: “Set down what is not yours to carry into sex.”"
   },
   "wands_page": {
     "upright": "A flirt with dirt on it. The Page of Wands is the first filthy message that is actually curious. Send it. Be a beginner on purpose, which is hotter than fake mastery. Order: “Flirt specifically. Skip the joke that hides the ask.”",
@@ -149,12 +149,12 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You feel it and you cap it, or you pour it on someone who did not ask. Neither is romance. One is a clenched jaw, the other is a mess. Order: “Open a little. Do not drown them.”"
   },
   "cups_2": {
-    "upright": "Both of you are actually in it. The Two of Cups is eye contact and a kiss that is not a negotiation. Equal mouth, equal want, nobody performing the couple. Order: “Kiss like you are both choosing it.”",
+    "upright": "Both of you are actually in it. Eye contact, and a kiss that is not a negotiation with an audience in mind. Mouths matched, want matched, nobody acting out the couple so the room will approve. Order: “Kiss like you are both choosing it.”",
     "reversed": "One of you is acting the scene. Yearning at a closed door is less hot than a true no or a true yes. Reciprocity or nothing. Order: “Ask if they want what you want. Believe the answer.”"
   },
   "cups_3": {
     "upright": "Joy with witnesses, or three people who mean it. The Three of Cups is the night that gets honest and a little slurred. Share the pleasure without turning it into shame after. Order: “Celebrate the want out loud with someone safe.”",
-    "reversed": "Gossip, exclusion, or you souring a pleasure because you were not the center of it. Someone else's come is not a theft. Order: “Stop competing with the fun. Join it or leave clean.”"
+    "reversed": "Gossip, exclusion, or you souring a pleasure because your mouth was not the one being used for a minute. Someone else's come is not a theft from your body. Order: “Stop competing with the fun. Join it or leave clean.”"
   },
   "cups_4": {
     "upright": "You are bored and a cup is still being offered to your mouth. The Four of Cups is apathy in a room trying to fuck you nicely. Look at what you refuse. Order: “Look at the offer before you call it dull.”",
@@ -166,7 +166,7 @@ export const CARD_INTERPRETATIONS = {
   },
   "cups_6": {
     "upright": "Old sweetness, the way you used to be easy to please, a lover from before. The Six of Cups lets you visit. It does not let you move back in and call it growth. Order: “Take the sweet touch. Leave the smallness.”",
-    "reversed": "Nostalgia is the one fucking you. The past is not tighter. It is finished. Or you are refusing a kindness because it reminds you of skin. Order: “Do not text the old one tonight.”"
+    "reversed": "Nostalgia is the one fucking you, and it is a lousy lay. What finished is not a tighter cunt or a better cock. It is finished. Or you are refusing a kindness because the skin reminds you of an older skin. Order: “Do not text the old one tonight.”"
   },
   "cups_7": {
     "upright": "Too many fantasies, none of them in the room. The Seven of Cups is you getting off on the menu. Pick a cup. The rest is scenery you cannot come in. Order: “Choose one fantasy and try it in a body.”",
@@ -178,11 +178,11 @@ export const CARD_INTERPRETATIONS = {
   },
   "cups_9": {
     "upright": "The wish, fat and pleased. The Nine of Cups is satiation: you got what you pictured and your body believes it. Enjoy the after. Smug is allowed for an hour. Order: “Come, then stay in it without improving it.”",
-    "reversed": "The wish disappointed, or you will not let yourself have the full glass. Taking less than you want is not modesty. It is you robbing your own cunt or cock. Order: “Ask for the version you actually pictured.”"
+    "reversed": "The picture you got off to let you down in the real body, or you will not take the full glass when it is already in your hand. Taking less than you want is not modesty. It is you robbing your own cunt or cock. Order: “Ask for the version you actually pictured.”"
   },
   "cups_10": {
     "upright": "The long warmth. The Ten of Cups is someone who knows how you like it and still wants you on a Tuesday. Filthy domestic is the prize, not the bore. Order: “Let it be ordinary and still get naked.”",
-    "reversed": "The happy picture is cracked, or you refuse a home because drama feels more like love on your skin. Check the actual room, the actual mouth. Order: “Repair it in bed and in the morning, or stop faking.”"
+    "reversed": "The happy picture is cracked, or you refuse a home because only a fight feels like being wanted. Check the actual room. Check the actual mouth. Drama is not a wetter cunt. Order: “Repair it in bed and in the morning, or stop faking.”"
   },
   "cups_page": {
     "upright": "A soft knock with a blush still on it. The Page of Cups offers a feeling and, if you do not mock it, the sex part too. Receive the ridiculous tender thing. Order: “Answer the gentle filthy offer without a sneer.”",
@@ -197,47 +197,47 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "You drown them, caretake until you vanish, or use emotion as a leash on their orgasm. Depth needs a shore. Order: “Feel it without making them responsible for your tide.”"
   },
   "cups_king": {
-    "upright": "Steady love that can still be nasty in the right direction. The King of Cups does not panic when the feeling gets big. He stays, and he fucks like the feeling matters. Order: “Stay kind while you are being filthy.”",
+    "upright": "Steady love that can still be nasty in the right direction. A person who does not panic when the feeling gets big, who stays, and who fucks like the feeling is the point of the thrust. Order: “Keep your hands kind while your mouth is obscene.”",
     "reversed": "Mood as a weapon, or a flatness you call calm while the bed goes nowhere. Control of the emotional room is not the same as being safe to come with. Order: “Name your mood before you put it in their body.”"
   },
   "swords_ace": {
     "upright": "A clean cut. The Ace of Swords is the truth that makes the sex better because nobody is lying about the act. Say the sharp thing. Kiss after, if it was true. Order: “Use the filthy noun. Say the precise want.”",
-    "reversed": "A muddy truth, or a blade you swing for sport. If you cannot say it clean, you are not ready to put it in someone. Order: “Wait until the sentence is true. Then say it naked.”"
+    "reversed": "A muddy truth, or a blade you swing because you like the flinch. A sentence you cannot say clean does not belong inside someone yet. Order: “Hold the line until it is actually true. Then say it with nothing on.”"
   },
   "swords_2": {
-    "upright": "A blindfold over a choice your body already made. The Two of Swords is the stalemate. Take the cloth off. One of the options is why you are throbbing. Order: “Look. Choose the one that gets you wet or hard.”",
+    "upright": "A blindfold over a choice your body already made. The stalemate is cloth, not fate. Take it off. One of the options is the reason your cock or cunt will not shut up. Order: “Look. Choose the one that gets you wet or hard.”",
     "reversed": "The stall is breaking and you are clinging to indecision because deciding means fucking the consequence. Information is already in the room. Order: “Decide today. Tell them with your clothes on.”"
   },
   "swords_3": {
-    "upright": "It goes through the chest. The Three of Swords is heartbreak, the sentence, the fuck you should not have had. Feel the puncture. Do not use a new body as a bandage tonight. Order: “Hurt honestly. Keep your hands off the rebound.”",
+    "upright": "It goes through the chest. Heartbreak, the sentence, the fuck you should not have had. Feel the puncture. A new body is a rotten bandage for a hole this fresh. Order: “Hurt honestly. Keep your hands off the rebound.”",
     "reversed": "The point is coming out. You can want a touch that does not cut, which will feel disloyal to the pain and is not. Order: “Let one kind memory be sexual again, slowly.”"
   },
   "swords_4": {
     "upright": "Lie down for sleep, not for proving. The Four of Swords is a truce. Your nerves are done. Horny can wait one night, which is how you come properly later. Order: “Sleep. Hands off the argument and the performance.”",
-    "reversed": "The rest has become a hiding place, or you refuse it and bring a fried brain to bed. Neither is hot. A tired fuck is mostly irritation. Order: “Rest tonight, or admit the bed is where you hide.”"
+    "reversed": "The rest has turned into a burrow you call recovery, or you refuse it and drag a fried brain into the bed. Neither is hot. A tired fuck is irritation with a dick in it. Order: “Rest tonight, or admit the bed is where you hide.”"
   },
   "swords_5": {
     "upright": "You won ugly. The Five of Swords is the argument you took past the point where anyone wants your mouth after. Put the points down. A hollow win does not get you off for long. Order: “Give the last word back. Touch them or leave.”",
     "reversed": "You can stop needing the win. Reconciliation is a softer voice and honest hands, or a clean exit without another cut. Order: “Apologize without collecting a sexual receipt.”"
   },
   "swords_6": {
-    "upright": "Leave the rough water. The Six of Swords is the calmer bed, the passage out. Take only the want that still belongs to you. The old fight does not get a seat. Order: “Get in the boat. Do not bring the storm to the new mouth.”",
+    "upright": "Get out of the chop. There is a calmer bed on the far side of this crossing. Take only the want that still belongs to you. The old fight does not get a seat, a mouth, or a souvenir. Order: “Get in the boat. Do not bring the storm to the new mouth.”",
     "reversed": "Stuck mid-crossing, full of the last person's voice. Or you refuse the move because rough water is familiar on your skin. Order: “Unpack one old fight before you kiss anyone new.”"
   },
   "swords_7": {
     "upright": "You are sliding something out of the room. The Seven of Swords is strategy or betrayal, and your body already knows which. Clever is allowed. A secret second bed is a different object. Order: “If you are sneaking, tell the truth or stop.”",
-    "reversed": "The sneak is exposed, or you are about to confess. Confession is sexier than a getaway you have to hold with your jaw. Order: “Confess before someone else undresses it.”"
+    "reversed": "The sneak is exposed, or the confession is already in your mouth and you are chewing it into a smaller, nicer crime. Confession is sexier than a getaway you have to hold with your jaw. Order: “Confess before someone else undresses it.”"
   },
   "swords_8": {
     "upright": "Tied by thoughts, not by rope you agreed to. The Eight of Swords is the shame story that says you cannot ask to be fucked the way you like. Test the bind. It is mostly sentences. Order: “Name one thought tying you. Step sideways out of it.”",
     "reversed": "You can see your hands. This is when people re-tie themselves and call it safety. The looseness is the whole card. Order: “Move one inch toward the ask you keep refusing.”"
   },
   "swords_9": {
-    "upright": "Awake while every worry wants a turn on your body. The Nine of Swords is anxiety in your arousal's clothes. The catastrophe is mostly mental. Hand on the sheet, not on the spiral. Order: “Write the fear. Sleep. Do not text it to a body.”",
+    "upright": "Awake, and every fear wants a turn wearing your arousal like a dress. The catastrophe is mostly in your head, tarted up as a body. Hand on the sheet, not on the spiral. Order: “Write the fear. Sleep. Do not text it to a body.”",
     "reversed": "The night is ending and you are less convinced by your own horror. That can feel like loss if horror was your intimacy. Morning can be dull and kind. Order: “Get up. Wash. Do not rehearse the disaster in the shower.”"
   },
   "swords_10": {
-    "upright": "Ruin, complete. The Ten of Swords is the old way dead on the floor. Over is the mercy. Do not romanticize the knives or let the corpse keep fucking you. Order: “Call it dead. Stop going back for one more cut.”",
+    "upright": "Ruin, complete. The old way is dead on the floor, and finished is the kindness worth having. Do not kiss the blades. Do not let that finished thing keep using your hips. Order: “Call it dead. Stop going back for one more cut.”",
     "reversed": "You are getting up, grotesque and correct. Recovery is awkward in the body. No trophy for the scar, no victory lap on the person who stabbed you. Order: “Rise. Do not reenlist in the same bed.”"
   },
   "swords_page": {
@@ -249,15 +249,15 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "Words as a way to avoid being touched. You win the point and lose the night, then wonder why nobody is wet for you. Order: “Put the argument down before you put anything in.”"
   },
   "swords_queen": {
-    "upright": "She sees through you and might still let you in. The Queen of Swords is the clean no and the clean yes. A boundary is what makes the fuck honest. Soft people trust a clean edge. Order: “Give a clean yes or a clean no. Touch only the yes.”",
-    "reversed": "So barbed nobody can get a mouth near you, or cutting because you are scared of wanting. Clarity is not contempt. Order: “Keep the boundary. Lose the sneer.”"
+    "upright": "She sees through you and might still let you in. The edge is a yes you can fuck and a no you can trust, which is what makes the act honest. Soft people open for an edge that does not wobble. Order: “Answer yes or no. Touch only where you meant the yes.”",
+    "reversed": "So barbed nobody can get a mouth near you, or cutting because wanting scares you into cruelty. Clarity is not contempt. A sneer is not a boundary. Order: “Hold the limit. Drop the curl of the lip.”"
   },
   "swords_king": {
     "upright": "The hard truth, and he can hold the room after. The King of Swords in bed means clear terms, no fog, a mind that serves the body. Decide, then be flesh. Order: “Set the terms. Then be a body, not a verdict.”",
-    "reversed": "You judge your way out of every orgasm, or you abdicate and call the vague bed easygoing. Intellect making you too proud to moan is the tell. Order: “Feel one thing you cannot argue with.”"
+    "reversed": "You think yourself out of every finish on the table, or you will not pick, and you call the foggy bed relaxed. A mind too proud to moan is the tell, and it is not attractive. Order: “Feel one thing you cannot argue with.”"
   },
   "pentacles_ace": {
-    "upright": "A chance you can touch. The Ace of Pentacles is a new job, a new hand on your actual skin, a seed. Plant it. Do not turn a good lay or a good offer into a theory. Order: “Take the tangible yes. Put time and hips into it.”",
+    "upright": "Something real is being offered: work, a hand on your actual skin, a start you can put weight on. Plant it in the calendar and in the body. Do not turn a good lay or a good offer into a theory you never get wet for. Order: “Take the tangible yes. Put time and hips into it.”",
     "reversed": "It slips because you are cheap with yourself or scared of a real start. A seed in your pocket is a prop, not a fuck and not a future. Order: “Book the room. Begin the body thing. Spend the hour.”"
   },
   "pentacles_2": {
@@ -285,7 +285,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "Impatience, or a ripe thing you will not pick. Look at the tree, not at your anxiety. Green stays. Ripe gets eaten. Order: “If it is ripe, take it in your mouth. If it is green, wait.”"
   },
   "pentacles_8": {
-    "upright": "The same stroke, learned, until their body trusts it. The Eight of Pentacles is repetition, which is the hottest work there is. Skill is attention, not a performance review. Order: “Practice the touch that works. Again. Watch their face.”",
+    "upright": "One stroke, practiced, until their body stops performing and starts answering. Repetition is the hottest work in the room. Skill is attention, not a review you write in your head while they are under you. Order: “Repeat the stroke their face already answered. Stay with it.”",
     "reversed": "Sloppy, or so perfect you never finish inside the moment. Either way nobody comes honestly. Care is the point of the craft. Order: “Do one careful repetition. Then let it be enough.”"
   },
   "pentacles_9": {
@@ -297,7 +297,7 @@ export const CARD_INTERPRETATIONS = {
     "reversed": "The house is shaky, or you reject security because it looks uncool on a body. A bed still needs rent and a future. Order: “Tend the practical thing that keeps the bed possible.”"
   },
   "pentacles_page": {
-    "upright": "Earnest, a little slow, filthy if allowed to learn. The Page of Pentacles studies the real body in front of them instead of a fantasy of skill. Start the practical want. Order: “Study that body. Take the notes with your hands.”",
+    "upright": "A beginner, a little slow, and filthy once you let them learn instead of applauding a skill they do not have yet. They study the real body in front of them. Start the practical want. Sweat is part of the lesson. Order: “Study that body. Take the notes with your hands.”",
     "reversed": "Too lazy to practice, or so stuck on perfect that you never touch the work. A new ordinary pleasure is knocking. Open the door with your clothes already undecided. Order: “Start the unglamorous practice today.”"
   },
   "pentacles_knight": {
@@ -310,6 +310,6 @@ export const CARD_INTERPRETATIONS = {
   },
   "pentacles_king": {
     "upright": "A provider who still wants you, not a wallet with an erection. The King of Pentacles builds the stable thing and fucks like the stability turns him on. Use the means. Skip the coronation. Order: “Provide. Then be filthy inside what you built.”",
-    "reversed": "Miser, status, the empire fucking itself. Or you refuse to be capable because dependence feels like love. Neither pays for the room where you get to be naked. Order: “Use what you have. Do not worship it. Do not hide it.”"
+    "reversed": "A miser fucking his own status, or a capable person refusing to be capable because being kept feels more like love than paying the bill. Neither pays for the room where you get to be naked and loud. Order: “Use what you have. Do not worship it. Do not hide it.”"
   }
 };
