@@ -2,7 +2,7 @@
  * Test Suite: Feline Mystica Masterpiece Illustrated Tarot Art Engine
  * Validates:
  * 1. Reversible Feline Mystica Card Back (with tarot-back-feline and defs compatibility)
- * 2. All 52 AI-generated raster masterpiece cards load properly
+ * 2. All 59 AI-generated raster masterpiece cards load properly
  * 3. All 78 cards in the deck render valid SVGs in feline_mystica theme without errors
  */
 
@@ -78,6 +78,13 @@ const EXPECTED_MYSTICA_FILES = [
   'nine_of_wands.jpg',
   'ten_of_wands.jpg',
   'two_of_cups.jpg',
+  'three_of_cups.jpg',
+  'four_of_cups.jpg',
+  'five_of_cups.jpg',
+  'six_of_cups.jpg',
+  'seven_of_cups.jpg',
+  'eight_of_cups.jpg',
+  'nine_of_cups.jpg',
   'card_back.jpg'
 ];
 
@@ -112,12 +119,13 @@ test('All 78 cards render successfully in feline_mystica theme', () => {
     assert.ok(svg.includes('<svg'), `Card ${card.id} must return valid SVG`);
     assert.ok(svg.includes('viewBox="0 0 300 480"'), `Card ${card.id} must have 300x480 viewBox`);
     assert.ok(svg.includes('tarot-mystica-theme'), `Card ${card.id} must have mystica theme class`);
-    assert.ok(svg.includes(card.name.toUpperCase()), `Card ${card.id} must display card name`);
+    assert.ok(svg.includes(`<title>${card.name}</title>`), `Card ${card.id} must be titled with the card name`);
+    if (!svg.includes('/assets/feline-mystica/')) assert.ok(svg.includes(card.name.toUpperCase()), `Card ${card.id} must display card name`);
 
     if (svg.includes('/assets/feline-mystica/')) {
       rasterCount++;
     }
   }
 
-  assert.strictEqual(rasterCount, 52, 'All 52 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, Two of Cups) must render AI raster artwork');
+  assert.strictEqual(rasterCount, 59, 'All 59 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, 8 Cups pips) must render AI raster artwork');
 });

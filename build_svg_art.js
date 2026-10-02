@@ -101,7 +101,14 @@ const FELINE_MYSTICA_IMAGES = {
   'wands_8': 'eight_of_wands.jpg',
   'wands_9': 'nine_of_wands.jpg',
   'wands_10': 'ten_of_wands.jpg',
-  'cups_2': 'two_of_cups.jpg'
+  'cups_2': 'two_of_cups.jpg',
+  'cups_3': 'three_of_cups.jpg',
+  'cups_4': 'four_of_cups.jpg',
+  'cups_5': 'five_of_cups.jpg',
+  'cups_6': 'six_of_cups.jpg',
+  'cups_7': 'seven_of_cups.jpg',
+  'cups_8': 'eight_of_cups.jpg',
+  'cups_9': 'nine_of_cups.jpg'
 };
 
 function _renderFelineMysticaCardBackSvg(width = 300, height = 480) {
@@ -134,9 +141,13 @@ function _renderFelineMysticaCardFaceSvg(card) {
 
   let artContent = '';
   let customDefs = '';
+  // A painted plate has the card's name painted into it. It runs down to the border and the
+  // frame's own name plate is left off, so the name is not shown twice. (The plates are 848x1264.)
+  const painted = Boolean(imgName);
+  const artHeight = painted ? 426 : 382;
 
   if (imgName) {
-    artContent = \`<image href="/assets/feline-mystica/\${imgName}" x="12" y="42" width="276" height="382" preserveAspectRatio="xMidYMid slice" />\`;
+    artContent = \`<image href="/assets/feline-mystica/\${imgName}" x="12" y="42" width="276" height="\${artHeight}" preserveAspectRatio="xMidYMid slice" />\`;
   } else if (card.arcana === 'major') {
     const art = CAT_MAJOR_ARCANA_ART[cid];
     if (art) {
@@ -164,6 +175,7 @@ function _renderFelineMysticaCardFaceSvg(card) {
   }
 
   return \`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 480" width="300" height="480" class="tarot-card-svg tarot-front tarot-feline-theme tarot-mystica-theme" data-id="\${cid}">
+  <title>\${card.name}</title>
   <defs>
     <linearGradient id="mysticaStockGrad_\${cid}" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#181126" />
@@ -177,7 +189,7 @@ function _renderFelineMysticaCardFaceSvg(card) {
       <stop offset="100%" stop-color="#8a6d1c" />
     </linearGradient>
     <clipPath id="artClip_\${cid}">
-      <rect x="12" y="42" width="276" height="382" rx="10" />
+      <rect x="12" y="42" width="276" height="\${artHeight}" rx="10" />
     </clipPath>
     \${customDefs}
   </defs>
@@ -190,17 +202,17 @@ function _renderFelineMysticaCardFaceSvg(card) {
   \${CAT_EMBLEMS.paw(281, 461, 4.5, '#ffd56b', 0.8)}
   <g id="mysticaHeader_\${cid}">
     <rect x="90" y="12" width="120" height="22" rx="4" fill="#0d0914" fill-opacity="0.9" stroke="url(#mysticaGoldGrad_\${cid})" stroke-width="0.9" />
-    <text x="150" y="27" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="11" font-weight="700" fill="#ffd700" text-anchor="middle" letter-spacing="2.5">\${numText || '✦'}</text>
+    <text x="150" y="27" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="700" fill="#ffd700" text-anchor="middle" letter-spacing="2.5">\${numText || '✦'}</text>
   </g>
   <g clip-path="url(#artClip_\${cid})">
     \${artContent}
   </g>
-  <rect x="12" y="42" width="276" height="382" rx="10" fill="none" stroke="url(#mysticaGoldGrad_\${cid})" stroke-width="1.1" opacity="0.85" />
-  <g id="mysticaFooter_\${cid}">
+  <rect x="12" y="42" width="276" height="\${artHeight}" rx="10" fill="none" stroke="url(#mysticaGoldGrad_\${cid})" stroke-width="1.1" opacity="0.85" />
+  \${painted ? '' : \`<g id="mysticaFooter_\${cid}">
     <rect x="16" y="428" width="268" height="40" rx="6" fill="#0b0813" fill-opacity="0.94" stroke="url(#mysticaGoldGrad_\${cid})" stroke-width="1.2" />
-    <text x="150" y="446" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="11" font-weight="700" fill="#fdf6d8" text-anchor="middle" letter-spacing="2">\${nameUpper}</text>
+    <text x="150" y="446" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="700" fill="#fdf6d8" text-anchor="middle" letter-spacing="2">\${nameUpper}</text>
     <text x="150" y="459" font-family="'Cinzel', serif" font-size="7.5" font-weight="400" fill="#d4af37" text-anchor="middle" letter-spacing="1.2">\${esotericTitle ? esotericTitle.toUpperCase() : ''}</text>
-  </g>
+  </g>\`}
 </svg>\`;
 }
 
@@ -234,6 +246,16 @@ export const renderFelineMysticaCardBackSvg = _renderFelineMysticaCardBackSvg;
 
   const bundledScript = parts.join('');
   const outPath = path.join(__dirname, 'js', 'svg-art.js');
+  // node build_svg_art.js --check: change nothing, and fail if js/svg-art.js is not what this would write
+  if (process.argv.includes('--check')) {
+    const same = fs.readFileSync(outPath, 'utf8').replace(/
+/g, '
+') === bundledScript.replace(/
+/g, '
+');
+    console.log(same ? 'js/svg-art.js is up to date.' : 'js/svg-art.js differs from what build_svg_art.js would write.');
+    process.exit(same ? 0 : 1);
+  }
   fs.writeFileSync(outPath, bundledScript, 'utf8');
   console.log('Successfully generated ' + outPath + ' (' + (bundledScript.length / 1024).toFixed(1) + ' KB)');
 }
