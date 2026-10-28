@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Test Suite: Feline Mystica Masterpiece Illustrated Tarot Art Engine
  * Validates:
  * 1. Reversible Feline Mystica Card Back (with tarot-back-feline and defs compatibility)
@@ -85,6 +85,18 @@ const EXPECTED_MYSTICA_FILES = [
   'seven_of_cups.jpg',
   'eight_of_cups.jpg',
   'nine_of_cups.jpg',
+  'ten_of_cups.jpg',
+  'two_of_swords.jpg',
+  'three_of_swords.jpg',
+  'four_of_swords.jpg',
+  'five_of_swords.jpg',
+  'six_of_swords.jpg',
+  'seven_of_swords.jpg',
+  'eight_of_swords.jpg',
+  'nine_of_swords.jpg',
+  'ten_of_swords.jpg',
+  'two_of_pentacles.jpg',
+  'three_of_pentacles.jpg',
   'card_back.jpg'
 ];
 
@@ -127,5 +139,5 @@ test('All 78 cards render successfully in feline_mystica theme', () => {
     }
   }
 
-  assert.strictEqual(rasterCount, 59, 'All 59 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, 8 Cups pips) must render AI raster artwork');
+  assert.strictEqual(rasterCount, 71, 'All 71 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, 9 Cups pips, 9 Swords pips, 2 Pentacles pips) must render AI raster artwork');
 });

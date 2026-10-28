@@ -1919,7 +1919,19 @@ const FELINE_MYSTICA_IMAGES = {
   'cups_6': 'six_of_cups.jpg',
   'cups_7': 'seven_of_cups.jpg',
   'cups_8': 'eight_of_cups.jpg',
-  'cups_9': 'nine_of_cups.jpg'
+  'cups_9': 'nine_of_cups.jpg',
+  'cups_10': 'ten_of_cups.jpg',
+  'swords_2': 'two_of_swords.jpg',
+  'swords_3': 'three_of_swords.jpg',
+  'swords_4': 'four_of_swords.jpg',
+  'swords_5': 'five_of_swords.jpg',
+  'swords_6': 'six_of_swords.jpg',
+  'swords_7': 'seven_of_swords.jpg',
+  'swords_8': 'eight_of_swords.jpg',
+  'swords_9': 'nine_of_swords.jpg',
+  'swords_10': 'ten_of_swords.jpg',
+  'pentacles_2': 'two_of_pentacles.jpg',
+  'pentacles_3': 'three_of_pentacles.jpg'
 };
 
 function _renderFelineMysticaCardBackSvg(width = 300, height = 480) {
