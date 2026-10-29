@@ -3,10 +3,12 @@
  *
  * A finished reading is stored as the facts needed to lay it out again:
  * which spread, which cards in which seats, which way up, who read it, and
- * the question. The interpretation text is not stored; the reader produces it
- * again from the same cards. The same record goes into browser history and,
- * encoded, into a shareable link.
+ * the question, and which kind of question the cards were read for. The
+ * interpretation text is not stored; it is produced again from the same cards.
+ * The same record goes into browser history and, encoded, into a shareable link.
  */
+
+import { isInquiryId } from './card-guide.js';
 
 export const HISTORY_KEY = 'astralis.history.v1';
 export const HISTORY_LIMIT = 50;
@@ -21,11 +23,12 @@ const MAX_QUESTION = 280;
  * @param {string} input.readerId
  * @param {string} input.deckTheme
  * @param {string} input.question
+ * @param {string} [input.inquiry] love, work, money, choice, inner, or general
  * @param {Array<{card: {id: string}, isReversed: boolean}>} input.drawnCards
  * @param {ReadonlyArray<{id: string}>} input.deck
  * @param {number} [input.at] When the reading was completed (ms since epoch)
  */
-export function makeRecord({ spreadId, threeCardTheme, readerId, deckTheme, question, drawnCards, deck, at = Date.now() }) {
+export function makeRecord({ spreadId, threeCardTheme, readerId, deckTheme, question, inquiry = 'general', drawnCards, deck, at = Date.now() }) {
   const cards = drawnCards.map(({ card, isReversed }) => {
     const index = deck.findIndex(item => item.id === card.id);
     if (index < 0) throw new Error(`Card ${card.id} is not in the deck.`);
@@ -38,6 +41,7 @@ export function makeRecord({ spreadId, threeCardTheme, readerId, deckTheme, ques
     reader: readerId || '',
     deck: deckTheme || '',
     q: String(question || '').trim().slice(0, MAX_QUESTION),
+    inquiry: isInquiryId(inquiry) ? inquiry : 'general',
     cards
   };
   record.id = recordId(record);
@@ -88,6 +92,8 @@ export function validateRecord(raw, deckSize = 78) {
     reader: typeof raw.reader === 'string' ? raw.reader.slice(0, 80) : '',
     deck: typeof raw.deck === 'string' ? raw.deck.slice(0, 40) : '',
     q: typeof raw.q === 'string' ? raw.q.slice(0, MAX_QUESTION) : '',
+    // Missing on links saved before the field existed, which means "guess from the question".
+    inquiry: isInquiryId(raw.inquiry) ? raw.inquiry : '',
     cards
   };
   record.id = recordId(record);
@@ -109,9 +115,9 @@ function fromBase64Url(text) {
 
 /** Encode a record for the URL fragment. */
 export function encodeRecord(record) {
-  return toBase64Url(JSON.stringify([
-    1, record.spread, record.theme, record.reader, record.deck, record.q, record.at, cardsToString(record.cards)
-  ]));
+  const packed = [1, record.spread, record.theme, record.reader, record.deck, record.q, record.at, cardsToString(record.cards)];
+  if (record.inquiry) packed.push(record.inquiry);
+  return toBase64Url(JSON.stringify(packed));
 }
 
 /** Decode a record from the URL fragment. Returns null for anything malformed. */
@@ -119,10 +125,10 @@ export function decodeRecord(text, deckSize = 78) {
   try {
     const parts = JSON.parse(fromBase64Url(text));
     if (!Array.isArray(parts) || parts[0] !== 1) return null;
-    const [, spread, theme, reader, deck, q, at, cards] = parts;
+    const [, spread, theme, reader, deck, q, at, cards, inquiry] = parts;
     const parsed = cardsFromString(cards);
     if (parsed.includes(null)) return null;
-    return validateRecord({ spread, theme, reader, deck, q, at, cards: parsed }, deckSize);
+    return validateRecord({ spread, theme, reader, deck, q, at, inquiry, cards: parsed }, deckSize);
   } catch (err) {
     return null;
   }

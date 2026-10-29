@@ -14,6 +14,7 @@ import {
 } from './history.js';
 import { renderReadingImage, downloadBlob, shareBlob, readingFileName } from './share-image.js';
 import { formatReadingText } from './reading-text.js';
+import { composeGuide, describeCard, guessInquiry, getInquiry, guideSearchText, INQUIRIES, isInquiryId, WAITING_LINE } from './card-guide.js';
 import { registry, ReaderRegistry } from './reader-interface.js';
 import { sound } from './sound.js';
 import { setupSoundControl, normaliseSoundState } from './sound-control.js';
@@ -38,6 +39,8 @@ const state = {
   threeCardTheme: DEFAULT_THREE_CARD_THEME,
   allowReversals: true,
   userQuery: '',
+  inquiry: 'general', // Which kind of question the cards are read for
+  inquiryLocked: false, // Set when the person picks one, or a saved reading names one
   drawnCards: [], // Array of { card, isReversed, position, isFlipped, tilt }
   reading: null, // Cached interpretation for the cards on the table
   completedAt: null, // When the last card of this reading was turned
@@ -96,6 +99,7 @@ const elements = {
   queryClearBtn: byId('queryClearBtn'),
   queryNote: byId('queryNote'),
   queryCount: byId('queryCount'),
+  inquiryTabs: byId('inquiryTabs'),
   spreadTabs: byId('spreadTabs'),
   threeCardThemeBox: byId('threeCardThemeBox'),
   threeCardThemeSelect: byId('threeCardThemeSelect'),
@@ -143,6 +147,9 @@ const elements = {
   modalStep: byId('modalStep'),
   modalCardName: byId('modalCardName'),
   modalEsotericTitle: byId('modalEsotericTitle'),
+  modalAbout: byId('modalAbout'),
+  modalInquiriesUpright: byId('modalInquiriesUpright'),
+  modalInquiriesReversed: byId('modalInquiriesReversed'),
   modalArcanaBadge: byId('modalArcanaBadge'),
   modalElementBadge: byId('modalElementBadge'),
   modalRulerBadge: byId('modalRulerBadge'),
@@ -339,6 +346,7 @@ function initApp() {
   setDeckThemeState(state.deckTheme);
   setupSpreadControls();
   setupSetupBar();
+  setupInquiryControls();
   setupQuestionField();
   setupSound();
   setupReadersDrawer();
@@ -554,7 +562,8 @@ function syncSetupBar() {
   if (!compact) return;
 
   const question = readingQuestion();
-  elements.setupCompactText.textContent = question ? `${currentSpreadTitle()} · “${question}”` : currentSpreadTitle();
+  const lens = getInquiry(state.inquiry).label;
+  elements.setupCompactText.textContent = question ? `${currentSpreadTitle()} · ${lens} · “${question}”` : `${currentSpreadTitle()} · ${lens}`;
   elements.setupTurnAllBtn.hidden = isReadingComplete() || state.drawnCards.length < 2;
   // Whoever was using a control that has just folded away keeps the keyboard
   if (focusWasInside) {
@@ -673,6 +682,8 @@ function dealSpread({ silent = false, before = null, note = '' } = {}) {
   if (!silent) sound.playSwoosh();
   state.dealId++;
   state.userQuery = elements.queryInput.value;
+  if (!state.inquiryLocked) state.inquiry = guessInquiry(state.userQuery);
+  syncInquiryTabs();
   syncSpreadControls();
   updateSpreadHeader();
 
@@ -720,6 +731,44 @@ function dealSpread({ silent = false, before = null, note = '' } = {}) {
 }
 
 // -------------------------------------------------------------
+// WHAT THE QUESTION IS ABOUT
+// -------------------------------------------------------------
+function setupInquiryControls() {
+  const group = elements.inquiryTabs;
+  group.replaceChildren();
+  for (const inquiry of INQUIRIES) {
+    const tab = button('inquiry-tab', inquiry.label);
+    tab.setAttribute('role', 'radio');
+    tab.dataset.inquiry = inquiry.id;
+    tab.title = inquiry.hint;
+    group.appendChild(tab);
+  }
+  syncInquiryTabs();
+  wireRadioGroup(group, (tab) => setInquiry(tab.dataset.inquiry, { lock: true }));
+}
+
+function syncInquiryTabs() {
+  syncRadioGroup(elements.inquiryTabs, tab => tab.dataset.inquiry === state.inquiry);
+}
+
+/** A click locks the choice. Typing only moves it when the person has not picked one. */
+function setInquiry(id, { lock = false } = {}) {
+  if (!isInquiryId(id)) return;
+  if (lock) state.inquiryLocked = true;
+  if (id === state.inquiry) {
+    syncInquiryTabs();
+    return;
+  }
+  state.inquiry = id;
+  syncInquiryTabs();
+  if (!anyCardTurned()) return;
+  state.reading = null;
+  renderReadingPanel();
+  saveDraft();
+  if (isReadingComplete()) commitReading();
+}
+
+// -------------------------------------------------------------
 // THE QUESTION
 // -------------------------------------------------------------
 let pasteWasCut = false;
@@ -729,9 +778,13 @@ function setupQuestionField() {
 
   input.addEventListener('input', () => {
     state.userQuery = input.value;
-    // Until a card is turned, the reading has not started: keep the title in step with the question.
+    // Until a card is turned, the reading has not started: keep the title, and the kind of question, in step.
     if (!anyCardTurned()) {
       state.reading = null;
+      if (!state.inquiryLocked) {
+        state.inquiry = guessInquiry(input.value);
+        syncInquiryTabs();
+      }
       updateQuestionTitle();
     }
     syncQuestionField();
@@ -1079,8 +1132,11 @@ function ensureReading() {
 
   let result = null;
   let failure = '';
+  // Built-in readers keep their names. The words are the card guide.
+  // A custom reader still supplies its own interpret().
+  const guide = !reader || BUILT_IN_READER_IDS.has(reader.id);
   try {
-    result = reader ? registry.interpret(spreadData) : null;
+    result = guide ? composeGuide(spreadData, state.inquiry) : registry.interpret(spreadData);
     if (!ReaderRegistry.isUsableReading(result, state.drawnCards.length)) {
       failure = 'it did not return a reading for every card';
       result = null;
@@ -1226,19 +1282,44 @@ function updateReadingOpening() {
   if (!node) return;
   const reader = registry.getActive();
   const started = anyCardTurned();
+  const reading = started ? state.reading : null;
+  const custom = reader && !BUILT_IN_READER_IDS.has(reader.id);
   const text = started
-    ? (state.reading && state.reading.opening) || ''
-    : (reader && reader.greeting) || '';
-  // Readers quote the question in curly quotes (js/readers/compose.js)
-  const question = started && state.reading ? state.reading.question : '';
+    ? (reading && reading.opening) || ''
+    : (custom ? (reader.greeting || '') : WAITING_LINE);
+  const question = started && reading ? reading.question : '';
   node.replaceChildren();
-  appendSpeech(node, text, question ? `“${question}”` : '');
+  // The guide quotes the question as typed, brackets and all. A custom reader's
+  // own words still mark [stage directions] in italics.
+  if ((reading && reading.guide) || (!started && !custom)) node.textContent = text;
+  else appendSpeech(node, text, question ? `“${question}”` : '');
   node.hidden = !text;
   node.classList.toggle('is-greeting', !started);
 }
 
-/** One card's reading: the lead-in and the line, then the reader's sign-off for that card on its own line. */
+function appendLabeledLine(container, className, label, text) {
+  const line = el('p', className);
+  line.appendChild(el('span', 'inquiry-name', label));
+  line.appendChild(document.createTextNode(text));
+  container.appendChild(line);
+  return line;
+}
+
+/** One card: what it is, its keywords, the usual meaning, then the kind of question. */
 function appendCardReading(container, data) {
+  if (data && data.about) {
+    container.appendChild(el('p', 'entry-about', data.about));
+    if (data.keywords && data.keywords.length) appendLabeledLine(container, 'entry-keywords', 'Keywords', data.keywords.join(' · '));
+    if (data.general) container.appendChild(el('p', 'entry-prose', data.general));
+    if (data.lead) appendLabeledLine(container, 'entry-inquiry', data.lead.label, data.lead.text);
+    const rest = data.others || [];
+    if (!rest.length) return;
+    const block = data.lead ? el('details', 'entry-others') : el('div', 'entry-others');
+    if (data.lead) block.appendChild(el('summary', null, 'Other questions'));
+    for (const item of rest) appendLabeledLine(block, 'entry-inquiry', item.label, item.text);
+    container.appendChild(block);
+    return;
+  }
   if (!data.lead && !data.body) {
     container.appendChild(speech('p', 'entry-prose', data.reflection || ''));
     return;
@@ -1619,11 +1700,12 @@ function chooseReader(readerId) {
   if (!changed) return;
 
   refreshReading();
-  if (anyCardTurned()) {
-    showStatus(`Now read by ${reader.name}.`);
-  } else {
-    showStatus(`${reader.name} will read these cards.`);
+  const builtIn = BUILT_IN_READER_IDS.has(reader.id);
+  if (builtIn) {
+    showStatus(`${reader.name} is selected. The reading stays with the card guide.`);
+    return;
   }
+  showStatus(anyCardTurned() ? `Now read by ${reader.name}.` : `${reader.name} will read these cards.`);
 }
 
 /** The two sentences a reader wrote for the list. A custom reader without them gets the start of its bio. */
@@ -1803,6 +1885,19 @@ function openCardDialog(list, pos, { fromSpread = false } = {}) {
 
 const ZODIAC_SIGNS = new Set(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']);
 
+/** The five kinds of question, under that orientation's usual meaning. */
+function fillInquiryList(node, card, isReversed) {
+  node.replaceChildren();
+  const described = describeCard(card, isReversed, 'general');
+  if (!described) return;
+  for (const item of described.others) {
+    const li = document.createElement('li');
+    li.appendChild(el('span', 'inquiry-name', item.label));
+    li.appendChild(document.createTextNode(item.text));
+    node.appendChild(li);
+  }
+}
+
 /** Fill the dialog for the current card. Focus is left wherever it is. */
 function renderModalCard() {
   const entry = modal.list[modal.pos];
@@ -1823,6 +1918,11 @@ function renderModalCard() {
   elements.modalCardName.textContent = card.name;
   elements.modalEsotericTitle.textContent = card.esotericTitle ? `Traditional title: ${card.esotericTitle}` : '';
   elements.modalEsotericTitle.hidden = !card.esotericTitle;
+  const about = describeCard(card, false);
+  elements.modalAbout.textContent = about ? about.about : '';
+  elements.modalAbout.hidden = !elements.modalAbout.textContent;
+  fillInquiryList(elements.modalInquiriesUpright, card, false);
+  fillInquiryList(elements.modalInquiriesReversed, card, true);
   elements.modalArcanaBadge.textContent = card.arcana === 'major' ? 'Major Arcana' : `Minor Arcana · ${card.suitName || card.suit}`;
   // Older card data kept the ruler in the element field ("Fire / Mars"); show them as two chips either way.
   const [element, ruler] = String(card.element || '').split(/\s*\/\s*/);
@@ -1843,7 +1943,8 @@ function renderModalCard() {
   const data = item && state.reading && state.reading.cardReadings ? state.reading.cardReadings[spreadIndex] : null;
   elements.modalInReading.hidden = !data;
   if (data) {
-    elements.modalPositionName.textContent = `${seatLabel(item, spreadIndex)} · ${state.reading.readerName}`;
+    const lens = state.reading.guide ? state.reading.inquiryLabel : state.reading.readerName;
+    elements.modalPositionName.textContent = `${seatLabel(item, spreadIndex)} · ${lens || ''}`;
     elements.modalPositionDesc.textContent = item.position.description || '';
     elements.modalPositionDesc.hidden = !item.position.description;
     elements.modalReflection.replaceChildren();
@@ -1944,6 +2045,7 @@ function compendiumMatches() {
   if (!query) return cards;
   return cards.filter(card => [
     card.name, card.element, card.ruler, card.esotericTitle, card.meaningUpright, card.meaningReversed,
+    guideSearchText(card),
     ...(card.keywordsUpright || []), ...(card.keywordsReversed || [])
   ].some(text => text && String(text).toLowerCase().includes(query)));
 }
@@ -2060,6 +2162,7 @@ function currentRecord() {
     readerId,
     deckTheme: state.deckTheme,
     question: readingQuestion(),
+    inquiry: state.inquiry,
     drawnCards: state.drawnCards,
     deck: TAROT_DECK,
     at: state.completedAt || Date.now()
@@ -2220,6 +2323,9 @@ function restoreRecord(record, { flipped = null, shared = false, undo = null } =
 
   state.userQuery = record.q;
   elements.queryInput.value = record.q;
+  state.inquiry = isInquiryId(record.inquiry) ? record.inquiry : guessInquiry(record.q);
+  state.inquiryLocked = isInquiryId(record.inquiry);
+  syncInquiryTabs();
 
   const positions = getPositionsForCurrentSpread();
   state.drawnCards = resolveCards(record, TAROT_DECK).map((drawn, idx) => ({

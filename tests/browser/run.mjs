@@ -40,6 +40,7 @@ const look = () => page.eval(`(() => {
     advice: text('.conclusion-block h3'),
     closing: text('.closing-words'),
     firstProse: text('.entry-prose'),
+    firstKeywords: text('.entry-keywords'),
     firstSign: text('.entry-signature'),
     notice: text('.reading-notice'),
     setupFull: !document.getElementById('setupFull').hidden,
@@ -65,7 +66,7 @@ try {
   check('one card is dealt face down', s.cards === 1 && s.turned === 0);
   check('the header is one row', s.header.height <= 80, s.header);
   check('nothing scrolls sideways', s.docWidth <= s.viewWidth, s);
-  check('the reader greets you before a card is turned', s.opening && s.opening.includes("Window's open"), s.opening);
+  check('before a card is turned the guide says what you will get', s.opening && s.opening.startsWith('Turn a card over for its keywords'), s.opening);
   check('the hint says what a click does', s.hint === 'Click the card to turn it over.', s.hint);
   check('there is no headline without a question', s.title === null, s.title);
   check('titles use the plain heading face', await page.eval(`getComputedStyle(document.getElementById('deckModalTitle')).fontFamily.replace(/["']/g, '').startsWith('Cinzel,')`));
@@ -104,8 +105,8 @@ try {
   s = await look();
   check('a card turns from the keyboard', s.turned === 1);
   check('the opening comes before the cards and quotes the question', s.opening && s.opening.includes('“should I quit my job?”'), s.opening);
-  check('the card has its text and its sign-off on a separate line', s.firstProse && s.firstSign && s.firstSign.startsWith('Stamp'), s.firstSign);
-  check('the sign-off is not repeated in the text', s.firstProse && !s.firstProse.includes('Stamp:'), s.firstProse);
+  check('a job question is read as work', s.opening && s.opening.includes('for work'), s.opening);
+  check('the card shows keywords and a meaning', s.firstKeywords && s.firstKeywords.startsWith('Keywords') && s.firstProse && s.firstProse.length > 40, s.firstKeywords);
   check('the set-up bar folds away once a card is turned', !s.setupFull && s.setupCompact && s.setupCompact.includes('Three cards'), s.setupCompact);
   check('the line about the deal is gone', s.status === '', s.status);
   await shot('02-one-card-turned');
@@ -156,7 +157,7 @@ try {
   await page.click('#copyReadingBtn');
   await page.wait(200);
   let copied = await page.eval('window.__copied');
-  check('copied text is plain and carries the opening', copied && !/[#*_`]/.test(copied) && copied.includes('Slip received'), copied && copied.slice(0, 200));
+  check('copied text is plain and carries the keywords', copied && !/[#*_`]/.test(copied) && copied.includes('Keywords:'), copied && copied.slice(0, 240));
   await page.click('#copyLinkBtn');
   await page.wait(200);
   check('Copy link asks about the question', await page.eval(`!document.getElementById('linkOptions').hidden && document.getElementById('linkOptions').innerText.includes('Include your question in the link?')`));
@@ -196,9 +197,9 @@ try {
   await page.eval(`document.querySelector('[data-reader-id="pippin"]').click()`);
   await page.wait(500);
   s = await look();
-  check('changing reader is said in a few words', s.status === 'Now read by Pippin.', s.status);
-  const actions = await page.eval(`({ count: document.querySelectorAll('#readingSection em.reader-action').length, italic: getComputedStyle(document.querySelector('.entry-prose em.reader-action')).fontStyle, brackets: document.getElementById('readingSection').innerText.includes('[') })`);
-  check("what Pippin does is in italics, without the brackets", actions.count > 5 && actions.italic === 'italic' && !actions.brackets, actions);
+  check('changing reader leaves the card guide in place', s.status === 'Pippin is selected. The reading stays with the card guide.', s.status);
+  const guide = await page.eval(`({ keywords: document.querySelectorAll('#readingSection .entry-keywords').length, actions: document.querySelectorAll('#readingSection em.reader-action').length })`);
+  check('the card guide has no stage directions', guide.keywords === 3 && guide.actions === 0, guide);
   await page.eval('window.scrollTo(0, 0)');
   await shot('07-pippin');
   await page.click('#changeReaderBtn');
@@ -213,7 +214,7 @@ try {
   await page.eval(`document.querySelector('[data-reader-id="morwenna_ravenscroft"]').click()`);
   await page.wait(500);
   s = await look();
-  check('Morwenna names the card and ends with a proverb', s.firstProse && s.firstSign && s.firstSign.startsWith('Proverb') && !/blockage|root distortion/.test(s.firstProse), s.firstSign);
+  check('another reader still shows the card guide', s.firstKeywords && s.firstKeywords.startsWith('Keywords') && !s.firstSign, s.firstKeywords);
   await page.click('#changeReaderBtn');
   await page.wait(500);
   await page.eval(`document.querySelector('[data-reader-id="cassian_vetch"]').click()`);

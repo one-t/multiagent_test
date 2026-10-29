@@ -54,6 +54,14 @@ test('a record survives the trip through a link, cards and orientation intact', 
   assert.deepEqual(cards.map(item => item.isReversed), [false, true, false]);
 });
 
+test('the kind of question survives a link, and an older link leaves it blank', () => {
+  const work = record({ inquiry: 'work' });
+  assert.equal(work.inquiry, 'work');
+  assert.equal(decodeRecord(encodeRecord(work)).inquiry, 'work');
+  assert.equal(validateRecord({ ...record(), inquiry: undefined }).inquiry, '');
+  assert.equal(validateRecord({ ...record(), inquiry: 'nope' }).inquiry, '');
+});
+
 test('links are URL-safe and keep non-ASCII questions', () => {
   const original = record({ question: 'Où vais-je — 我该走吗？ 🐈' });
   const encoded = encodeRecord(original);

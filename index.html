@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Astralis — tarot readings</title>
-    <meta name="description" content="Draw one card, three cards, or a Celtic Cross from a 78-card deck and have it read by the reader you choose. Readings can be saved, shared by link, or kept as a picture." />
+    <meta name="description" content="Draw one card, three cards, or a Celtic Cross. Each card shows its keywords, its usual meaning, and a line for love, work, money, a decision, or inner life." />
     <meta name="theme-color" content="#08060c" />
     <meta name="color-scheme" content="dark" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Astralis — tarot readings" />
-    <meta property="og:description" content="Draw one card, three cards, or a Celtic Cross from a 78-card deck and have it read by the reader you choose." />
+    <meta property="og:description" content="Draw one card, three cards, or a Celtic Cross. Each card shows its keywords, its usual meaning, and a line for love, work, money, a decision, or inner life." />
     <meta property="og:image" content="assets/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -81,6 +81,10 @@
             <div class="field-meta" id="queryMeta">
               <span id="queryNote" class="field-note" hidden></span>
               <span id="queryCount" class="field-count" hidden></span>
+            </div>
+            <div class="inquiry-row">
+              <span class="field-label" id="inquiryLabel">Read it as</span>
+              <div class="inquiry-tabs" id="inquiryTabs" role="radiogroup" aria-labelledby="inquiryLabel"></div>
             </div>
           </div>
 
@@ -168,6 +172,7 @@
           <div class="modal-header">
             <h2 id="modalCardName"></h2>
             <p id="modalEsotericTitle" class="modal-esoteric-title"></p>
+            <p id="modalAbout" class="modal-about"></p>
           </div>
           <div class="modal-badges">
             <span id="modalArcanaBadge" class="badge-tag"></span>
@@ -184,11 +189,13 @@
             <h3>Upright<span class="meaning-flag" id="modalUprightFlag"></span></h3>
             <p id="modalMeaningUpright"></p>
             <p id="modalKeywordsUpright" class="modal-position-desc"></p>
+            <ul id="modalInquiriesUpright" class="modal-inquiries"></ul>
           </div>
           <div class="modal-body-section modal-meaning" id="modalReversedSection">
             <h3>Reversed<span class="meaning-flag" id="modalReversedFlag"></span></h3>
             <p id="modalMeaningReversed"></p>
             <p id="modalKeywordsReversed" class="modal-position-desc"></p>
+            <ul id="modalInquiriesReversed" class="modal-inquiries"></ul>
           </div>
         </div>
       </div>

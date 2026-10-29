@@ -664,6 +664,46 @@ button {
   color: var(--reversed);
 }
 
+.inquiry-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 12px;
+}
+
+.inquiry-row .field-label {
+  margin-bottom: 0;
+}
+
+.inquiry-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.inquiry-tab {
+  min-height: 32px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-gold-subtle);
+  background: rgba(18, 14, 26, 0.5);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.6px;
+}
+
+.inquiry-tab[aria-checked="true"] {
+  border-color: var(--gold-rich);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(20, 15, 30, 0.7) 100%);
+  color: var(--gold-primary);
+}
+
+.inquiry-tab[aria-checked="true"]::before {
+  content: "✓ ";
+}
+
 .setup-options {
   display: flex;
   align-items: center;
@@ -796,7 +836,8 @@ button {
 }
 
 @media (hover: hover) {
-  .spread-tab-btn:hover {
+  .spread-tab-btn:hover,
+  .inquiry-tab:hover {
     border-color: var(--border-gold);
     color: var(--text-main);
   }
@@ -1494,6 +1535,69 @@ button {
   font-size: 1.08rem;
   line-height: 1.6;
   color: var(--text-main);
+}
+
+.entry-about,
+.modal-about {
+  max-width: 65ch;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #fff9e6;
+}
+
+.modal-about {
+  margin-top: 8px;
+}
+
+.entry-keywords,
+.entry-inquiry,
+.modal-inquiries li {
+  max-width: 65ch;
+}
+
+.entry-keywords {
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.entry-inquiry,
+.modal-inquiries li {
+  margin-top: 10px;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--text-main);
+}
+
+.inquiry-name {
+  margin-right: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--gold-rich);
+}
+
+.entry-others {
+  margin-top: 12px;
+}
+
+.entry-others summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.8px;
+  color: var(--gold-primary);
+}
+
+.modal-inquiries {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 @keyframes entryIn {
@@ -2497,6 +2601,10 @@ button {
   .setup-question .field-meta {
     grid-column: 2;
   }
+
+  .setup-question .inquiry-row {
+    grid-column: 1 / -1;
+  }
 }
 
 /* =============================================================
@@ -2803,6 +2911,7 @@ button {
 @media (pointer: coarse) {
   .btn,
   .spread-tab-btn,
+  .inquiry-tab,
   .chip-btn,
   .subtheme-select,
   .filter-chip,
@@ -2876,6 +2985,7 @@ button {
   }
 
   .spread-tab-btn[aria-checked="true"],
+  .inquiry-tab[aria-checked="true"],
   .reader-card[aria-checked="true"],
   .deck-tile[aria-checked="true"],
   .filter-chip[aria-pressed="true"] {
