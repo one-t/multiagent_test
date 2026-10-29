@@ -56,6 +56,7 @@ test('a dealt card carries keywords, the usual meaning, and the question it was 
   assert.match(described.reflection, /^The Tower/);
   assert.match(described.reflection, /Keywords: /);
   assert.match(described.reflection, /Work: /);
+  assert.equal(described.reflection.includes('Love:'), false);
 
   const positions = getPositions('single');
   const reading = composeGuide({

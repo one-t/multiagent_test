@@ -676,6 +676,10 @@ button {
   margin-bottom: 0;
 }
 
+.reading-inquiry {
+  margin: 0 0 18px;
+}
+
 .inquiry-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -1496,6 +1500,15 @@ button {
 }
 
 /* The reader's first words: a greeting while the cards are down, then the opening for this question */
+.reading-voice-note {
+  max-width: 65ch;
+  margin: -8px 0 20px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--gold-primary);
+}
+
 .reading-opening {
   max-width: 65ch;
   margin-bottom: 20px;
@@ -1571,6 +1584,15 @@ button {
   font-size: 1.05rem;
   line-height: 1.55;
   color: var(--text-main);
+}
+
+.entry-voice {
+  max-width: 65ch;
+  margin-top: 4px;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #f0e2c8;
 }
 
 .inquiry-name {
@@ -2918,6 +2940,10 @@ button {
   .toggle-label,
   .custom-reader summary {
     min-height: 44px;
+  }
+
+  .inquiry-tab {
+    min-width: 44px;
   }
 
   .custom-reader summary {

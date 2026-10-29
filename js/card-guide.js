@@ -64,7 +64,7 @@ export function openingLine(question, inquiryId) {
   const asked = String(question || "").trim();
   const body = inquiry.id === "general"
     ? "Each card gives a few keywords, its usual meaning, and a line for love, work, money, a decision, and inner life."
-    : `Each card gives a few keywords, its usual meaning, and what that means for ${inquiry.as}. The other kinds of question are listed under it.`;
+    : `Each card gives a few keywords, its usual meaning, and what that means for ${inquiry.as}.`;
   return asked ? `“${asked}” ${body}` : body;
 }
 
@@ -97,13 +97,15 @@ export function describeCard(card, isReversed, inquiryId = "general") {
   const categories = categoriesFor(side);
   const lead = inquiry.id === "general" ? null : categories.find(item => item.id === inquiry.id) || null;
   const others = lead ? categories.filter(item => item.id !== lead.id) : categories;
+  // A chosen subject is the only line. General keeps every subject.
+  const shown = lead ? [lead] : categories;
   return {
     about: entry.about,
     keywords,
     general,
     lead,
     others,
-    reflection: cardBlock({ about: entry.about, keywords, general, categories })
+    reflection: cardBlock({ about: entry.about, keywords, general, categories: shown })
   };
 }
 
@@ -182,6 +184,8 @@ export function composeGuide(spreadData, inquiryId) {
     actionableAdvice: several ? advice[bucket] : "",
     closingBenediction: several
       ? "These are the usual meanings of the cards, applied to the question. They are a way to think about it, not a prediction."
-      : "One card is enough for a direct question. Use the line for the kind of question you chose. The others are there if the question is a different kind."
+      : (inquiry.id === "general"
+        ? "One card is enough for a direct question. Use the line for the kind of question you chose. The others are there if the question is a different kind."
+        : "One card is enough for a direct question. The line under the card is for the kind of question you chose.")
   };
 }

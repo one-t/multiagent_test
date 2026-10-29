@@ -15,6 +15,7 @@ import {
 import { renderReadingImage, downloadBlob, shareBlob, readingFileName } from './share-image.js';
 import { formatReadingText } from './reading-text.js';
 import { composeGuide, describeCard, guessInquiry, getInquiry, guideSearchText, INQUIRIES, isInquiryId, WAITING_LINE } from './card-guide.js';
+import { applySableVoice, sableOrders } from './readers/sable-voice.js';
 import { registry, ReaderRegistry } from './reader-interface.js';
 import { sound } from './sound.js';
 import { setupSoundControl, normaliseSoundState } from './sound-control.js';
@@ -748,13 +749,17 @@ function setupInquiryControls() {
 }
 
 function syncInquiryTabs() {
-  syncRadioGroup(elements.inquiryTabs, tab => tab.dataset.inquiry === state.inquiry);
+  const match = tab => tab.dataset.inquiry === state.inquiry;
+  syncRadioGroup(elements.inquiryTabs, match);
+  const reading = document.getElementById('readingInquiryTabs');
+  if (reading) syncRadioGroup(reading, match);
 }
 
 /** A click locks the choice. Typing only moves it when the person has not picked one. */
 function setInquiry(id, { lock = false } = {}) {
   if (!isInquiryId(id)) return;
   if (lock) state.inquiryLocked = true;
+  const fromReading = Boolean(document.activeElement && document.activeElement.closest && document.activeElement.closest('#readingInquiryTabs'));
   if (id === state.inquiry) {
     syncInquiryTabs();
     return;
@@ -764,6 +769,10 @@ function setInquiry(id, { lock = false } = {}) {
   if (!anyCardTurned()) return;
   state.reading = null;
   renderReadingPanel();
+  if (fromReading) {
+    const again = document.querySelector(`#readingInquiryTabs [data-inquiry="${state.inquiry}"]`);
+    if (again) again.focus({ preventScroll: true });
+  }
   saveDraft();
   if (isReadingComplete()) commitReading();
 }
@@ -1065,6 +1074,8 @@ function flipCard(idx, { scroll = false, quiet = false } = {}) {
   revealEntry(idx, { scroll });
   updateReadingNotice();
   updateReadingOpening();
+  updateVoiceNote();
+  updateReadingInquiry();
   updateQuestionTitle();
   syncDealButton();
   syncQuestionField();
@@ -1146,6 +1157,7 @@ function ensureReading() {
     failure = err && err.message ? err.message : String(err);
   }
   if (!result) result = ReaderRegistry.plainReading(spreadData, reader || {});
+  if (result.guide && reader && reader.id === 'sable_moreau') result = applySableVoice(result);
 
   state.reading = {
     ...result,
@@ -1231,6 +1243,14 @@ function renderReadingPanel() {
   opening.id = 'readingOpening';
   section.appendChild(opening);
   updateReadingOpening();
+  const voiceNote = el('p', 'reading-voice-note');
+  voiceNote.id = 'readingVoiceNote';
+  section.appendChild(voiceNote);
+  updateVoiceNote();
+
+  // The set-up chips fold away once a card is turned. These take over.
+  appendReadingInquiry(section);
+  updateReadingInquiry();
 
   // One row per position
   const list = el('ol', 'reading-cards-grid');
@@ -1297,6 +1317,48 @@ function updateReadingOpening() {
   node.classList.toggle('is-greeting', !started);
 }
 
+function updateReadingInquiry() {
+  const row = document.querySelector('.reading-inquiry');
+  if (row) row.hidden = !anyCardTurned();
+}
+
+function updateVoiceNote() {
+  const node = document.getElementById('readingVoiceNote');
+  if (!node) return;
+  const reading = anyCardTurned() ? state.reading : null;
+  const text = reading && reading.voiceNote ? reading.voiceNote : '';
+  node.textContent = text;
+  node.hidden = !text;
+}
+
+/** The same subjects as the set-up bar, kept beside the reading so a different one can be shown. */
+function appendReadingInquiry(section) {
+  const row = el('div', 'inquiry-row reading-inquiry');
+  const label = el('span', 'field-label', 'Read it as');
+  label.id = 'readingInquiryLabel';
+  row.appendChild(label);
+  const group = el('div', 'inquiry-tabs');
+  group.id = 'readingInquiryTabs';
+  group.setAttribute('role', 'radiogroup');
+  group.setAttribute('aria-labelledby', 'readingInquiryLabel');
+  for (const inquiry of INQUIRIES) {
+    const tab = button('inquiry-tab', inquiry.label);
+    tab.setAttribute('role', 'radio');
+    tab.dataset.inquiry = inquiry.id;
+    tab.title = inquiry.hint;
+    group.appendChild(tab);
+  }
+  row.appendChild(group);
+  section.appendChild(row);
+  syncRadioGroup(group, tab => tab.dataset.inquiry === state.inquiry);
+  wireRadioGroup(group, (tab) => setInquiry(tab.dataset.inquiry, { lock: true }));
+}
+
+function appendCategory(container, item) {
+  appendLabeledLine(container, 'entry-inquiry', item.label, item.text);
+  if (item.voice) appendLabeledLine(container, 'entry-voice', 'Sable', item.voice);
+}
+
 function appendLabeledLine(container, className, label, text) {
   const line = el('p', className);
   line.appendChild(el('span', 'inquiry-name', label));
@@ -1311,12 +1373,14 @@ function appendCardReading(container, data) {
     container.appendChild(el('p', 'entry-about', data.about));
     if (data.keywords && data.keywords.length) appendLabeledLine(container, 'entry-keywords', 'Keywords', data.keywords.join(' · '));
     if (data.general) container.appendChild(el('p', 'entry-prose', data.general));
-    if (data.lead) appendLabeledLine(container, 'entry-inquiry', data.lead.label, data.lead.text);
+    if (data.lead) {
+      appendCategory(container, data.lead);
+      return;
+    }
     const rest = data.others || [];
     if (!rest.length) return;
-    const block = data.lead ? el('details', 'entry-others') : el('div', 'entry-others');
-    if (data.lead) block.appendChild(el('summary', null, 'Other questions'));
-    for (const item of rest) appendLabeledLine(block, 'entry-inquiry', item.label, item.text);
+    const block = el('div', 'entry-others');
+    for (const item of rest) appendCategory(block, item);
     container.appendChild(block);
     return;
   }
@@ -1580,7 +1644,7 @@ function readingAsText() {
     spreadLabel: currentSpreadTitle(),
     dateLabel: state.completedAt ? new Date(state.completedAt).toLocaleDateString(undefined, { dateStyle: 'long' }) : '',
     question: reading.question,
-    opening: reading.opening,
+    opening: [reading.opening, reading.voiceNote].filter(Boolean).join('\n'),
     cards: state.drawnCards.map((item, idx) => ({
       position: item.position.name,
       cardName: item.card.name,
@@ -1702,7 +1766,10 @@ function chooseReader(readerId) {
   refreshReading();
   const builtIn = BUILT_IN_READER_IDS.has(reader.id);
   if (builtIn) {
-    showStatus(`${reader.name} is selected. The reading stays with the card guide.`);
+    const extra = reader.id === 'sable_moreau'
+      ? ' She adds an order under each kind of question. Stop means stop.'
+      : '';
+    showStatus(`${reader.name} is selected. The reading stays with the card guide.${extra}`);
     return;
   }
   showStatus(anyCardTurned() ? `Now read by ${reader.name}.` : `${reader.name} will read these cards.`);
@@ -1890,10 +1957,18 @@ function fillInquiryList(node, card, isReversed) {
   node.replaceChildren();
   const described = describeCard(card, isReversed, 'general');
   if (!described) return;
+  const reader = registry.getActive();
+  const orders = reader && reader.id === 'sable_moreau' ? sableOrders(card.id, isReversed) : null;
   for (const item of described.others) {
     const li = document.createElement('li');
     li.appendChild(el('span', 'inquiry-name', item.label));
     li.appendChild(document.createTextNode(item.text));
+    if (orders && orders[item.id]) {
+      const voice = el('p', 'entry-voice');
+      voice.appendChild(el('span', 'inquiry-name', 'Sable'));
+      voice.appendChild(document.createTextNode(orders[item.id]));
+      li.appendChild(voice);
+    }
     node.appendChild(li);
   }
 }

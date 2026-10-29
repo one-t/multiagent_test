@@ -106,6 +106,18 @@ try {
   check('a card turns from the keyboard', s.turned === 1);
   check('the opening comes before the cards and quotes the question', s.opening && s.opening.includes('“should I quit my job?”'), s.opening);
   check('a job question is read as work', s.opening && s.opening.includes('for work'), s.opening);
+  const subject = await page.eval(`(() => {
+    const names = [...document.querySelectorAll('#readingSection .entry-inquiry .inquiry-name')].map(e => e.textContent);
+    const work = document.querySelector('#readingInquiryTabs [data-inquiry="work"]');
+    return { names, checked: work && work.getAttribute('aria-checked') };
+  })()`);
+  check('the reading shows the work line and not the other subjects', subject.names.length === 1 && subject.names[0] === 'Work' && subject.checked === 'true', subject);
+  await page.eval(`document.querySelector('#readingInquiryTabs [data-inquiry="love"]').click()`);
+  await page.wait(200);
+  const love = await page.eval(`[...document.querySelectorAll('#readingSection .entry-inquiry .inquiry-name')].map(e => e.textContent).join()`);
+  check('choosing Love shows the love line', love === 'Love', love);
+  await page.eval(`document.querySelector('#readingInquiryTabs [data-inquiry="work"]').click()`);
+  await page.wait(200);
   check('the card shows keywords and a meaning', s.firstKeywords && s.firstKeywords.startsWith('Keywords') && s.firstProse && s.firstProse.length > 40, s.firstKeywords);
   check('the set-up bar folds away once a card is turned', !s.setupFull && s.setupCompact && s.setupCompact.includes('Three cards'), s.setupCompact);
   check('the line about the deal is gone', s.status === '', s.status);
@@ -209,12 +221,20 @@ try {
   s = await look();
   check('an explicit reader is labelled in the reading', s.explicit === 'Explicit', s.explicit);
   check('focus stays on Change reader after choosing', s.focus === 'changeReaderBtn', s.focus);
+  const sableVoice = await page.eval(`({
+    voices: document.querySelectorAll('#readingSection .entry-voice').length,
+    note: (document.getElementById('readingVoiceNote') || {}).textContent || '',
+    sample: (document.querySelector('#readingSection .entry-voice') || {}).innerText || '',
+    keywords: document.querySelectorAll('#readingSection .entry-keywords').length
+  })`);
+  check('Sable keeps the guide and adds an order for the chosen subject', sableVoice.keywords === 3 && sableVoice.voices === 3 && sableVoice.note.includes('Stop means stop') && sableVoice.sample.includes('Order:'), sableVoice);
   await page.click('#changeReaderBtn');
   await page.wait(500);
   await page.eval(`document.querySelector('[data-reader-id="morwenna_ravenscroft"]').click()`);
   await page.wait(500);
   s = await look();
   check('another reader still shows the card guide', s.firstKeywords && s.firstKeywords.startsWith('Keywords') && !s.firstSign, s.firstKeywords);
+  check('another reader drops Sable’s orders', await page.eval(`document.querySelectorAll('#readingSection .entry-voice').length`) === 0);
   await page.click('#changeReaderBtn');
   await page.wait(500);
   await page.eval(`document.querySelector('[data-reader-id="cassian_vetch"]').click()`);
