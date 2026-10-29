@@ -97,6 +97,13 @@ const EXPECTED_MYSTICA_FILES = [
   'ten_of_swords.jpg',
   'two_of_pentacles.jpg',
   'three_of_pentacles.jpg',
+  'four_of_pentacles.jpg',
+  'five_of_pentacles.jpg',
+  'six_of_pentacles.jpg',
+  'seven_of_pentacles.jpg',
+  'eight_of_pentacles.jpg',
+  'nine_of_pentacles.jpg',
+  'ten_of_pentacles.jpg',
   'card_back.jpg'
 ];
 
@@ -139,5 +146,5 @@ test('All 78 cards render successfully in feline_mystica theme', () => {
     }
   }
 
-  assert.strictEqual(rasterCount, 71, 'All 71 raster cards (22 Major, 16 Court, 4 Aces, 9 Wands pips, 9 Cups pips, 9 Swords pips, 2 Pentacles pips) must render AI raster artwork');
+  assert.strictEqual(rasterCount, 78, 'All 78 cards in the complete deck (22 Major, 16 Court, 4 Aces, 36 Pips) must render AI raster artwork');
 });
